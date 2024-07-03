@@ -15,6 +15,7 @@ function Register() {
     password: "",
     first_name: "",
     last_name: "",
+    nickname: "",
   });
 
   const navigate = useNavigate();
@@ -26,15 +27,15 @@ function Register() {
   const handleClearState = () => {
     setNewUser({
       email: "",
-      first_name: "",
       last_name: "",
       photo: "",
+      nickname: "",
     });
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+    console.log(newUser);
     try {
       const { email, password } = newUser;
       // createUser in firebase
@@ -114,6 +115,19 @@ function Register() {
               name="email"
               placeholder="Enter email"
               value={newUser.email}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          {/*Nickname */}
+          <label htmlFor="nickname">
+            Nickname:{" "}
+            <input
+              type="nickname"
+              id="nickname"
+              name="nickname"
+              placeholder="Enter nickname"
+              value={newUser.nickname}
               onChange={handleChange}
               required
             />

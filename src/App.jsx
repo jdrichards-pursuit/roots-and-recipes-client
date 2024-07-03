@@ -60,7 +60,7 @@ function App() {
         <Route path="/register" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         {/* Need to fix the paths below */}
-        <Route path="/familyform" element={<FamilyForm />} />
+        <Route path="/family_form" element={<FamilyForm />} />
         <Route path="/join_family" element={<JoinFamilyForm />} />
         <Route path="/family_cookbook" element={<FamilyCookbook />} />
         <Route path="/favorites" element={<Favortites />} />

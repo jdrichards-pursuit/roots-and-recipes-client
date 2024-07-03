@@ -34,7 +34,7 @@ function Profile() {
     async function getUser() {
       // this is a helper function that will check the state of the current user in firebase and fetch the user using the JWT token from localstorage and the uid
       const user = await getUserData();
-
+      console.log("useEffect Profile:", user);
       if (user) setUserDetails(user);
     }
 
@@ -66,6 +66,7 @@ function Profile() {
             Last Name:{" "}
             {userDetails.last_name ? userDetails.last_name : "Unknown"}
           </p>
+          <p>Nickname: {userDetails.nickname}</p>
 
           <button onClick={handleLogout}>Logout</button>
         </>
