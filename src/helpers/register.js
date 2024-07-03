@@ -15,6 +15,7 @@ export const register = async (user, photoURL, uid) => {
       email: user.email,
       photo: photoURL || "",
       nickname: user.nickname,
+      family_code: user.family_code,
     }),
   };
   const response = await fetch(`${URL}/api/auth/register`, options);
