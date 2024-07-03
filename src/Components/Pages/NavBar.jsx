@@ -1,10 +1,14 @@
 import React from "react";
-import PlusIcon from "./PlusIcon";
+
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   return (
     <div>
-      <PlusIcon />
+      <Link to={`/recipe_form`}>
+        <p>Plus icon Image</p>
+      </Link>
+
       <div>NavBar</div>
     </div>
   );

@@ -62,7 +62,7 @@ function Register() {
           toast.success("User Registered Successfully!!", {
             position: "top-center",
           });
-          navigate("/profile");
+          navigate("/home");
         } else {
           toast.error("User Not Found", {
             position: "top-center",
