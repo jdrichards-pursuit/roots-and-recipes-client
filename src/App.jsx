@@ -16,6 +16,17 @@ import FamilyForm from "./Components/Family/FamilyForm";
 import JoinFamilyForm from "./Components/Family/JoinFamilyForm";
 import FamilyCookbook from "./Components/Pages/FamilyCookbook";
 import Favortites from "./Components/Pages/Favortites";
+import Home from "./Components/Pages/Home";
+import NavBar from "./Components/Pages/NavBar";
+// import PlusIcon from "./Components/Pages/PlusIcon";
+import UserProfile from "./Components/Pages/UserProfile";
+import RecipeForm from "./Components/Recipe/RecipeForm";
+import RecipeList from "./Components/Recipe/RecipeList";
+import RecipeShow from "./Components/Recipe/RecipeShow";
+import AboutUs from "./Components/Hamburger/AboutUs";
+import BurgerMenu from "./Components/Hamburger/BurgerMenu";
+import ContactUs from "./Components/Hamburger/ContactUs";
+import FAQ from "./Components/Hamburger/FAQ";
 
 function App() {
   const [user, setUser] = useState();
@@ -26,6 +37,11 @@ function App() {
   });
   return (
     <div>
+      <AboutUs />
+      <BurgerMenu />
+      <ContactUs />
+      <FAQ />
+
       <Routes
         style={{
           display: "flex",
@@ -48,7 +64,14 @@ function App() {
         <Route path="/join_family" element={<JoinFamilyForm />} />
         <Route path="/family_cookbook" element={<FamilyCookbook />} />
         <Route path="/favorites" element={<Favortites />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/user_profile" element={<UserProfile />} />
+        <Route path="/recipe_form" element={<RecipeForm />} />
+        <Route path="/recipe_list" element={<RecipeList />} />
+        <Route path="/recipe_show" element={<RecipeShow />} />
       </Routes>
+      <NavBar />
+      {/* <PlusIcon /> */}
       <ToastContainer />
     </div>
   );
