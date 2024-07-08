@@ -43,7 +43,7 @@ function Profile() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      {console.log(userDetails)}
+      {/* {console.log(userDetails)} */}
       {userDetails ? (
         <>
           <img
