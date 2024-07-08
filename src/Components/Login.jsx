@@ -41,9 +41,8 @@ function Login() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h3 className="bg-emerald-500 ">
-        <span className="bg-emerald-300 "> Login</span>
-      </h3>
+      <h3>Login</h3>
+
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">
           Email Address:{" "}
