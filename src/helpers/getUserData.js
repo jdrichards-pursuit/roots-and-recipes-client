@@ -25,3 +25,14 @@ export const getUserData = () => {
     });
   });
 };
+
+// async function testGetUserData() {
+//   try {
+//     const userData = await getUserData();
+//     console.log("User Data:", userData);
+//   } catch (error) {
+//     console.error("Error fetching user data:", error);
+//   }
+// }
+
+// testGetUserData();
