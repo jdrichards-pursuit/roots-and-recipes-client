@@ -15,7 +15,6 @@ import "./App.css";
 import FamilyForm from "./Components/Family/FamilyForm";
 import JoinFamilyForm from "./Components/Family/JoinFamilyForm";
 import FamilyCookbook from "./Components/Pages/FamilyCookbook";
-import Favortites from "./Components/Pages/Favortites";
 import Home from "./Components/Pages/Home";
 import NavBar from "./Components/Pages/NavBar";
 // import PlusIcon from "./Components/Pages/PlusIcon";
@@ -27,6 +26,7 @@ import AboutUs from "./Components/Hamburger/AboutUs";
 import BurgerMenu from "./Components/Hamburger/BurgerMenu";
 import ContactUs from "./Components/Hamburger/ContactUs";
 import FAQ from "./Components/Hamburger/FAQ";
+import { MyCookbook } from "./Components/Pages/MyCookbook";
 
 function App() {
   const [user, setUser] = useState();
@@ -35,13 +35,10 @@ function App() {
       setUser(user);
     });
   });
+
   return (
     <div>
-      <AboutUs />
       <BurgerMenu />
-      <ContactUs />
-      <FAQ />
-
       <Routes
         style={{
           display: "flex",
@@ -49,13 +46,12 @@ function App() {
           justifyContent: "center",
           alignItems: "center",
           marginTop: 100,
-        }}
-      >
+        }}>
         <Route
           path="/"
           element={user ? <Navigate to="/profile" /> : <Login />}
         />
-        <Route path="/test" element={user ? <Test /> : <Login />} />
+        {/* <Route path="/test" element={user ? <Test /> : <Login />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
@@ -63,14 +59,17 @@ function App() {
         <Route path="/family_form" element={<FamilyForm />} />
         <Route path="/join_family" element={<JoinFamilyForm />} />
         <Route path="/family_cookbook" element={<FamilyCookbook />} />
-        <Route path="/favorites" element={<Favortites />} />
+        <Route path="/cookbook" element={<MyCookbook />} />
         <Route path="/home" element={<Home />} />
         <Route path="/user_profile" element={<UserProfile />} />
         <Route path="/recipe_form" element={<RecipeForm />} />
         <Route path="/recipe_list" element={<RecipeList />} />
         <Route path="/recipe_show" element={<RecipeShow />} />
+        <Route path="/about_us" element={<AboutUs />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact_us" element={<ContactUs />} />
       </Routes>
-      <NavBar />
+      {user && <NavBar />}
       {/* <PlusIcon /> */}
       <ToastContainer />
     </div>
