@@ -20,8 +20,13 @@ const Home = () => {
   }, []);
   return (
     <div>
-      {allPublicRecipes.map((r) => {
-        <img src={r.photo} alt={`${r.photo}`} />;
+      {allPublicRecipes.map((r, index) => {
+        return (
+          <div key={index}>
+            <p>Name:{r.name}</p>
+            <p>Chef:{r.chef}</p>
+          </div>
+        );
       })}
     </div>
   );
