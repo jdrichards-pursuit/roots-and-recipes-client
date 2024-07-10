@@ -14,7 +14,7 @@ function RecipeForm() {
     name: "",
     family: "",
     chef: "",
-    status: "TRUE",
+    status: "FALSE",
     user_id: "",
   });
 
