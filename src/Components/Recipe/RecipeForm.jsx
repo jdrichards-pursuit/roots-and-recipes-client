@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserData } from "../../helpers/getUserData";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
 function RecipeForm() {
   const navigate = useNavigate();
 
+  // user state
+  const [userDetails, setUserDetails] = useState(null);
+  //  new recipe state
   const [newRecipe, setNewRecipe] = useState({
     name: "",
     family: "",
     chef: "",
     status: "TRUE",
+    user_id: "",
   });
 
   // Function to add a new recipe
@@ -41,6 +46,21 @@ function RecipeForm() {
   const handleTextChange = (event) => {
     setNewRecipe({ ...newRecipe, [event.target.id]: event.target.value });
   };
+
+  // Use Effect
+  useEffect(() => {
+    async function getUser() {
+      // this is a helper function that will check the state of the current user in firebase and fetch the user using the JWT token from localstorage and the uid
+      const user = await getUserData();
+      console.log("useEffect Profile:", user);
+      if (user) {
+        setUserDetails(user);
+        setNewRecipe({ ...newRecipe, user_id: user.id });
+      }
+    }
+
+    getUser();
+  }, []);
 
   return (
     <div className="ml-28 border-2 border-black border-solid">
