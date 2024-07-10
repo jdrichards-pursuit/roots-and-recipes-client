@@ -18,7 +18,6 @@ import FamilyCookbook from "./Components/Pages/FamilyCookbook";
 import Home from "./Components/Pages/Home";
 import NavBar from "./Components/Pages/NavBar";
 // import PlusIcon from "./Components/Pages/PlusIcon";
-import UserProfile from "./Components/Pages/UserProfile";
 import RecipeForm from "./Components/Recipe/RecipeForm";
 import RecipeList from "./Components/Recipe/RecipeList";
 import RecipeShow from "./Components/Recipe/RecipeShow";
@@ -61,7 +60,6 @@ function App() {
         <Route path="/family_cookbook" element={<FamilyCookbook />} />
         <Route path="/cookbook" element={<MyCookbook />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/user_profile" element={<UserProfile />} />
         <Route path="/recipe_form" element={<RecipeForm />} />
         <Route path="/recipe_list" element={<RecipeList />} />
         <Route path="/recipe_show" element={<RecipeShow />} />

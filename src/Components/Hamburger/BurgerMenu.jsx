@@ -5,9 +5,6 @@ import hamburgerMenuIconPng from "../../assets/ham_menu_icon.png";
 const BurgerMenu = () => {
   const [hamMenuToggle, setHamMenuToggle] = useState(false);
 
-  useEffect(() => {
-    console.log(hamMenuToggle);
-  }, [hamMenuToggle]);
   return (
     <div>
       <span>
