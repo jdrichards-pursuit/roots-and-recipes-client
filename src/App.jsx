@@ -33,7 +33,7 @@ function App() {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
-      console.log(user.providerData);
+      // console.log(user.providerData);
     });
   });
 
