@@ -47,7 +47,8 @@ function App() {
           justifyContent: "center",
           alignItems: "center",
           marginTop: 100,
-        }}>
+        }}
+      >
         <Route
           path="/"
           element={user ? <Navigate to="/profile" /> : <Login />}
@@ -62,7 +63,7 @@ function App() {
         <Route path="/family_cookbook" element={<FamilyCookbook />} />
         <Route path="/cookbook" element={<MyCookbook />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/user_profile" element={<UserProfile />} />
+        {/* <Route path="/user_profile" element={<UserProfile />} /> */}
         <Route path="/recipe_form" element={<RecipeForm />} />
         <Route path="/recipe_list" element={<RecipeList />} />
         <Route path="/recipe_show" element={<RecipeShow />} />

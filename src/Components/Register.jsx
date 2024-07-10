@@ -37,12 +37,13 @@ function Register() {
     e.preventDefault();
     console.log(newUser);
     try {
-      const { email, password } = newUser;
+      const { email, password, nickname } = newUser;
       // createUser in firebase
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
+        nickname
       );
 
       // you need the JWT token to authenticate protected routes on the backend
@@ -78,9 +79,12 @@ function Register() {
     }
   };
   return (
-    <div style={{ textAlign: "center" }}>
+    // style={{ textAlign: "center" }}
+    <div className="text-center ">
       <form onSubmit={handleRegister}>
-        <h3>Sign Up</h3>
+        <h3>
+          <span className="bg-orange-300 text-white">Roots & Recipes</span>
+        </h3>
         <div>
           <label htmlFor="first_name">
             First Name:{" "}
@@ -95,7 +99,7 @@ function Register() {
             />
           </label>
 
-          <label htmlFor="last_name">
+          {/* <label htmlFor="last_name">
             Last Name:{" "}
             <input
               type="text"
@@ -105,7 +109,7 @@ function Register() {
               value={newUser.last_name}
               onChange={handleChange}
             />
-          </label>
+          </label> */}
 
           <label htmlFor="email">
             Email Address:{" "}
@@ -121,12 +125,12 @@ function Register() {
           </label>
           {/*Nickname */}
           <label htmlFor="nickname">
-            Nickname:{" "}
+            Username:{" "}
             <input
               type="nickname"
               id="nickname"
               name="nickname"
-              placeholder="Enter nickname"
+              placeholder="Enter username"
               value={newUser.nickname}
               onChange={handleChange}
               required

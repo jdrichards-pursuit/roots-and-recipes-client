@@ -30,7 +30,7 @@ const NavBar = () => {
           <img src={cookbookIconPng} alt="cookbook icon" />
         </span>
       </Link>
-      <Link to={`/user_profile`}>
+      <Link to={`/profile`}>
         <span>
           <img src={profileIconPng} alt="profile icon" />
         </span>
