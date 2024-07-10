@@ -29,7 +29,8 @@ function RecipeForm() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("New recipe added:", data);
+        // console.log("New recipe added:", data);
+        setNewRecipe(data);
         navigate(`/cookbook`);
       })
       .catch((error) => {
@@ -52,7 +53,7 @@ function RecipeForm() {
     async function getUser() {
       // this is a helper function that will check the state of the current user in firebase and fetch the user using the JWT token from localstorage and the uid
       const user = await getUserData();
-      console.log("useEffect Profile:", user);
+      // console.log("useEffect Profile:", user);
       if (user) {
         setUserDetails(user);
         setNewRecipe({ ...newRecipe, user_id: user.id });

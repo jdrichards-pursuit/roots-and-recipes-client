@@ -1,6 +1,8 @@
 const URL = import.meta.env.VITE_BASE_URL;
 
 export const fetchUser = async (user, token) => {
+  console.log("user:", user);
+  console.log("token:", token);
   const options = {
     method: "GET",
     headers: {
