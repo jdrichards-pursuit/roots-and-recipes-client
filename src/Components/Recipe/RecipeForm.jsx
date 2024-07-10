@@ -1,23 +1,45 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 const URL = import.meta.env.VITE_BASE_URL;
 
 function RecipeForm() {
   const navigate = useNavigate();
 
-  const [recipe, setRecipe] = useState({
-    dish_name: "",
-    family_name: "",
+  const [newRecipe, setNewRecipe] = useState({
+    name: "",
+    family: "",
+    chef: "",
+    status: "TRUE",
   });
 
+  // Function to add a new recipe
+  const addRecipe = () => {
+    fetch(`${URL}/api/recipes`, {
+      method: "POST",
+      body: JSON.stringify(newRecipe),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("New recipe added:", data);
+        navigate(`/cookbook`);
+      })
+      .catch((error) => {
+        console.error("Error adding recipe:", error);
+      });
+  };
+
+  // handle Submit function
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    // send to the backend
+    addRecipe();
   };
 
   const handleTextChange = (event) => {
-    setRecipe({ ...recipe, [event.target.id]: event.target.value });
+    setNewRecipe({ ...newRecipe, [event.target.id]: event.target.value });
   };
 
   return (
@@ -29,11 +51,11 @@ function RecipeForm() {
           <h2>Name of dish</h2>
         </label>
         <input
-          id="dish_name"
-          value={recipe.dish_name}
+          id="name"
+          value={newRecipe.name}
           type="text"
           onChange={handleTextChange}
-          placeholder="dish_name"
+          placeholder="Name of dish"
           required
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
@@ -43,62 +65,26 @@ function RecipeForm() {
           <h2>Family</h2>
         </label>
         <input
-          id="family_name"
-          value={recipe.family_name}
+          id="family"
+          value={newRecipe.family}
           type="text"
           onChange={handleTextChange}
-          placeholder="family_name"
+          placeholder="Family"
           required
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
-        {/* Ingredients Input */}
+
+        {/* Chef Input (if needed) */}
         <label>
-          <h2>Ingredients</h2>
+          <h2>Chef</h2>
         </label>
         <input
-          id="ingredients"
-          value=""
+          id="chef"
+          value={newRecipe.chef}
           type="text"
-          // onChange={handleTextChange}
-          placeholder="ingredients"
-          // required
+          onChange={handleTextChange}
+          placeholder="Chef"
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
-        />
-
-        {/* Quantity Input */}
-        <input
-          id="quantity"
-          value="Quantity"
-          type="text"
-          // onChange={handleTextChange}
-          placeholder="quantity"
-          // required
-          // className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-0.05 px-0 text-center text-xs"
-          className="ml-4 shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-0.5 px-1 text-center text-xs w-20"
-        />
-
-        {/* Unit Input */}
-        <input
-          id="unit"
-          value="Unit"
-          type="text"
-          // onChange={handleTextChange}
-          placeholder="unit"
-          // required
-          // className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-0.05 px-0 text-center text-xs"
-          className="ml-4 shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-0.5 px-1 text-center text-xs w-20"
-        />
-        {/* Plus Sign */}
-
-        <label className="mt-4"></label>
-        <input
-          id="add ingredient"
-          value="+"
-          type="text"
-          // onChange={handleTextChange}
-          placeholder="add ingredient"
-          // required
-          className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3 text-center text-xl"
         />
 
         {/* Submit/Save Button */}
