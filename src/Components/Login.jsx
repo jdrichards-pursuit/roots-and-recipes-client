@@ -21,9 +21,16 @@ function Login() {
     const { email, password } = loginUser;
     try {
       //sign in to firebase
-      await signInWithEmailAndPassword(auth, email, password);
+
+      const loggedUser = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       console.log("User logged in Successfully");
 
+      const token = await loggedUser.user.getIdToken();
+      localStorage.setItem("token", token);
       setLoginNewUser({ password: "", email: "" });
 
       toast.success("User logged in Successfully", {
