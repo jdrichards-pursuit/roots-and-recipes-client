@@ -7,7 +7,7 @@ import { logout } from "../helpers/logout";
 
 import placeholderImage from "../assets/placeholder.png";
 
-function Profile() {
+function Profile({setBurgerToggle}) {
   const navigate = useNavigate();
 
   const [userDetails, setUserDetails] = useState(null);
@@ -37,7 +37,7 @@ function Profile() {
       console.log("useEffect Profile:", user);
       if (user) setUserDetails(user);
     }
-
+    setBurgerToggle(true);
     getUser();
   }, []);
 

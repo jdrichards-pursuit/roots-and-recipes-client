@@ -29,6 +29,8 @@ import { MyCookbook } from "./Components/Pages/MyCookbook";
 
 function App() {
   const [user, setUser] = useState();
+  const [burgerToggle, setBurgerToggle] = useState(false);
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
@@ -37,7 +39,7 @@ function App() {
 
   return (
     <div>
-      <BurgerMenu />
+      <BurgerMenu burgerToggle = {burgerToggle} />
       <Routes
         style={{
           display: "flex",
@@ -48,12 +50,12 @@ function App() {
         }}>
         <Route
           path="/"
-          element={user ? <Navigate to="/profile" /> : <Login />}
+          element={user ? <Navigate to="/profile" /> : <Login setBurgerToggle={setBurgerToggle} burgerToggle={burgerToggle} />}
         />
         {/* <Route path="/test" element={user ? <Test /> : <Login />} /> */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setBurgerToggle = {setBurgerToggle} burgerToggle= {burgerToggle} />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<Profile setBurgerToggle = {setBurgerToggle} />} />
         {/* Need to fix the paths below */}
         <Route path="/family_form" element={<FamilyForm />} />
         <Route path="/join_family" element={<JoinFamilyForm />} />
