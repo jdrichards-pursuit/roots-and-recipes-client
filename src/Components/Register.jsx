@@ -28,8 +28,9 @@ function Register() {
     setNewUser({
       email: "",
       last_name: "",
-      photo: "",
       nickname: "",
+      password: "",
+      first_name: "",
     });
   };
 
@@ -77,13 +78,17 @@ function Register() {
       });
     }
   };
+
   return (
-    <div style={{ textAlign: "center" }}>
-      <form onSubmit={handleRegister}>
-        <h3>Sign Up</h3>
-        <div>
-          <label htmlFor="first_name">
-            First Name:{" "}
+    <div className="min-h-screen flex flex-col justify-center items-center bg-[#713A3A]">
+      <div className="w-full max-w-md bg-[#FFDAB9] p-4 rounded-lg shadow-md">
+        <h3 className="text-2xl font-bold mb-6 text-center">Sign Up</h3>
+
+        <form onSubmit={handleRegister} className="space-y-6">
+          <div>
+            <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
+              First Name
+            </label>
             <input
               type="text"
               id="first_name"
@@ -92,11 +97,14 @@ function Register() {
               value={newUser.first_name}
               onChange={handleChange}
               required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-          </label>
+          </div>
 
-          <label htmlFor="last_name">
-            Last Name:{" "}
+          <div>
+            <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
+              Last Name
+            </label>
             <input
               type="text"
               id="last_name"
@@ -104,11 +112,14 @@ function Register() {
               placeholder="Last name"
               value={newUser.last_name}
               onChange={handleChange}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-          </label>
+          </div>
 
-          <label htmlFor="email">
-            Email Address:{" "}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
             <input
               type="email"
               id="email"
@@ -117,43 +128,58 @@ function Register() {
               value={newUser.email}
               onChange={handleChange}
               required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-          </label>
-          {/*Nickname */}
-          <label htmlFor="nickname">
-            Nickname:{" "}
+          </div>
+
+          <div>
+            <label htmlFor="nickname" className="block text-sm font-medium text-gray-700">
+              Nickname
+            </label>
             <input
-              type="nickname"
+              type="text"
               id="nickname"
               name="nickname"
               placeholder="Enter nickname"
               value={newUser.nickname}
               onChange={handleChange}
               required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-          </label>
+          </div>
 
-          <label htmlFor="password">
-            Password:{" "}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
-              placeholder="Enter password"
               id="password"
               name="password"
+              placeholder="Enter password"
               value={newUser.password}
               onChange={handleChange}
               required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-          </label>
+          </div>
 
-          <button type="submit" style={{ width: 140 }}>
-            Sign Up
-          </button>
+          <div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm">
+            Already registered? <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">Login</Link>
+          </p>
         </div>
-        <p>
-          Already registered <Link to="/login">Login</Link>
-        </p>
-      </form>
+      </div>
     </div>
   );
 }
