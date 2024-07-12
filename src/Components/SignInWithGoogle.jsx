@@ -11,9 +11,9 @@ import googleBadge from "../assets/google.png";
 async function handleGoogleSignIn() {
   const provider = new GoogleAuthProvider();
   try {
-    //sign into Firebase
+    // Sign into Firebase
     const { user } = await signInWithPopup(auth, provider);
-    //retrieve JWT token from firebase
+    // Retrieve JWT token from firebase
     const token = await user.getIdToken();
     localStorage.setItem("token", token);
 
@@ -25,7 +25,7 @@ async function handleGoogleSignIn() {
       await register(user, photoURL, uid);
     }
 
-    // return key/value to use for the navigate in the googleLogin function below
+    // Return key/value to use for the navigate in the googleLogin function below
     return { navigateTo: "/profile" };
   } catch (error) {
     localStorage.removeItem("token");
@@ -48,8 +48,11 @@ function SignInWithGoogle() {
   };
 
   return (
-    <div style={{ cursor: "pointer" }} onClick={googleLogin}>
-      <img src={googleBadge} width={"20%"} />
+    <div
+      className="flex justify-center mt-4 cursor-pointer"
+      onClick={googleLogin}
+    >
+      <img src={googleBadge} className="w-48 h-12" alt="Sign in with Google" />
     </div>
   );
 }

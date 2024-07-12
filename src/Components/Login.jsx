@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
-function Login({setBurgerToggle, burgerToggle}) {
+function Login({ setBurgerToggle, burgerToggle }) {
   const navigate = useNavigate();
 
   const [loginUser, setLoginNewUser] = useState({ password: "", email: "" });
@@ -20,10 +20,12 @@ function Login({setBurgerToggle, burgerToggle}) {
 
     const { email, password } = loginUser;
     try {
-      //sign in to firebase
-      await signInWithEmailAndPassword(auth, email, password);
+      // Sign in to firebase
+      const loggedUser = await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in Successfully");
 
+      const token = await loggedUser.user.getIdToken();
+      localStorage.setItem("token", token);
       setLoginNewUser({ password: "", email: "" });
 
       toast.success("User logged in Successfully", {
@@ -39,8 +41,12 @@ function Login({setBurgerToggle, burgerToggle}) {
     }
   };
 
-  useEffect(() => {setBurgerToggle(false)}, [])
-  console.log(burgerToggle)
+  useEffect(() => {
+    setBurgerToggle(false);
+  }, [setBurgerToggle]);
+
+  console.log(burgerToggle);
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-[#713A3A]">
       <div className="w-full max-w-md bg-[#FFDAB9] p-8 rounded-lg shadow-md">

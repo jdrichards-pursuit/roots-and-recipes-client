@@ -15,6 +15,7 @@ body {
   font-family: "Fira Sans", sans-serif;
   font-size: 20px;
   line-height: 40px;
+  background-color: bisque;
 }
 
 button {
@@ -29,4 +30,40 @@ button {
 
 label {
   display: block;
+}
+
+header {
+  background-color: #5a3e36 !important; /* Custom brown */
+}
+
+footer {
+  background-color: #5a3e36 !important; /* Custom brown */
+}
+
+footer a {
+  transition: transform 0.2s;
+}
+
+footer a:hover {
+  transform: scale(1.1);
+}
+
+footer a img.w-8.h-8 {
+  /* Make "Add" icon larger and standout */
+  width: 32px;
+  height: 32px;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+footer a span.text-xs {
+  /* Increase the size of the text under the icons */
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+footer a:nth-child(3) span.text-xs {
+  /* Make "Add" text larger */
+  font-size: 1rem;
 }
