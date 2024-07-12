@@ -21,83 +21,56 @@ const Layout = ({ children, userName }) => {
       </header>
       <main className="flex-grow p-4 mt-16 mb-16">{children}</main>
       {/* Footer */}
-      <footer className="bg-custom-brown w-full p-4 flex justify-around fixed bottom-0 z-10">
-        {userName ? (
-          <>
-            <Link to="/home" className="flex flex-col items-center text-white">
-              <img src={homeIconPng} alt="home icon" className="w-6 h-6 mb-1" />
-              <span className="text-xs">Home</span>
-            </Link>
-            <Link
-              to="/family_cookbook"
-              className="flex flex-col items-center text-white"
-            >
-              <img
-                src={familyIconPng}
-                alt="family icon"
-                className="w-6 h-6 mb-1"
-              />
-              <span className="text-xs">Family</span>
-            </Link>
-            <Link
-              to="/recipe_form"
-              className="flex flex-col items-center text-white"
-            >
-              <img src={plusIconPng} alt="plus icon" className="w-8 h-8 mb-1" />
-              <span className="text-xs">Add</span>
-            </Link>
-            <Link
-              to="/cookbook"
-              className="flex flex-col items-center text-white"
-            >
-              <img
-                src={cookbookIconPng}
-                alt="cookbook icon"
-                className="w-6 h-6 mb-1"
-              />
-              <span className="text-xs">Cookbook</span>
-            </Link>
-            <Link
-              to="/profile"
-              className="flex flex-col items-center text-white"
-            >
-              <img
-                src={profileIconPng}
-                alt="profile icon"
-                className="w-6 h-6 mb-1"
-              />
-              <span className="text-xs">Profile</span>
-            </Link>
-          </>
-        ) : (
-          !isAuthPage && (
-            <>
-              <Link
-                to="/login"
-                className="flex flex-col items-center text-white"
-              >
-                <img
-                  src={loginIconPng}
-                  alt="login icon"
-                  className="w-6 h-6 mb-1"
-                />
-                <span className="text-xs">Login</span>
-              </Link>
-              <Link
-                to="/register"
-                className="flex flex-col items-center text-white"
-              >
-                <img
-                  src={registerIconPng}
-                  alt="register icon"
-                  className="w-6 h-6 mb-1"
-                />
-                <span className="text-xs">Register</span>
-              </Link>
-            </>
-          )
-        )}
-      </footer>
+      {!isAuthPage && (
+        <footer className="bg-custom-brown w-full p-4 flex justify-around fixed bottom-0 z-10">
+          {/* Home Link */}
+          <Link to="/home" className="flex flex-col items-center text-white">
+            <img src={homeIconPng} alt="home icon" className="w-6 h-6 mb-1" />
+            <span className="text-xs">Home</span>
+          </Link>
+          {/* Family Link */}
+          <Link
+            to="/family_cookbook"
+            className="flex flex-col items-center text-white"
+          >
+            <img
+              src={familyIconPng}
+              alt="family icon"
+              className="w-6 h-6 mb-1"
+            />
+            <span className="text-xs">Family</span>
+          </Link>
+          {/* Add Recipe Link */}
+          <Link
+            to="/recipe_form"
+            className="flex flex-col items-center text-white"
+          >
+            <img src={plusIconPng} alt="plus icon" className="w-8 h-8 mb-1" />
+            <span className="text-xs">Add</span>
+          </Link>
+          {/* Cookbook Link */}
+          <Link
+            to="/cookbook"
+            className="flex flex-col items-center text-white"
+          >
+            <img
+              src={cookbookIconPng}
+              alt="cookbook icon"
+              className="w-6 h-6 mb-1"
+            />
+            <span className="text-xs">Cookbook</span>
+          </Link>
+          {/* Profile Link */}
+          <Link to="/profile" className="flex flex-col items-center text-white">
+            <img
+              src={profileIconPng}
+              alt="profile icon"
+              className="w-6 h-6 mb-1"
+            />
+            <span className="text-xs">Profile</span>
+          </Link>
+        </footer>
+      )}
     </div>
   );
 };

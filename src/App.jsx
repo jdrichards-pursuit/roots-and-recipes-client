@@ -24,6 +24,7 @@ import "./index.css";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [burgerToggle, setBurgerToggle] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -34,14 +35,37 @@ function App() {
 
   return (
     <Layout userName={user ? user.displayName : null}>
-      <BurgerMenu />
+      <BurgerMenu burgerToggle={burgerToggle} />
       <Routes>
-        <Route path="/" element={user ? <Navigate to="/home" /> : <Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            user ? (
+              <Navigate to="/home" />
+            ) : (
+              <Login
+                setBurgerToggle={setBurgerToggle}
+                burgerToggle={burgerToggle}
+              />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Login
+              setBurgerToggle={setBurgerToggle}
+              burgerToggle={burgerToggle}
+            />
+          }
+        />
         <Route path="/register" element={<SignUp />} />
         {user && (
           <>
-            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/profile"
+              element={<Profile setBurgerToggle={setBurgerToggle} />}
+            />
             <Route path="/family_form" element={<FamilyForm />} />
             <Route path="/join_family" element={<JoinFamilyForm />} />
             <Route path="/family_cookbook" element={<FamilyCookbook />} />
