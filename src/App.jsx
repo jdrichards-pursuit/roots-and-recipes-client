@@ -39,33 +39,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            user ? (
-              <Navigate to="/home" />
-            ) : (
-              <Login
-                setBurgerToggle={setBurgerToggle}
-                burgerToggle={burgerToggle}
-              />
-            )
-          }
+          element={user ? <Navigate to="/home" /> : <Login setBurgerToggle={setBurgerToggle} burgerToggle={burgerToggle} />}
         />
-        <Route
-          path="/login"
-          element={
-            <Login
-              setBurgerToggle={setBurgerToggle}
-              burgerToggle={burgerToggle}
-            />
-          }
-        />
+        <Route path="/login" element={<Login setBurgerToggle={setBurgerToggle} burgerToggle={burgerToggle} />} />
         <Route path="/register" element={<SignUp />} />
         {user && (
           <>
-            <Route
-              path="/profile"
-              element={<Profile setBurgerToggle={setBurgerToggle} />}
-            />
+            <Route path="/profile" element={<Profile setBurgerToggle={setBurgerToggle} />} />
             <Route path="/family_form" element={<FamilyForm />} />
             <Route path="/join_family" element={<JoinFamilyForm />} />
             <Route path="/family_cookbook" element={<FamilyCookbook />} />

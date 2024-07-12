@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
-function Login() {
+function Login({ setBurgerToggle, burgerToggle }) {
   const navigate = useNavigate();
 
   const [loginUser, setLoginNewUser] = useState({ password: "", email: "" });
@@ -21,11 +21,7 @@ function Login() {
     const { email, password } = loginUser;
     try {
       // Sign in to firebase
-      const loggedUser = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const loggedUser = await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in Successfully");
 
       const token = await loggedUser.user.getIdToken();
@@ -45,58 +41,69 @@ function Login() {
     }
   };
 
+  useEffect(() => {
+    setBurgerToggle(false);
+  }, [setBurgerToggle]);
+
+  console.log(burgerToggle);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-custom-beige">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 mb-2">
-            Email Address:
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter email"
-            value={loginUser.email}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-          />
+    <div className="min-h-screen flex flex-col justify-center items-center bg-[#713A3A]">
+      <div className="w-full max-w-md bg-[#FFDAB9] p-8 rounded-lg shadow-md">
+        <h3 className="text-2xl font-bold mb-6 text-center">Login</h3>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter email"
+              value={loginUser.email}
+              onChange={handleChange}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+              value={loginUser.password}
+              onChange={handleChange}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#7EB098] hover:bg-[#8CC7AB] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm">
+            New user? <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">Register Here</Link>
+          </p>
+          <p className="mt-2 text-sm">--Or continue with--</p>
         </div>
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-gray-700 mb-2">
-            Password:
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter password"
-            value={loginUser.password}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-          />
+
+        <div className="mt-4 flex justify-center">
+          <SignInWithGoogle className="bg-gray-200 p-4 rounded-lg shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105" />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
-        >
-          Submit
-        </button>
-      </form>
-      <div className="mt-4 text-center">
-        <p>
-          New user{" "}
-          <Link to="/register" className="text-blue-500">
-            Register Here
-          </Link>
-        </p>
-        <p className="mt-2">--Or continue with--</p>
       </div>
-      <SignInWithGoogle />
     </div>
   );
 }
