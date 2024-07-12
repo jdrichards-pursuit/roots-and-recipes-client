@@ -20,7 +20,7 @@ function Login() {
 
     const { email, password } = loginUser;
     try {
-      //sign in to firebase
+      // Sign in to firebase
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in Successfully");
 
@@ -40,12 +40,16 @@ function Login() {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h3>Login</h3>
-
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">
-          Email Address:{" "}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-custom-beige">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-lg shadow-md w-full max-w-md"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-gray-700 mb-2">
+            Email Address:
+          </label>
           <input
             type="email"
             id="email"
@@ -53,11 +57,13 @@ function Login() {
             placeholder="Enter email"
             value={loginUser.email}
             onChange={handleChange}
+            className="w-full p-2 border rounded"
           />
-        </label>
-
-        <label htmlFor="password">
-          Password:{" "}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700 mb-2">
+            Password:
+          </label>
           <input
             type="password"
             id="password"
@@ -65,14 +71,24 @@ function Login() {
             placeholder="Enter password"
             value={loginUser.password}
             onChange={handleChange}
+            className="w-full p-2 border rounded"
           />
-        </label>
-
-        <button type="submit">Submit</button>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+        >
+          Submit
+        </button>
       </form>
-      <div>
-        New user <Link to="/register">Register Here</Link>
-        <p>--Or continue with--</p>
+      <div className="mt-4 text-center">
+        <p>
+          New user{" "}
+          <Link to="/register" className="text-blue-500">
+            Register Here
+          </Link>
+        </p>
+        <p className="mt-2">--Or continue with--</p>
       </div>
       <SignInWithGoogle />
     </div>
