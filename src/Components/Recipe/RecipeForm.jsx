@@ -92,8 +92,8 @@ function RecipeForm() {
 
   // HANDLE INGREDIENTS DELETE
   const handleIngredientDelete = (index) => {
-    const newInputs = ingredientsInputs.filter((_, i) => i !== index);
-    setIngredientsInputs(newInputs);
+    const newIngredientInputs = ingredientsInputs.filter((_, i) => i !== index);
+    setIngredientsInputs(newIngredientInputs);
   };
 
   // HANDLE STEPS INPUT
@@ -106,6 +106,12 @@ function RecipeForm() {
     const newSteps = [...stepsInputs];
     newSteps[index] = event.target.value;
     setStepsInputs(newSteps);
+  };
+
+  // HANDLE STEPS DELETE
+  const handleStepDelete = (index) => {
+    const newStepInput = stepsInputs.filter((_, i) => i !== index);
+    setStepsInputs(newStepInput);
   };
 
   // HANDLE PUBLIC TOGGLE
@@ -222,9 +228,9 @@ function RecipeForm() {
                 value={stepInput}
                 className="border-solid border-2 border-black p-2 mt-8"
               />
-              <button>
+              <div onClick={() => handleStepDelete(index)}>
                 <X />
-              </button>
+              </div>
             </div>
           );
         })}
