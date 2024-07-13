@@ -42,7 +42,7 @@ const Layout = ({ children, userName }) => {
           </Link>
           {/* Add Recipe Link */}
           <Link
-            to="/recipe_form"
+            to="/create_a_recipe"
             className="flex flex-col items-center text-white"
           >
             <img src={plusIconPng} alt="plus icon" className="w-8 h-8 mb-1" />
