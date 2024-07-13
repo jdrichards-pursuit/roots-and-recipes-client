@@ -21,6 +21,7 @@ import { MyCookbook } from "./Components/Pages/MyCookbook";
 import Layout from "./Components/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
+import CreatARecipe from "./Components/Pages/CreatARecipe";
 
 function App() {
   const [user, setUser] = useState();
@@ -84,6 +85,7 @@ function App() {
             <Route path="/about_us" element={<AboutUs />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact_us" element={<ContactUs />} />
+            <Route path="/create_a_recipe" element={<CreatARecipe />} />
           </>
         )}
       </Routes>
