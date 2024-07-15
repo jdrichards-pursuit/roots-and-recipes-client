@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 
 import { getUserData } from "../../helpers/getUserData";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -126,10 +127,12 @@ export const MyCookbook = () => {
             </div>
           ))
         ) : (
-          <p className="text-center bg-[#D9D9D9]">
-            Add a recipe
-            <span>+</span>
-          </p>
+          <Link to={"/create_a_recipe"}>
+            <p className="text-center bg-[#D9D9D9]">
+              Add a recipe
+              <span>+</span>
+            </p>
+          </Link>
         )}
       </div>
     </div>
