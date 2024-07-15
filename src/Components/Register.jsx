@@ -38,12 +38,13 @@ function Register() {
     e.preventDefault();
     console.log(newUser);
     try {
-      const { email, password } = newUser;
+      const { email, password, nickname } = newUser;
       // createUser in firebase
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
+        nickname
       );
 
       // you need the JWT token to authenticate protected routes on the backend
@@ -80,6 +81,7 @@ function Register() {
   };
 
   return (
+
     <div className="min-h-screen flex flex-col justify-center items-center bg-[#713A3A]">
       <div className="w-full max-w-md bg-[#FFDAB9] p-4 rounded-lg shadow-md">
         <h3 className="text-2xl font-bold mb-6 text-center">Sign Up</h3>
@@ -89,6 +91,7 @@ function Register() {
             <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
               First Name
             </label>
+
             <input
               type="text"
               id="first_name"
@@ -101,10 +104,12 @@ function Register() {
             />
           </div>
 
+
           <div>
             <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
               Last Name
             </label>
+
             <input
               type="text"
               id="last_name"
@@ -114,7 +119,9 @@ function Register() {
               onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
+
           </div>
+
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -130,17 +137,19 @@ function Register() {
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
+
           </div>
 
           <div>
             <label htmlFor="nickname" className="block text-sm font-medium text-gray-700">
               Nickname
             </label>
+
             <input
               type="text"
               id="nickname"
               name="nickname"
-              placeholder="Enter nickname"
+              placeholder="Enter username"
               value={newUser.nickname}
               onChange={handleChange}
               required

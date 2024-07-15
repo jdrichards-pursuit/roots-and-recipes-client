@@ -20,7 +20,7 @@ const NavBar = () => {
           <img src={familyIconPng} alt="family icon" />
         </span>
       </Link>
-      <Link to={`/recipe_form`}>
+      <Link to={`/create_a_recipe`}>
         <span>
           <img src={plusIconPng} alt="plus icon" />
         </span>

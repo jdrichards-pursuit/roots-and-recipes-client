@@ -12,7 +12,9 @@ const Layout = ({ children, userName }) => {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div className="flex flex-col min-h-screen bg-custom-beige">
+
+    <div className="flex flex-col min-h-screen bg-[#FFDAB9]">
+
       {/* Header */}
       <header className="bg-custom-brown text-center py-4 fixed top-0 w-full z-10">
         <h1 className="text-2xl text-white">
@@ -42,7 +44,9 @@ const Layout = ({ children, userName }) => {
           </Link>
           {/* Add Recipe Link */}
           <Link
-            to="/recipe_form"
+
+            to="/create_a_recipe"
+
             className="flex flex-col items-center text-white"
           >
             <img src={plusIconPng} alt="plus icon" className="w-8 h-8 mb-1" />

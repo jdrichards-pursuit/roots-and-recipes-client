@@ -22,6 +22,10 @@ import Layout from "./Components/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
+import CreatARecipe from "./Components/Pages/CreatARecipe";
+
+
+
 function App() {
   const [user, setUser] = useState(null);
   const [burgerToggle, setBurgerToggle] = useState(false);
@@ -68,6 +72,7 @@ function App() {
             />
             <Route path="/family_form" element={<FamilyForm />} />
             <Route path="/join_family" element={<JoinFamilyForm />} />
+
             <Route
               path="/family_cookbook"
               element={<FamilyCookbook setBurgerToggle={setBurgerToggle} />}
@@ -84,11 +89,15 @@ function App() {
               path="/recipe_form"
               element={<RecipeForm setBurgerToggle={setBurgerToggle} />}
             />
+
             <Route path="/recipe_list" element={<RecipeList />} />
             <Route path="/recipe_show" element={<RecipeShow />} />
             <Route path="/about_us" element={<AboutUs />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact_us" element={<ContactUs />} />
+
+            <Route path="/create_a_recipe" element={<CreatARecipe />} />
+
           </>
         )}
       </Routes>

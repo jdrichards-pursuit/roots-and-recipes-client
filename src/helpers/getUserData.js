@@ -14,6 +14,7 @@ export const getUserData = () => {
         // checking local storage will prove user is logged in
         const token = localStorage.getItem("token");
 
+        // console.log("fetch User:", user, token);
         //helper function to do the actual fetched. abstracted because it is used in two placees in this code
         const retrievedUser = await fetchUser(user, token);
 
