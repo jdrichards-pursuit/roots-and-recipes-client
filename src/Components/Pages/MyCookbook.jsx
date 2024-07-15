@@ -84,10 +84,10 @@ export const MyCookbook = () => {
 
   return (
     <div className="text-center">
-      <div className="bg-pink-900 text-orange-200">MyCookbook</div>
+      <div className="bg-[#713A3A] text-[#FFDAB9]">MyCookbook</div>
 
       {/* Continue with the search functionality */}
-      <div className=" bg-orange-200">
+      <div className=" bg-[#FFDAB9]">
         <div className="mr-2">
           <Search className="h-6 w-6 text-gray-300 ml-2" />
           <input
@@ -108,8 +108,8 @@ export const MyCookbook = () => {
                 <p
                   className={`${
                     index % 2 === 0
-                      ? "bg-blue-200 text-pink-900"
-                      : "text-blue-200 bg-pink-900"
+                      ? "bg-[#C7DEF1] text-[#713A3A]"
+                      : "text-[#C7DEF1] bg-[#713A3A]"
                   } p-4 rounded-lg`}
                 >
                   {recipe.name} <span className="ml-6">+</span>
@@ -126,7 +126,7 @@ export const MyCookbook = () => {
             </div>
           ))
         ) : (
-          <p className="text-center bg-zinc-300">
+          <p className="text-center bg-[#D9D9D9]">
             Add a recipe
             <span>+</span>
           </p>
