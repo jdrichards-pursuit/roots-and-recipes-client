@@ -6,6 +6,7 @@ import { Mic } from "lucide-react";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
+
 function RecipeForm() {
   const navigate = useNavigate();
 
@@ -312,6 +313,7 @@ function RecipeForm() {
       )}
     </div>
   );
+
 }
 
 export default RecipeForm;

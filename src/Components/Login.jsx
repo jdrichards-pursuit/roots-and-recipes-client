@@ -21,12 +21,13 @@ function Login({ setBurgerToggle, burgerToggle }) {
     const { email, password } = loginUser;
     try {
       // Sign in to firebase
+
       const loggedUser = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      console.log("User logged in Successfully");
+
 
       const token = await loggedUser.user.getIdToken();
       localStorage.setItem("token", token);
@@ -58,10 +59,9 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+
               Email Address
             </label>
             <input
@@ -76,10 +76,9 @@ function Login({ setBurgerToggle, burgerToggle }) {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+
               Password
             </label>
             <input
@@ -105,13 +104,9 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
         <div className="mt-6 text-center">
           <p className="text-sm">
-            New user?{" "}
-            <Link
-              to="/register"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              Register Here
-            </Link>
+
+            New user? <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">Register Here</Link>
+
           </p>
           <p className="mt-2 text-sm">--Or continue with--</p>
         </div>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 // import { useParams } from "react-router-dom";
@@ -9,7 +10,7 @@ import { Link } from "react-router-dom";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-export const MyCookbook = () => {
+export const MyCookbook = ({setBurgerToggle}) => {
   const navigate = useNavigate();
   // need to use useAuth for the user
   // create a state called "usersUID" and then set the initial value to user.currentUser.uid
@@ -68,6 +69,7 @@ export const MyCookbook = () => {
 
         // setMyRecipes({ ...newRecipe, user_id: user.id });
       }
+       setBurgerToggle(false);
     }
 
     getUser();
@@ -137,4 +139,5 @@ export const MyCookbook = () => {
       </div>
     </div>
   );
+
 };
