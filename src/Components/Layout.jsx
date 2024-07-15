@@ -12,7 +12,7 @@ const Layout = ({ children, userName }) => {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div className="flex flex-col min-h-screen bg-custom-beige">
+    <div className="flex flex-col min-h-screen bg-[#FFDAB9]">
       {/* Header */}
       <header className="bg-custom-brown text-center py-4 fixed top-0 w-full z-10">
         <h1 className="text-2xl text-white">
