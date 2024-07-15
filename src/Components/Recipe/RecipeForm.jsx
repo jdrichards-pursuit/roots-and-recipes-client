@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 
-function RecipeForm() {
+function RecipeForm({ setBurgerToggle }) {
+  useEffect(() => {
+    setBurgerToggle(false);
+  }, []);
+
   return <div>RecipeForm</div>;
 }
 

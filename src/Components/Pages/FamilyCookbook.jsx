@@ -1,6 +1,10 @@
-import React from "react";
+import { useEffect } from "react";
 
-const FamilyCookbook = () => {
+const FamilyCookbook = ({ setBurgerToggle }) => {
+  useEffect(() => {
+    setBurgerToggle(false);
+  }, []);
+
   return <div>FamilyCookbook</div>;
 };
 

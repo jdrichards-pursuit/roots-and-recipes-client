@@ -39,19 +39,51 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={user ? <Navigate to="/home" /> : <Login setBurgerToggle={setBurgerToggle} burgerToggle={burgerToggle} />}
+          element={
+            user ? (
+              <Navigate to="/home" />
+            ) : (
+              <Login
+                setBurgerToggle={setBurgerToggle}
+                burgerToggle={burgerToggle}
+              />
+            )
+          }
         />
-        <Route path="/login" element={<Login setBurgerToggle={setBurgerToggle} burgerToggle={burgerToggle} />} />
+        <Route
+          path="/login"
+          element={
+            <Login
+              setBurgerToggle={setBurgerToggle}
+              burgerToggle={burgerToggle}
+            />
+          }
+        />
         <Route path="/register" element={<SignUp />} />
         {user && (
           <>
-            <Route path="/profile" element={<Profile setBurgerToggle={setBurgerToggle} />} />
+            <Route
+              path="/profile"
+              element={<Profile setBurgerToggle={setBurgerToggle} />}
+            />
             <Route path="/family_form" element={<FamilyForm />} />
             <Route path="/join_family" element={<JoinFamilyForm />} />
-            <Route path="/family_cookbook" element={<FamilyCookbook />} />
-            <Route path="/cookbook" element={<MyCookbook />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/recipe_form" element={<RecipeForm />} />
+            <Route
+              path="/family_cookbook"
+              element={<FamilyCookbook setBurgerToggle={setBurgerToggle} />}
+            />
+            <Route
+              path="/cookbook"
+              element={<MyCookbook setBurgerToggle={setBurgerToggle} />}
+            />
+            <Route
+              path="/home"
+              element={<Home setBurgerToggle={setBurgerToggle} />}
+            />
+            <Route
+              path="/recipe_form"
+              element={<RecipeForm setBurgerToggle={setBurgerToggle} />}
+            />
             <Route path="/recipe_list" element={<RecipeList />} />
             <Route path="/recipe_show" element={<RecipeShow />} />
             <Route path="/about_us" element={<AboutUs />} />

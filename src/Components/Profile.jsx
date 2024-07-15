@@ -7,7 +7,7 @@ import { logout } from "../helpers/logout";
 
 import placeholderImage from "../assets/placeholder.png";
 
-function Profile({setBurgerToggle}) {
+function Profile({ setBurgerToggle }) {
   const navigate = useNavigate();
 
   const [userDetails, setUserDetails] = useState(null);
@@ -34,7 +34,7 @@ function Profile({setBurgerToggle}) {
     async function getUser() {
       // this is a helper function that will check the state of the current user in firebase and fetch the user using the JWT token from localstorage and the uid
       const user = await getUserData();
-      console.log("useEffect Profile:", user);
+      // console.log("useEffect Profile:", user);
       if (user) setUserDetails(user);
     }
     setBurgerToggle(true);
