@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
 import { X } from "lucide-react";
 import { Mic } from "lucide-react";
+import { data } from "autoprefixer";
 
 const URL = import.meta.env.VITE_BASE_URL;
-
 
 function RecipeForm() {
   const navigate = useNavigate();
@@ -24,6 +24,13 @@ function RecipeForm() {
     steps: "",
   });
 
+  //State for all categories
+  const [categories, setCategories] = useState([]);
+  //State for selected categories
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const [recipeID, setRecipeID] = useState();
+
   // STATES FOR THE MODAL
   const [showModal, setShowModal] = useState(false);
   const [modalChoice, setModalChoice] = useState(null);
@@ -37,35 +44,92 @@ function RecipeForm() {
   const [isPublic, setIsPublic] = useState(true);
 
   // Function to add a new recipe
-  const addRecipe = () => {
-    fetch(`${URL}/api/recipes`, {
-      method: "POST",
-      body: JSON.stringify(newRecipe),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log("New recipe added:", data);
-        setNewRecipe(data);
+  // const addRecipe = () => {
+  //   fetch(`${URL}/api/recipes`, {
+  //     method: "POST",
+  //     body: JSON.stringify(newRecipe),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // console.log("New recipe added:", data);
+  //       setNewRecipe(data);
 
-        if (modalChoice === "yes") {
-          navigate(`family_cookbook`);
-        } else {
-          navigate(`/cookbook`);
-        }
-      })
-      .catch((error) => {
-        console.error("Error adding recipe:", error);
+  //       if (modalChoice === "yes") {
+  //         navigate(`family_cookbook`);
+  //       } else {
+  //         navigate(`/cookbook`);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error adding recipe:", error);
+  //     });
+  // };
+
+  const addRecipe = async () => {
+    try {
+      const response = await fetch(`${URL}/api/recipes`, {
+        method: "POST",
+        body: JSON.stringify(newRecipe),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to add recipe");
+      }
+
+      const data = await response.json();
+      setNewRecipe(data); // Assuming you want to update the state with the new recipe
+
+      // Navigate based on modalChoice
+      if (modalChoice === "yes") {
+        navigate(`family_cookbook`);
+      } else {
+        navigate(`/cookbook`);
+      }
+
+      return data; // Return the added recipe or necessary data
+    } catch (error) {
+      console.error("Error adding recipe:", error);
+      throw error; // Rethrow the error for handling in the calling function
+    }
   };
 
-  // handle Submit function
-  const handleSubmit = (event) => {
+  //Handles category entry
+  const handleTagEntry = (categories, recipe_id) => {
+    //Sends back a post fetch with {recipe_id: , category_id: }
+    //Iterate through each category and send a post fetch back
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    addRecipe();
-    setShowModal(true);
+
+    try {
+      // Wait for addRecipe to complete
+      await addRecipe();
+
+      // Fetch the latest recipe after adding
+      if (userDetails) {
+        const response = await fetch(
+          `${URL}/api/recipes/latest/${userDetails.id}`
+        );
+        const data = await response.json();
+        setRecipeID(data.id);
+        console.log(data);
+      }
+
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle the error appropriately (e.g., show a message to the user)
+    }
+
+    selectedCategories.length > 0 &&
+      handleTagEntry(selectedCategories, recipeID);
   };
 
   // HANDLE THE TEXT CHANGES
@@ -122,6 +186,19 @@ function RecipeForm() {
     setNewRecipe({ ...newRecipe, status: !isPublic ? "TRUE" : "FALSE" });
   };
 
+  // HANDLE TAG CLICK
+  const handleTagClick = (c) => {
+    if (selectedCategories.includes(c)) {
+      setSelectedCategories(
+        selectedCategories.filter(
+          (selectedC) => selectedC.category_name !== c.category_name
+        )
+      );
+    } else {
+      setSelectedCategories([...selectedCategories, c]);
+    }
+  };
+
   // Use Effect
   useEffect(() => {
     async function getUser() {
@@ -134,6 +211,11 @@ function RecipeForm() {
       }
     }
 
+    fetch(`${URL}/api/categories`)
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((error) => console.error("Error fetching categories:", error));
+
     getUser();
   }, []);
 
@@ -141,8 +223,9 @@ function RecipeForm() {
   newRecipe.ingredients = ingredientsInputs.join(",");
   // GIVE THE STEPS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.steps = stepsInputs.join(",");
-  console.log("NEW RECIPE", newRecipe);
+  // console.log("NEW RECIPE", newRecipe);
 
+  // console.log(userDetails.id);
   return (
     <div className="ml-28 border-2 border-black border-solid">
       <h1 className="text-center">New Recipe</h1>
@@ -212,8 +295,7 @@ function RecipeForm() {
 
         <p
           onClick={() => handleAddIngredientsInput()}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
           +
         </p>
 
@@ -246,8 +328,7 @@ function RecipeForm() {
 
         <p
           onClick={() => handleStepsInput()}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
           +
         </p>
 
@@ -260,8 +341,7 @@ function RecipeForm() {
             onClick={handlePublicToggle}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               isPublic ? "bg-blue-500" : "bg-gray-300"
-            }`}
-          >
+            }`}>
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
@@ -269,6 +349,21 @@ function RecipeForm() {
             />
           </div>
           <span className="ml-3">{isPublic ? "Public" : "Private"}</span>
+        </div>
+
+        <div>
+          {categories.length > 0 &&
+            categories.map((c, index) => {
+              return (
+                <p
+                  key={index}
+                  onClick={() => {
+                    handleTagClick(c);
+                  }}>
+                  #{c.category_name}
+                </p>
+              );
+            })}
         </div>
 
         {/* Submit/Save Button */}
@@ -280,8 +375,7 @@ function RecipeForm() {
           />
           <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
-          >
+            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2">
             Cancel
           </p>
         </div>
@@ -297,14 +391,12 @@ function RecipeForm() {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
-              >
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
-              >
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
                 No
               </button>
             </div>
@@ -313,7 +405,6 @@ function RecipeForm() {
       )}
     </div>
   );
-
 }
 
 export default RecipeForm;

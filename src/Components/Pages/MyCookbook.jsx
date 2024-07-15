@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 // import { useParams } from "react-router-dom";
@@ -10,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-export const MyCookbook = ({setBurgerToggle}) => {
+export const MyCookbook = ({ setBurgerToggle }) => {
   const navigate = useNavigate();
   // need to use useAuth for the user
   // create a state called "usersUID" and then set the initial value to user.currentUser.uid
@@ -69,7 +68,7 @@ export const MyCookbook = ({setBurgerToggle}) => {
 
         // setMyRecipes({ ...newRecipe, user_id: user.id });
       }
-       setBurgerToggle(false);
+      setBurgerToggle(false);
     }
 
     getUser();
@@ -83,7 +82,7 @@ export const MyCookbook = ({setBurgerToggle}) => {
   };
 
   // console.log("MY RECIPES", Array.isArray(myRecipes));
-  console.log("MY RECIPES", myRecipes);
+  // console.log("MY RECIPES", myRecipes);
 
   return (
     <div className="text-center">
@@ -113,8 +112,7 @@ export const MyCookbook = ({setBurgerToggle}) => {
                     index % 2 === 0
                       ? "bg-[#C7DEF1] text-[#713A3A]"
                       : "text-[#C7DEF1] bg-[#713A3A]"
-                  } p-4 rounded-lg`}
-                >
+                  } p-4 rounded-lg`}>
                   {recipe.name} <span className="ml-6">+</span>
                 </p>
               </div>
@@ -122,8 +120,7 @@ export const MyCookbook = ({setBurgerToggle}) => {
                */}
               <span
                 className="ml-4 text-2xl cursor-pointer"
-                onClick={() => toggleHeart(index)}
-              >
+                onClick={() => toggleHeart(index)}>
                 {heartStates[index] ? "❤️" : "🤍"}
               </span>
             </div>
@@ -139,5 +136,4 @@ export const MyCookbook = ({setBurgerToggle}) => {
       </div>
     </div>
   );
-
 };
