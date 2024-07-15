@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
 import { X } from "lucide-react";
+import { Mic } from "lucide-react";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -222,12 +223,17 @@ function RecipeForm() {
         {stepsInputs.map((stepInput, index) => {
           return (
             <div key={index}>
-              <input
-                onChange={(e) => handleStepsInputChange(index, e)}
-                type="text"
-                value={stepInput}
-                className="border-solid border-2 border-black p-2 mt-8"
-              />
+              <div className="flex items-center space-x-2 mt-8">
+                <input
+                  onChange={(e) => handleStepsInputChange(index, e)}
+                  type="text"
+                  value={stepInput}
+                  className="border-solid border-2 border-black p-2 mt-8"
+                />
+
+                <Mic className="mt-8" />
+              </div>
+
               <div onClick={() => handleStepDelete(index)}>
                 <X />
               </div>
