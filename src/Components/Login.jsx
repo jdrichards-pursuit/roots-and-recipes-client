@@ -94,7 +94,7 @@ function Login({setBurgerToggle, burgerToggle}) {
           <p className="mt-2 text-sm">--Or continue with--</p>
         </div>
 
-        <div className="mt-4 flex justify-center items-center">
+        <div className="mt-4">
           <SignInWithGoogle 
           // className="bg-gray-200 p-4 rounded-lg shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105" 
           />
