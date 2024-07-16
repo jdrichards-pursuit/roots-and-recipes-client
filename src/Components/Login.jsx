@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
-function Login({ setBurgerToggle, burgerToggle }) {
+function Login({setBurgerToggle, burgerToggle}) {
   const navigate = useNavigate();
 
   const [loginUser, setLoginNewUser] = useState({ password: "", email: "" });
@@ -20,17 +20,10 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
     const { email, password } = loginUser;
     try {
-      // Sign in to firebase
+      //sign in to firebase
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log("User logged in Successfully");
 
-      const loggedUser = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-
-      const token = await loggedUser.user.getIdToken();
-      localStorage.setItem("token", token);
       setLoginNewUser({ password: "", email: "" });
 
       toast.success("User logged in Successfully", {
@@ -46,12 +39,8 @@ function Login({ setBurgerToggle, burgerToggle }) {
     }
   };
 
-  useEffect(() => {
-    setBurgerToggle(false);
-  }, [setBurgerToggle]);
-
-  console.log(burgerToggle);
-
+  useEffect(() => {setBurgerToggle(false)}, [])
+  console.log(burgerToggle)
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-[#713A3A]">
       <div className="w-full max-w-md bg-[#FFDAB9] p-8 rounded-lg shadow-md">
@@ -59,9 +48,7 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-
               Email Address
             </label>
             <input
@@ -76,9 +63,7 @@ function Login({ setBurgerToggle, burgerToggle }) {
           </div>
 
           <div>
-
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-
               Password
             </label>
             <input
@@ -104,9 +89,7 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
         <div className="mt-6 text-center">
           <p className="text-sm">
-
             New user? <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">Register Here</Link>
-
           </p>
           <p className="mt-2 text-sm">--Or continue with--</p>
         </div>

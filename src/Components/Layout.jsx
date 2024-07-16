@@ -12,11 +12,9 @@ const Layout = ({ children, userName }) => {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-
     <div className="flex flex-col min-h-screen bg-[#FFDAB9]">
-
       {/* Header */}
-      <header className="bg-custom-brown text-center py-4 fixed top-0 w-full z-10">
+      <header className="bg-[#713A3A] text-center py-4 fixed top-0 w-full z-10">
         <h1 className="text-2xl text-white">
           {userName ? `${userName}'s Cookbook` : "Roots & Recipe Cookbook"}
         </h1>
@@ -24,7 +22,7 @@ const Layout = ({ children, userName }) => {
       <main className="flex-grow p-4 mt-16 mb-16">{children}</main>
       {/* Footer */}
       {!isAuthPage && (
-        <footer className="bg-custom-brown w-full p-4 flex justify-around fixed bottom-0 z-10">
+        <footer className="bg-[#713A3A] w-full p-4 flex justify-around fixed bottom-0 z-10">
           {/* Home Link */}
           <Link to="/home" className="flex flex-col items-center text-white">
             <img src={homeIconPng} alt="home icon" className="w-6 h-6 mb-1" />
@@ -44,9 +42,7 @@ const Layout = ({ children, userName }) => {
           </Link>
           {/* Add Recipe Link */}
           <Link
-
             to="/create_a_recipe"
-
             className="flex flex-col items-center text-white"
           >
             <img src={plusIconPng} alt="plus icon" className="w-8 h-8 mb-1" />
