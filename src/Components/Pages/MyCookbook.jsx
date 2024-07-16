@@ -11,16 +11,12 @@ const URL = import.meta.env.VITE_BASE_URL;
 
 export const MyCookbook = ({ setBurgerToggle }) => {
   const navigate = useNavigate();
-  // need to use useAuth for the user
-  // create a state called "usersUID" and then set the initial value to user.currentUser.uid
-  // make a fetch call to "/user/:uid" and give the state as the uid value (template literals)
-  // store this data into a user state
 
-  // we need this to have access to the users information that is protected by firebase
-
-  // useState to hold the users recipes
   const [myRecipes, setMyRecipes] = useState([]);
-  // const { user_id } = useParams();
+  // useState for filtered recipes
+  const [recipes, setRecipes] = useState([]);
+  // useState for search bar inputs
+  const [input, setInput] = useState("");
   const [userDetails, setUserDetails] = useState(null);
   // const [allRecipes, setAllRecipes] = useState([]);
 
@@ -41,19 +37,17 @@ export const MyCookbook = ({ setBurgerToggle }) => {
         .then((data) => {
           if (Array.isArray(data)) {
             setMyRecipes(data);
+            setRecipes(data);
             setHeartStates(new Array(data.length).fill(false));
           } else {
             console.error("Error fetching recipes:", data);
             setMyRecipes([]);
+            setRecipes([]);
           }
         })
         .catch((error) => console.error("Error fetching user:", error));
     }
   };
-
-  // useEffect(() => {
-  //   fetchMyRecipes();
-  // }, []);
 
   useEffect(() => {
     async function getUser() {
@@ -81,8 +75,16 @@ export const MyCookbook = ({ setBurgerToggle }) => {
     );
   };
 
-  // console.log("MY RECIPES", Array.isArray(myRecipes));
-  // console.log("MY RECIPES", myRecipes);
+  const handleSearchChange = (event) => {
+    const search = event.target.value;
+    setInput(search);
+    const result = search.length
+      ? myRecipes.filter((recipe) =>
+          recipe.name.toLowerCase().includes(search.toLowerCase())
+        )
+      : myRecipes;
+    setRecipes(result);
+  };
 
   return (
     <div className="text-center">
@@ -97,14 +99,21 @@ export const MyCookbook = ({ setBurgerToggle }) => {
             type="text"
             id="search"
             placeholder="Search.."
-            // value={input}
-            // onChange={handleSearchChange}
+            value={input}
+            onChange={handleSearchChange}
           />
         </div>
 
         {/* Map the users recipes onto the page */}
-        {myRecipes.length > 0 ? (
-          myRecipes.map((recipe, index) => (
+        {!myRecipes.length ? (
+          <Link to={"/create_a_recipe"}>
+            <p className="text-center bg-[#D9D9D9]">
+              Add a recipe
+              <span>+</span>
+            </p>
+          </Link>
+        ) : recipes.length > 0 ? (
+          recipes.map((recipe, index) => (
             <div key={index} className="flex items-center mt-4 mx-10">
               <div className="border-solid border-2 border-black rounded-xl flex-1">
                 <p
@@ -112,7 +121,8 @@ export const MyCookbook = ({ setBurgerToggle }) => {
                     index % 2 === 0
                       ? "bg-[#C7DEF1] text-[#713A3A]"
                       : "text-[#C7DEF1] bg-[#713A3A]"
-                  } p-4 rounded-lg`}>
+                  } p-4 rounded-lg`}
+                >
                   {recipe.name} <span className="ml-6">+</span>
                 </p>
               </div>
@@ -120,18 +130,16 @@ export const MyCookbook = ({ setBurgerToggle }) => {
                */}
               <span
                 className="ml-4 text-2xl cursor-pointer"
-                onClick={() => toggleHeart(index)}>
+                onClick={() => toggleHeart(index)}
+              >
                 {heartStates[index] ? "❤️" : "🤍"}
               </span>
             </div>
           ))
         ) : (
-          <Link to={"/create_a_recipe"}>
-            <p className="text-center bg-[#D9D9D9]">
-              Add a recipe
-              <span>+</span>
-            </p>
-          </Link>
+          <p className="text-center bg-[#D9D9D9] p-4">
+            No recipes of that name can be found
+          </p>
         )}
       </div>
     </div>
