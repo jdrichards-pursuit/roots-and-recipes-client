@@ -48,51 +48,48 @@ const Home = ({ setBurgerToggle }) => {
   };
 
   return (
-    <div>
-      <div>
-        <input type="text" placeholder="Search" onChange={handleSearchChange} />
+    <div className="p-4">
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search"
+          onChange={handleSearchChange}
+          className="w-full p-2 border rounded"
+        />
       </div>
 
       {homeDefault && (
         <>
-          <h1>Top Lunch Recipes</h1>
-          <div style={{ display: "flex", overflowX: "auto", maxWidth: "100%" }}>
+          <h1 className="text-xl font-bold mb-4">Top Lunch Recipes</h1>
+          <div className="flex overflow-x-auto space-x-4">
             {allLunchRecipes.map((r, index) => (
-              <div key={index}>
-                <p>{r.name}</p>
-                <img
-                  key={index}
-                  src={r.photo}
-                  alt={`Recipe ${r.photo}`}
-                  style={{
-                    flex: "0 0 auto",
-                    marginRight: "10px",
-                    height: "200px",
-                    width: "auto",
-                    border: "1px solid black",
-                  }}
-                />
+              <div key={index} className="flex-shrink-0">
+                <p className="text-center mb-2">{r.name}</p>
+                <div className="w-48 h-48 relative">
+                  <img
+                    key={index}
+                    src={r.photo}
+                    alt={`Recipe ${r.photo}`}
+                    className="object-cover w-full h-full rounded"
+                  />
+                </div>
               </div>
             ))}
           </div>
 
-          <h1>Top Dinner Recipes</h1>
-          <div style={{ display: "flex", overflowX: "auto", maxWidth: "100%" }}>
+          <h1 className="text-xl font-bold mt-8 mb-4">Top Dinner Recipes</h1>
+          <div className="flex overflow-x-auto space-x-4">
             {allDinnerRecipes.map((r, index) => (
-              <div key={index}>
-                <p>{r.name}</p>
-                <img
-                  key={index}
-                  src={r.photo}
-                  alt={`Recipe ${r.photo}`}
-                  style={{
-                    flex: "0 0 auto",
-                    marginRight: "10px",
-                    height: "200px",
-                    width: "auto",
-                    border: "1px solid black",
-                  }}
-                />
+              <div key={index} className="flex-shrink-0">
+                <p className="text-center mb-2">{r.name}</p>
+                <div className="w-48 h-48 relative">
+                  <img
+                    key={index}
+                    src={r.photo}
+                    alt={`Recipe ${r.photo}`}
+                    className="object-cover w-full h-full rounded"
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -102,24 +99,20 @@ const Home = ({ setBurgerToggle }) => {
       {!homeDefault && (
         <>
           {searchedRecipes.length === 0 ? (
-            <p className="text-center bg-[#D9D9D9] p-4">
+            <p className="text-center bg-gray-200 p-4">
               Sorry, recipe cannot be found
             </p>
           ) : (
             searchedRecipes.map((r, index) => (
-              <div key={index}>
-                <p>{r.name}</p>
-                <img
-                  src={r.photo}
-                  alt={`Recipe ${r.name}`}
-                  style={{
-                    flex: "0 0 auto",
-                    marginRight: "10px",
-                    height: "200px",
-                    width: "auto",
-                    border: "1px solid black",
-                  }}
-                />
+              <div key={index} className="mb-4">
+                <p className="text-center mb-2">{r.name}</p>
+                <div className="w-48 h-48 relative mx-auto">
+                  <img
+                    src={r.photo}
+                    alt={`Recipe ${r.name}`}
+                    className="object-cover w-full h-full rounded"
+                  />
+                </div>
               </div>
             ))
           )}
