@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import hamburgerMenuIconPng from "../../assets/ham_menu_icon.png";
 
-const BurgerMenu = () => {
+const BurgerMenu = ({burgerToggle}) => {
   const [hamMenuToggle, setHamMenuToggle] = useState(false);
 
   return (
-    <div>
+    burgerToggle && (<div>
       <span>
         <img
           src={hamburgerMenuIconPng}
@@ -30,7 +30,7 @@ const BurgerMenu = () => {
           </Link>
         </div>
       )}
-    </div>
+    </div>)
   );
 };
 
