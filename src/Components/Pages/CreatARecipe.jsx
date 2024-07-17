@@ -2,6 +2,8 @@ import { Info } from "lucide-react";
 import { Camera } from "lucide-react";
 import { ChevronsRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import TakePhoto from "../Recipe/TakePhoto"
+
 
 const CreatARecipe = () => {
   return (
@@ -21,6 +23,7 @@ const CreatARecipe = () => {
       <h3>Take a Picture</h3>
       <div className="bg-[#D9D9D9] flex  justify-center w-48 ml-20 h-full">
         <Camera />
+        <TakePhoto />
       </div>
       <div className="text-center">
         <p className="inline-block">or enter manually</p>
