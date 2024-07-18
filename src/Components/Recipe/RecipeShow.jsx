@@ -18,10 +18,10 @@ const Loading = () => (
 const RecipeShow = () => {
   const { id } = useParams();
 
-  // State to store the recipe, initialized as null to indicate loading state
+  //  STATE TO STORE THE RECIPE
   const [singleRecipe, setSingleRecipe] = useState(null);
+  // had to change the initial state from being empty to null. i guess to let it be known there will be something there soon or to indicate "loading state"
 
-  // useEffect to fetch the recipe data when the component mounts or when the 'id' changes
   useEffect(() => {
     fetch(`${URL}/api/recipes/single_recipe/${id}`)
       .then((res) => res.json())
@@ -30,10 +30,11 @@ const RecipeShow = () => {
       })
       .catch((error) => console.error("Error fetching recipe:", error));
   }, [id]);
+  // I had to add the id to the dependency array to get rid of the error i was receiving when refreshing the page
+  // This dependency array includes 'id' to refetch data if the 'id' changes
 
-  // If singleRecipe is null, show the loading spinner
   if (!singleRecipe) {
-    return <Loading />;
+    return <div>Loading...</div>;
   }
 
   // Destructure the properties from the singleRecipe object
@@ -49,14 +50,13 @@ const RecipeShow = () => {
       <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
       <img src={photo} alt={name} className="mb-4" />
 
-      <p className="text-lg mb-2">
-        <strong>Chef:</strong> {chef}
+      <p className="text-lg mb-2">Chef: {chef}</p>
+      <p className="text-lg mb-2 font-bold">
+        Family:
+        <span className="font-thin"> {family}</span>
       </p>
       <p className="text-lg mb-2">
-        <strong>Family:</strong> {family}
-      </p>
-      <p className="text-lg mb-2">
-        <strong>Created at:</strong> {new Date(created_at).toLocaleDateString()}
+        Created at: {new Date(created_at).toLocaleDateString()}
       </p>
 
       <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
