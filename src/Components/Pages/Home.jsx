@@ -140,17 +140,22 @@ const Home = ({ setBurgerToggle }) => {
               Sorry, recipe cannot be found
             </p>
           ) : (
-            searchedRecipes.map((recipe, index) => (
-              <div key={index} className="mb-4">
-                <p className="text-center mb-2">{recipe.name}</p>
-                <div className="w-48 h-48 relative mx-auto">
-                  <img
-                    src={recipe.photo || placeholderImage}
-                    alt={`Recipe ${recipe.name}`}
-                    className="object-cover w-full h-full rounded"
-                  />
+            searchedRecipes.map((searchedRecipe, index) => (
+              <Link
+                key={searchedRecipe.id}
+                to={`/recipe_show/${searchedRecipe.id}`}
+              >
+                <div key={index} className="mb-4">
+                  <p className="text-center mb-2">{searchedRecipe.name}</p>
+                  <div className="w-48 h-48 relative mx-auto">
+                    <img
+                      src={searchedRecipe.photo || placeholderImage}
+                      alt={`Recipe ${searchedRecipe.name}`}
+                      className="object-cover w-full h-full rounded"
+                    />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </>
