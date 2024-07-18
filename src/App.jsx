@@ -18,7 +18,7 @@ import BurgerMenu from "./Components/Hamburger/BurgerMenu";
 import ContactUs from "./Components/Hamburger/ContactUs";
 import FAQ from "./Components/Hamburger/FAQ";
 import { MyCookbook } from "./Components/Pages/MyCookbook";
-import Layout from "./Components/Layout";
+import NavBar from "./Components/Pages/NavBar";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
@@ -36,7 +36,7 @@ function App() {
   }, []);
 
   return (
-    <Layout userName={user ? user.displayName : null}>
+    <NavBar userName={user ? user.displayName : null}>
       <BurgerMenu burgerToggle={burgerToggle} />
       <Routes>
         <Route
@@ -99,7 +99,7 @@ function App() {
         )}
       </Routes>
       <ToastContainer />
-    </Layout>
+    </NavBar>
   );
 }
 
