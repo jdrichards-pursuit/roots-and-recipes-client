@@ -18,7 +18,13 @@ const useHandleSearchChange = (allData, setResults, setDefaultState) => {
     [allData, setResults, setDefaultState]
   );
 
-  return { searchInput, handleSearchChange };
+  const clearSearch = useCallback(() => {
+    setSearchInput("");
+    setResults([]);
+    setDefaultState(true);
+  }, [setResults, setDefaultState]);
+
+  return { searchInput, handleSearchChange, clearSearch };
 };
 
 export default useHandleSearchChange;

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import useHandleSearchChange from "../../helpers/useHandleSearchChange";
 import { Link } from "react-router-dom";
+import placeholderImage from "../../assets/recipe_place_holder.png";
+
 const URL = import.meta.env.VITE_BASE_URL;
 
 const Home = ({ setBurgerToggle }) => {
@@ -11,11 +13,8 @@ const Home = ({ setBurgerToggle }) => {
   const [homeDefault, setHomeDefault] = useState(true);
   const [searchedRecipes, setSearchedRecipes] = useState([]);
 
-  const { searchInput, handleSearchChange } = useHandleSearchChange(
-    allPublicRecipes,
-    setSearchedRecipes,
-    setHomeDefault
-  );
+  const { searchInput, handleSearchChange, clearSearch } =
+    useHandleSearchChange(allPublicRecipes, setSearchedRecipes, setHomeDefault);
 
   const user = getAuth();
 
@@ -41,9 +40,14 @@ const Home = ({ setBurgerToggle }) => {
     setBurgerToggle(false);
   }, []);
 
+  //SORT RECIPES ? 🤔
+  const sortRecipesAlphabetically = (recipes) => {
+    return recipes.sort((a, b) => a.name.localeCompare(b.name));
+  };
+
   return (
     <div className="p-4">
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <input
           type="text"
           placeholder="Search"
@@ -51,6 +55,14 @@ const Home = ({ setBurgerToggle }) => {
           onChange={handleSearchChange}
           className="w-full p-2 border rounded"
         />
+        {searchInput && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-none px-1 py-0.5 rounded"
+          >
+            x
+          </button>
+        )}
       </div>
 
       {homeDefault && (
@@ -67,8 +79,8 @@ const Home = ({ setBurgerToggle }) => {
                   <div className="w-48 h-48 relative">
                     <img
                       key={index}
-                      src={singleLunchRecipe.photo}
-                      alt={`Recipe ${singleLunchRecipe.photo}`}
+                      src={singleLunchRecipe.photo || placeholderImage}
+                      alt={`Recipe ${singleLunchRecipe.name}`}
                       className="object-cover w-full h-full rounded"
                     />
                   </div>
@@ -89,14 +101,39 @@ const Home = ({ setBurgerToggle }) => {
                   <div className="w-48 h-48 relative">
                     <img
                       key={index}
-                      src={singleDinnerRecipe.photo}
-                      alt={`Recipe ${singleDinnerRecipe.photo}`}
+                      src={singleDinnerRecipe.photo || placeholderImage}
+                      alt={`Recipe ${singleDinnerRecipe.name}`}
                       className="object-cover w-full h-full rounded"
                     />
                   </div>
                 </div>
               </Link>
             ))}
+          </div>
+
+          {/* All Recipes section */}
+          <h1 className="text-xl font-bold mt-8 mb-4">All Recipes</h1>
+          <div className="flex overflow-x-auto space-x-4">
+            {sortRecipesAlphabetically(allPublicRecipes).map(
+              (singleRecipe, index) => (
+                <Link
+                  key={singleRecipe.id}
+                  to={`/recipe_show/${singleRecipe.id}`}
+                >
+                  <div className="flex-shrink-0">
+                    <p className="text-center mb-2">{singleRecipe.name}</p>
+                    <div className="w-48 h-48 relative">
+                      <img
+                        key={index}
+                        src={singleRecipe.photo || placeholderImage}
+                        alt={`Recipe ${singleRecipe.name}`}
+                        className="object-cover w-full h-full rounded"
+                      />
+                    </div>
+                  </div>
+                </Link>
+              )
+            )}
           </div>
         </>
       )}
@@ -108,17 +145,22 @@ const Home = ({ setBurgerToggle }) => {
               Sorry, recipe cannot be found
             </p>
           ) : (
-            searchedRecipes.map((recipe, index) => (
-              <div key={index} className="mb-4">
-                <p className="text-center mb-2">{recipe.name}</p>
-                <div className="w-48 h-48 relative mx-auto">
-                  <img
-                    src={recipe.photo}
-                    alt={`Recipe ${recipe.name}`}
-                    className="object-cover w-full h-full rounded"
-                  />
+            searchedRecipes.map((searchedRecipe, index) => (
+              <Link
+                key={searchedRecipe.id}
+                to={`/recipe_show/${searchedRecipe.id}`}
+              >
+                <div key={index} className="mb-4">
+                  <p className="text-center mb-2">{searchedRecipe.name}</p>
+                  <div className="w-48 h-48 relative mx-auto">
+                    <img
+                      src={searchedRecipe.photo || placeholderImage}
+                      alt={`Recipe ${searchedRecipe.name}`}
+                      className="object-cover w-full h-full rounded"
+                    />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </>
