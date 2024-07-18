@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import useHandleSearchChange from "../../helpers/useHandleSearchChange";
 import { Link } from "react-router-dom";
+import placeholderImage from "../../assets/recipe_place_holder.png";
+
 const URL = import.meta.env.VITE_BASE_URL;
 
 const Home = ({ setBurgerToggle }) => {
@@ -41,6 +43,11 @@ const Home = ({ setBurgerToggle }) => {
     setBurgerToggle(false);
   }, []);
 
+  //SORT RECIPES ? 🤔
+  const sortRecipesAlphabetically = (recipes) => {
+    return recipes.sort((a, b) => a.name.localeCompare(b.name));
+  };
+
   return (
     <div className="p-4">
       <div className="mb-4">
@@ -67,8 +74,8 @@ const Home = ({ setBurgerToggle }) => {
                   <div className="w-48 h-48 relative">
                     <img
                       key={index}
-                      src={singleLunchRecipe.photo}
-                      alt={`Recipe ${singleLunchRecipe.photo}`}
+                      src={singleLunchRecipe.photo || placeholderImage}
+                      alt={`Recipe ${singleLunchRecipe.name}`}
                       className="object-cover w-full h-full rounded"
                     />
                   </div>
@@ -89,14 +96,39 @@ const Home = ({ setBurgerToggle }) => {
                   <div className="w-48 h-48 relative">
                     <img
                       key={index}
-                      src={singleDinnerRecipe.photo}
-                      alt={`Recipe ${singleDinnerRecipe.photo}`}
+                      src={singleDinnerRecipe.photo || placeholderImage}
+                      alt={`Recipe ${singleDinnerRecipe.name}`}
                       className="object-cover w-full h-full rounded"
                     />
                   </div>
                 </div>
               </Link>
             ))}
+          </div>
+
+          {/* All Recipes section */}
+          <h1 className="text-xl font-bold mt-8 mb-4">All Recipes</h1>
+          <div className="flex overflow-x-auto space-x-4">
+            {sortRecipesAlphabetically(allPublicRecipes).map(
+              (singleRecipe, index) => (
+                <Link
+                  key={singleRecipe.id}
+                  to={`/recipe_show/${singleRecipe.id}`}
+                >
+                  <div className="flex-shrink-0">
+                    <p className="text-center mb-2">{singleRecipe.name}</p>
+                    <div className="w-48 h-48 relative">
+                      <img
+                        key={index}
+                        src={singleRecipe.photo || placeholderImage}
+                        alt={`Recipe ${singleRecipe.name}`}
+                        className="object-cover w-full h-full rounded"
+                      />
+                    </div>
+                  </div>
+                </Link>
+              )
+            )}
           </div>
         </>
       )}
@@ -113,7 +145,7 @@ const Home = ({ setBurgerToggle }) => {
                 <p className="text-center mb-2">{recipe.name}</p>
                 <div className="w-48 h-48 relative mx-auto">
                   <img
-                    src={recipe.photo}
+                    src={recipe.photo || placeholderImage}
                     alt={`Recipe ${recipe.name}`}
                     className="object-cover w-full h-full rounded"
                   />
