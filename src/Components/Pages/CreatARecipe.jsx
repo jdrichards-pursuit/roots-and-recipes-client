@@ -14,20 +14,10 @@ const CreatARecipe = () => {
           <Info />
         </div>
       </div>
-      <p className="text-black">
-        Lorem ipsum dolor sit amet consectetur. Suspendisse.
-      </p>
-
-      <h3>Upload a Recipe</h3>
-      <p className="bg-[#D9D9D9] w-48 ml-20 h-8 ">+</p>
-      <h3>Take a Picture</h3>
-      <div className="bg-[#D9D9D9] flex  justify-center w-48 ml-20 h-full">
-        <Camera />
-        <TakePhoto />
-      </div>
+      <TakePhoto />
       <div className="text-center">
-        <p className="inline-block">or enter manually</p>
         <div className="bg-[#7EB09B] flex justify-center mx-auto w-40">
+          <p className="inline-block">Enter Manually</p>
           <Link to={`/recipe_form`}>
             <ChevronsRight />
           </Link>
