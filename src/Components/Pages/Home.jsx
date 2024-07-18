@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
-
+import useHandleSearchChange from "../../helpers/useHandleSearchChange";
+import { Link } from "react-router-dom";
 const URL = import.meta.env.VITE_BASE_URL;
 
 const Home = ({ setBurgerToggle }) => {
@@ -9,7 +10,12 @@ const Home = ({ setBurgerToggle }) => {
   const [allDinnerRecipes, setAllDinnerRecipes] = useState([]);
   const [homeDefault, setHomeDefault] = useState(true);
   const [searchedRecipes, setSearchedRecipes] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
+
+  const { searchInput, handleSearchChange } = useHandleSearchChange(
+    allPublicRecipes,
+    setSearchedRecipes,
+    setHomeDefault
+  );
 
   const user = getAuth();
 
@@ -35,24 +41,13 @@ const Home = ({ setBurgerToggle }) => {
     setBurgerToggle(false);
   }, []);
 
-  const handleSearchChange = (e) => {
-    const search = e.target.value;
-    setSearchInput(search);
-    const result = search.length
-      ? allPublicRecipes.filter((recipe) =>
-          recipe.name.toLowerCase().includes(search.toLowerCase())
-        )
-      : [];
-    setSearchedRecipes(result);
-    setHomeDefault(search.length === 0);
-  };
-
   return (
     <div className="p-4">
       <div className="mb-4">
         <input
           type="text"
           placeholder="Search"
+          value={searchInput}
           onChange={handleSearchChange}
           className="w-full p-2 border rounded"
         />
@@ -62,35 +57,45 @@ const Home = ({ setBurgerToggle }) => {
         <>
           <h1 className="text-xl font-bold mb-4">Top Lunch Recipes</h1>
           <div className="flex overflow-x-auto space-x-4">
-            {allLunchRecipes.map((r, index) => (
-              <div key={index} className="flex-shrink-0">
-                <p className="text-center mb-2">{r.name}</p>
-                <div className="w-48 h-48 relative">
-                  <img
-                    key={index}
-                    src={r.photo}
-                    alt={`Recipe ${r.photo}`}
-                    className="object-cover w-full h-full rounded"
-                  />
+            {allLunchRecipes.map((singleLunchRecipe, index) => (
+              <Link
+                key={singleLunchRecipe.id}
+                to={`/recipe_show/${singleLunchRecipe.id}`}
+              >
+                <div className="flex-shrink-0">
+                  <p className="text-center mb-2">{singleLunchRecipe.name}</p>
+                  <div className="w-48 h-48 relative">
+                    <img
+                      key={index}
+                      src={singleLunchRecipe.photo}
+                      alt={`Recipe ${singleLunchRecipe.photo}`}
+                      className="object-cover w-full h-full rounded"
+                    />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
           <h1 className="text-xl font-bold mt-8 mb-4">Top Dinner Recipes</h1>
           <div className="flex overflow-x-auto space-x-4">
-            {allDinnerRecipes.map((r, index) => (
-              <div key={index} className="flex-shrink-0">
-                <p className="text-center mb-2">{r.name}</p>
-                <div className="w-48 h-48 relative">
-                  <img
-                    key={index}
-                    src={r.photo}
-                    alt={`Recipe ${r.photo}`}
-                    className="object-cover w-full h-full rounded"
-                  />
+            {allDinnerRecipes.map((singleDinnerRecipe, index) => (
+              <Link
+                key={singleDinnerRecipe.id}
+                to={`/recipe_show/${singleDinnerRecipe.id}`}
+              >
+                <div className="flex-shrink-0">
+                  <p className="text-center mb-2">{singleDinnerRecipe.name}</p>
+                  <div className="w-48 h-48 relative">
+                    <img
+                      key={index}
+                      src={singleDinnerRecipe.photo}
+                      alt={`Recipe ${singleDinnerRecipe.photo}`}
+                      className="object-cover w-full h-full rounded"
+                    />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </>
@@ -103,13 +108,13 @@ const Home = ({ setBurgerToggle }) => {
               Sorry, recipe cannot be found
             </p>
           ) : (
-            searchedRecipes.map((r, index) => (
+            searchedRecipes.map((recipe, index) => (
               <div key={index} className="mb-4">
-                <p className="text-center mb-2">{r.name}</p>
+                <p className="text-center mb-2">{recipe.name}</p>
                 <div className="w-48 h-48 relative mx-auto">
                   <img
-                    src={r.photo}
-                    alt={`Recipe ${r.name}`}
+                    src={recipe.photo}
+                    alt={`Recipe ${recipe.name}`}
                     className="object-cover w-full h-full rounded"
                   />
                 </div>
