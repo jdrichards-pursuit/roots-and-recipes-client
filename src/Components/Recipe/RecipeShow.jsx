@@ -1,19 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-const URL = import.meta.env.VITE_BASE_URL;
+import placeholderImage from "../../assets/recipe_place_holder.png";
 
-// Loading spinner component
-const Loading = () => (
-  <div className="flex items-center justify-center h-screen">
-    <div className="text-center">
-      <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32 mb-4"></div>
-      <h2 className="text-xl font-semibold text-gray-700">Loading Recipe...</h2>
-      <p className="text-gray-500">
-        Please wait while we fetch your delicious recipe!
-      </p>
-    </div>
-  </div>
-);
+const URL = import.meta.env.VITE_BASE_URL;
 
 const RecipeShow = () => {
   const { id } = useParams();
@@ -42,13 +31,17 @@ const RecipeShow = () => {
     singleRecipe;
 
   // Split ingredients and steps into arrays
-  const ingredientList = ingredients.split(", ");
-  const stepsList = steps.split(", ");
+  // const ingredientList = ingredients.split(", ");
+  // const stepsList = steps.split(", ");
+  const ingredientList = ingredients.split(",").map((item) => item.trim());
+  const stepsList = steps.split(",").map((item) => item.trim());
+
+  console.log(singleRecipe);
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
-      <img src={photo} alt={name} className="mb-4" />
+      <img src={photo || placeholderImage} alt={name} className="mb-4" />
 
       <p className="text-lg mb-2">Chef: {chef}</p>
       <p className="text-lg mb-2 font-bold">
@@ -73,6 +66,34 @@ const RecipeShow = () => {
         ))}
       </ol>
     </div>
+
+    // <div className="p-4">
+    //   <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
+    //   <img src={photo} alt={name} className="mb-4" />
+
+    //   <p className="text-lg mb-2">Chef: {chef}</p>
+    //   <p className="text-lg mb-2 font-bold">
+    //     Family:
+    //     <span className="font-thin"> {family}</span>
+    //   </p>
+    //   <p className="text-lg mb-2">
+    //     Created at: {new Date(created_at).toLocaleDateString()}
+    //   </p>
+
+    //   <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
+    //   <ul className="list-disc ml-5 mb-4">
+    //     {ingredientList.map((ingredient, index) => (
+    //       <li key={index}>{ingredient}</li>
+    //     ))}
+    //   </ul>
+
+    //   <h2 className="text-xl font-semibold mb-2">Steps</h2>
+    //   <ol className="list-decimal ml-5">
+    //     {stepsList.map((step, index) => (
+    //       <li key={index}>{step}</li>
+    //     ))}
+    //   </ol>
+    // </div>
   );
 };
 
