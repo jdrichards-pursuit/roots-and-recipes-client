@@ -13,11 +13,8 @@ const Home = ({ setBurgerToggle }) => {
   const [homeDefault, setHomeDefault] = useState(true);
   const [searchedRecipes, setSearchedRecipes] = useState([]);
 
-  const { searchInput, handleSearchChange } = useHandleSearchChange(
-    allPublicRecipes,
-    setSearchedRecipes,
-    setHomeDefault
-  );
+  const { searchInput, handleSearchChange, clearSearch } =
+    useHandleSearchChange(allPublicRecipes, setSearchedRecipes, setHomeDefault);
 
   const user = getAuth();
 
@@ -50,7 +47,7 @@ const Home = ({ setBurgerToggle }) => {
 
   return (
     <div className="p-4">
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <input
           type="text"
           placeholder="Search"
@@ -58,6 +55,14 @@ const Home = ({ setBurgerToggle }) => {
           onChange={handleSearchChange}
           className="w-full p-2 border rounded"
         />
+        {searchInput && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-none px-1 py-0.5 rounded"
+          >
+            x
+          </button>
+        )}
       </div>
 
       {homeDefault && (
