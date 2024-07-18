@@ -114,27 +114,23 @@ export const MyCookbook = ({ setBurgerToggle }) => {
           </Link>
         ) : recipes.length > 0 ? (
           recipes.map((recipe, index) => (
-            <div key={index} className="flex items-center mt-4 mx-10">
-              <div className="border-solid border-2 border-black rounded-xl flex-1">
-                <p
-                  className={`${
-                    index % 2 === 0
-                      ? "bg-[#C7DEF1] text-[#713A3A]"
-                      : "text-[#C7DEF1] bg-[#713A3A]"
-                  } p-4 rounded-lg`}
-                >
-                  {recipe.name} <span className="ml-6">+</span>
-                </p>
-              </div>
-              {/* <span className="ml-4 text-2xl">🤍</span>
-               */}
-              <span
+            <Link key={recipe.id} to={`/recipe_show/${recipe.id}`}>
+              <div className="flex items-center mt-4 mx-10">
+                <div className="border-solid border-2 border-black rounded-xl flex-1">
+                  <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
+                    {recipe.name} <span className="ml-6">+</span>
+                  </p>
+                </div>
+                {/* <span className="ml-4 text-2xl">🤍</span>
+                 */}
+                {/* <span
                 className="ml-4 text-2xl cursor-pointer"
                 onClick={() => toggleHeart(index)}
               >
                 {heartStates[index] ? "❤️" : "🤍"}
-              </span>
-            </div>
+              </span> */}
+              </div>
+            </Link>
           ))
         ) : (
           <p className="text-center bg-[#D9D9D9] p-4">
