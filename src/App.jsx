@@ -24,8 +24,6 @@ import "./index.css";
 
 import CreatARecipe from "./Components/Pages/CreatARecipe";
 
-
-
 function App() {
   const [user, setUser] = useState(null);
   const [burgerToggle, setBurgerToggle] = useState(false);
@@ -91,13 +89,12 @@ function App() {
             />
 
             <Route path="/recipe_list" element={<RecipeList />} />
-            <Route path="/recipe_show" element={<RecipeShow />} />
+            <Route path="/recipe_show/:id" element={<RecipeShow />} />
             <Route path="/about_us" element={<AboutUs />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact_us" element={<ContactUs />} />
 
             <Route path="/create_a_recipe" element={<CreatARecipe />} />
-
           </>
         )}
       </Routes>
