@@ -14,11 +14,11 @@ function Profile({ setBurgerToggle }) {
   async function handleLogout() {
     try {
       await logout();
-      toast.success("User logged out successfully!", {
-        position: "top-center",
-      });
+      // toast.success("User logged out successfully!", {
+      //   position: "top-center",
+      // });
       navigate("/login");
-      console.log("User logged out successfully!");
+      // console.log("User logged out successfully!");
     } catch (error) {
       toast.error(error.message, {
         position: "bottom-center",

@@ -3,7 +3,19 @@ import { useNavigate, Link } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
 import { X } from "lucide-react";
 import { Mic } from "lucide-react";
+import { Plus } from "lucide-react";
 import { data } from "autoprefixer";
+import {
+  handleTagClick,
+  handleTextChange,
+  handleAddIngredientsInput,
+  handleIngredientsInputChange,
+  handleIngredientDelete,
+  handleStepsInput,
+  handleStepsInputChange,
+  handleStepDelete,
+  handlePublicToggle,
+} from "../../helpers/helpers";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -13,6 +25,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // user state
   const [userDetails, setUserDetails] = useState(null);
 
+  // console.log(userDetails);
   //State for all categories
   const [categories, setCategories] = useState([]);
   //State for selected categories
@@ -32,42 +45,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
 
-  // Function to add a new recipe
-  // const addRecipe = () => {
-  //   fetch(`${URL}/api/recipes`, {
-  //     method: "POST",
-  //     body: JSON.stringify(newRecipe),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       // console.log("New recipe added:", data);
-  //       setNewRecipe(data);
 
-  //       if (modalChoice === "yes") {
-  //         navigate(`family_cookbook`);
-  //       } else {
-  //         navigate(`/cookbook`);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error adding recipe:", error);
-  //     });
-  // };
-  // const dishPhoto = localStorage.getItem("photo");
-  // newRecipe.photo = dishPhoto;
 
-  // useEffect(() => {
-  //   const dishPhoto = localStorage.getItem("photo");
-  //   if (dishPhoto) {
-  //     setNewRecipe((prevRecipe) => ({
-  //       ...prevRecipe,
-  //       photo: dishPhoto,
-  //     }));
-  //   }
-  // }, [setNewRecipe]);
   const addRecipe = async () => {
     // console.log(userDetails);
     newRecipe.user_id = userDetails.id;
@@ -106,6 +85,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   };
 
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -142,11 +123,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   };
 
-  // HANDLE THE TEXT CHANGES
-  const handleTextChange = (event) => {
-    setNewRecipe({ ...newRecipe, [event.target.id]: event.target.value });
-  };
-
   // Handle modal choice function
   const handleModalChoice = (choice) => {
     setModalChoice(choice);
@@ -154,59 +130,9 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     // addRecipe(); // Proceed to add recipe after user's choice
   };
 
-  // HANDLE INGREDIENTS INPUT
-  const handleAddIngredientsInput = () => {
-    setIngredientsInputs([...ingredientsInputs, ""]);
-  };
-
-  // HANDLE INGREDIENTS INPUT CHANGE
-  const handleIngredientsInputChange = (index, event) => {
-    const newInputs = [...ingredientsInputs];
-    newInputs[index] = event.target.value;
-    setIngredientsInputs(newInputs);
-  };
-
-  // HANDLE INGREDIENTS DELETE
-  const handleIngredientDelete = (index) => {
-    const newIngredientInputs = ingredientsInputs.filter((_, i) => i !== index);
-    setIngredientsInputs(newIngredientInputs);
-  };
-
-  // HANDLE STEPS INPUT
-  const handleStepsInput = () => {
-    setStepsInputs([...stepsInputs, ""]);
-  };
-
-  // HANDLE STEPS INPUT CHANGE
-  const handleStepsInputChange = (index, event) => {
-    const newSteps = [...stepsInputs];
-    newSteps[index] = event.target.value;
-    setStepsInputs(newSteps);
-  };
-
-  // HANDLE STEPS DELETE
-  const handleStepDelete = (index) => {
-    const newStepInput = stepsInputs.filter((_, i) => i !== index);
-    setStepsInputs(newStepInput);
-  };
-
   // HANDLE PUBLIC TOGGLE
-  const handlePublicToggle = () => {
-    setIsPublic(!isPublic);
-    setNewRecipe({ ...newRecipe, status: !isPublic ? "TRUE" : "FALSE" });
-  };
-
-  // HANDLE TAG CLICK
-  const handleTagClick = (c) => {
-    if (selectedCategories.includes(c)) {
-      setSelectedCategories(
-        selectedCategories.filter(
-          (selectedC) => selectedC.category_name !== c.category_name
-        )
-      );
-    } else {
-      setSelectedCategories([...selectedCategories, c]);
-    }
+  const handlePublicToggleClick = () => {
+    handlePublicToggle(isPublic, setIsPublic, newRecipe, setNewRecipe);
   };
 
   // Use Effect
@@ -274,7 +200,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // console.log("NEW RECIPE", newRecipe);
   return (
     <div className="ml-28 border-2 border-black border-solid">
-      <h1 className="text-center">New Recipe</h1>
+      <h1 className="text-center text-[#713A3A]">New Recipe</h1>
       <form onSubmit={handleSubmit}>
         {/* Dish Name Input */}
         <label>
@@ -284,7 +210,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           id="name"
           value={newRecipe.name || ""}
           type="text"
-          onChange={handleTextChange}
+          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           placeholder="Name of dish"
           // required
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
@@ -298,7 +224,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           id="family"
           value={newRecipe.family || ""}
           type="text"
-          onChange={handleTextChange}
+          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           placeholder="Family"
           // required
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
@@ -312,7 +238,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           id="chef"
           value={newRecipe.chef || ""}
           type="text"
-          onChange={handleTextChange}
+          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           placeholder="Chef"
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
@@ -326,26 +252,44 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           return (
             <div key={index}>
               <input
-                onChange={(e) => handleIngredientsInputChange(index, e)}
+                onChange={(e) =>
+                  handleIngredientsInputChange(
+                    index,
+                    e,
+                    setIngredientsInputs,
+                    ingredientsInputs
+                  )
+                }
                 type="text"
                 value={ingredientInput || ""}
                 className="border-solid border-2 border-black p-2 mt-8"
               />
-              <div onClick={() => handleIngredientDelete(index)}>
+              <div
+                onClick={() =>
+                  handleIngredientDelete(
+                    index,
+                    setIngredientsInputs,
+                    ingredientsInputs
+                  )
+                }
+              >
                 <X />
               </div>
             </div>
           );
         })}
-        {/* PLUS BUTTON */}
 
-        <p
-          onClick={() => {
-            handleAddIngredientsInput();
-          }}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
-          +
-        </p>
+
+        {/* PLUS BUTTON */}
+        <div
+          onClick={() =>
+            handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
+          }
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
+          <Plus />
+        </div>
+
 
         {/* Steps Input */}
         <label>
@@ -356,7 +300,14 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             <div key={index}>
               <div className="flex items-center space-x-2 mt-8">
                 <input
-                  onChange={(e) => handleStepsInputChange(index, e)}
+                  onChange={(e) =>
+                    handleStepsInputChange(
+                      index,
+                      e,
+                      setStepsInputs,
+                      stepsInputs
+                    )
+                  }
                   type="text"
                   value={stepInput || ""}
                   className="border-solid border-2 border-black p-2 mt-8"
@@ -365,7 +316,11 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                 <Mic className="mt-8" />
               </div>
 
-              <div onClick={() => handleStepDelete(index)}>
+              <div
+                onClick={() =>
+                  handleStepDelete(index, setStepsInputs, stepsInputs)
+                }
+              >
                 <X />
               </div>
             </div>
@@ -374,46 +329,57 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
         {/* PLUS BUTTON */}
 
-        <p
-          onClick={() => {
-            handleStepsInput();
-          }}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
-          +
-        </p>
+
+        <div
+          onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
+          <Plus />
+
+        </div>
+
+        {/* CATEGORIES */}
+        <div>
+          {categories.length > 0 &&
+            categories.map((category, index) => {
+              const isSelected = selectedCategories.includes(category);
+              return (
+                <p
+                  key={index}
+                  onClick={() =>
+                    handleTagClick(
+                      category,
+                      selectedCategories,
+                      setSelectedCategories
+                    )
+                  }
+                  className={`inline-block px-2 py-1 rounded-full ${
+                    isSelected ? "bg-gray-200" : ""
+                  }`}
+                >
+                  #{category.category_name}
+                </p>
+              );
+            })}
+        </div>
 
         {/* Public Toggle */}
-        <label>
-          <h2>Public</h2>
-        </label>
-        <div className="flex items-center mb-4">
+
+        {/* Public Toggle */}
+        <div className="flex justify-center items-center mt-4">
+          <span className="mr-3">{isPublic ? "Public" : "Private"}</span>
           <div
-            onClick={handlePublicToggle}
+            onClick={handlePublicToggleClick}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-              isPublic ? "bg-blue-500" : "bg-gray-300"
-            }`}>
+              isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
+            }`}
+          >
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
               } transition-transform duration-300`}
             />
           </div>
-          <span className="ml-3">{isPublic ? "Public" : "Private"}</span>
-        </div>
-
-        <div>
-          {categories.length > 0 &&
-            categories.map((c, index) => {
-              return (
-                <p
-                  key={index}
-                  onClick={() => {
-                    handleTagClick(c);
-                  }}>
-                  #{c.category_name}
-                </p>
-              );
-            })}
         </div>
 
         {/* Submit/Save Button */}
@@ -425,7 +391,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           />
           <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2">
+            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
+          >
             Cancel
           </p>
         </div>
@@ -441,12 +408,14 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
+              >
                 No
               </button>
             </div>

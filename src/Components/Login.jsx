@@ -22,13 +22,13 @@ function Login({ setBurgerToggle, burgerToggle }) {
     try {
       //sign in to firebase
       await signInWithEmailAndPassword(auth, email, password);
-      console.log("User logged in Successfully");
+      // console.log("User logged in Successfully");
 
       setLoginNewUser({ password: "", email: "" });
 
-      toast.success("User logged in Successfully", {
-        position: "top-center",
-      });
+      // toast.success("User logged in Successfully", {
+      //   position: "top-center",
+      // });
       navigate("/home");
     } catch (error) {
       console.log(error.message);
@@ -42,6 +42,7 @@ function Login({ setBurgerToggle, burgerToggle }) {
   useEffect(() => {
     setBurgerToggle(false);
   }, []);
+
 
   console.log(burgerToggle);
 
@@ -102,6 +103,7 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
       <div className="mt-4 flex justify-center items-center">
         <div className="flex justify-center items-center">
+
           <SignInWithGoogle />
         </div>
       </div>
