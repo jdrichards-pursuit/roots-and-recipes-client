@@ -23,10 +23,23 @@ import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
 import CreatARecipe from "./Components/Pages/CreatARecipe";
+import { DishCameraView } from "./Components/DishCameraView";
 
 function App() {
   const [user, setUser] = useState(null);
   const [burgerToggle, setBurgerToggle] = useState(false);
+
+  //  new recipe state
+  const [newRecipe, setNewRecipe] = useState({
+    name: "",
+    family: "",
+    chef: "",
+    status: "TRUE",
+    user_id: "",
+    photo: "",
+    ingredients: "",
+    steps: "",
+  });
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -85,7 +98,23 @@ function App() {
             />
             <Route
               path="/recipe_form"
-              element={<RecipeForm setBurgerToggle={setBurgerToggle} />}
+              element={
+                <RecipeForm
+                  setBurgerToggle={setBurgerToggle}
+                  setNewRecipe={setNewRecipe}
+                  newRecipe={newRecipe}
+                />
+              }
+            />
+            <Route
+              path="/dish_photo"
+              element={
+                <DishCameraView
+                  setBurgerToggle={setBurgerToggle}
+                  newRecipe={newRecipe}
+                  setNewRecipe={setNewRecipe}
+                />
+              }
             />
 
             <Route path="/recipe_list" element={<RecipeList />} />

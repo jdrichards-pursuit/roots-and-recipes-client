@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Camera } from "react-camera-pro";
 import { useNavigate } from "react-router-dom";
 
-export const DishCamera = ({ setNewRecipe }) => {
+export const DishCamera = ({ setNewRecipe, newRecipe }) => {
   const camera = useRef(null);
   const [image, setImage] = useState(null);
   const [cameraToggle, setCameraToggle] = useState(true);
@@ -39,6 +39,11 @@ export const DishCamera = ({ setNewRecipe }) => {
     setCameraToggle(false);
   };
 
+  const saveToLocalStorage = () => {
+    const updatedRecipe = { ...newRecipe, photo: image };
+    localStorage.setItem("newRecipe", JSON.stringify(updatedRecipe));
+  };
+
   return (
     <div style={{ position: "relative", width: "300px", height: "300px" }}>
       {" "}
@@ -63,6 +68,7 @@ export const DishCamera = ({ setNewRecipe }) => {
                 photo: image,
               }));
               navigate("/recipe_form");
+              saveToLocalStorage();
               // console.log(image);
             }}>
             Check
