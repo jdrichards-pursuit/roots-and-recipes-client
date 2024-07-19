@@ -295,7 +295,8 @@ function RecipeForm() {
 
         <p
           onClick={() => handleAddIngredientsInput()}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
           +
         </p>
 
@@ -328,42 +329,47 @@ function RecipeForm() {
 
         <p
           onClick={() => handleStepsInput()}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
           +
         </p>
 
+        {/* CATEGORIES */}
+        <div>
+          {categories.length > 0 &&
+            categories.map((category, index) => {
+              const isSelected = selectedCategories.includes(category);
+              return (
+                <p
+                  key={index}
+                  onClick={() => handleTagClick(category)}
+                  className={`inline-block px-2 py-1 rounded-full ${
+                    isSelected ? "bg-gray-200" : ""
+                  }`}
+                >
+                  #{category.category_name}
+                </p>
+              );
+            })}
+        </div>
+
         {/* Public Toggle */}
-        <label>
-          <h2>Public</h2>
-        </label>
-        <div className="flex items-center mb-4">
+
+        {/* Public Toggle */}
+        <div className="flex justify-center items-center mt-4">
+          <span className="mr-3">{isPublic ? "Public" : "Private"}</span>
           <div
             onClick={handlePublicToggle}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-              isPublic ? "bg-blue-500" : "bg-gray-300"
-            }`}>
+              isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
+            }`}
+          >
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
               } transition-transform duration-300`}
             />
           </div>
-          <span className="ml-3">{isPublic ? "Public" : "Private"}</span>
-        </div>
-
-        <div>
-          {categories.length > 0 &&
-            categories.map((c, index) => {
-              return (
-                <p
-                  key={index}
-                  onClick={() => {
-                    handleTagClick(c);
-                  }}>
-                  #{c.category_name}
-                </p>
-              );
-            })}
         </div>
 
         {/* Submit/Save Button */}
@@ -375,7 +381,8 @@ function RecipeForm() {
           />
           <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2">
+            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
+          >
             Cancel
           </p>
         </div>
@@ -391,12 +398,14 @@ function RecipeForm() {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
+              >
                 No
               </button>
             </div>
