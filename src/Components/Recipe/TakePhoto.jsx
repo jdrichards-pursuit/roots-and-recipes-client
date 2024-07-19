@@ -6,14 +6,14 @@ import { Camera as CameraIcon } from "lucide-react";
 
 
 const TakePhoto = () => {
-    // const [dataUri, setDataUri] = useState('');
     const [image, setImage] = useState('');
-    const [photoUpload, setPhotoUpload] = useState('')
     const [imageURL, setImageURL] = useState('')
+    const [showCamera, setShowCamera] = useState(false);
 
     function handleTakePhotoAnimationDone(dataUri) {
         setImageURL('')
         setImage(dataUri)
+        setShowCamera(false);
     }
 
     function retake() {
@@ -22,32 +22,37 @@ const TakePhoto = () => {
 
     function handleImageUpload(e) {
         setImage(e.target.files[0])
-        console.log(e.target.files[0])
         const objectUrl = URL.createObjectURL(e.target.files[0])
         setImageURL(objectUrl)
     }
 
+    function handleCameraChange() {
+        setShowCamera(!showCamera);
+    }
+
     return (
-        <div>
+        <div className='grid-cols-1 place-content-around'>
             <h3>Image Upload</h3>
-            <input type="file" accept="image/*" onChange={handleImageUpload} on value={photoUpload} />
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
             <h3>Take a Picture</h3>
-            <div className="bg-[#D9D9D9] flex  justify-center w-48 ml-20 h-full">
-                <CameraIcon />
+            <div className="flex justify-center">
+                <CameraIcon onClick={handleCameraChange} />
             </div>
-            {
-                (image)
-                    ? <div>
-                        {(imageURL)
-                            ?
-                            <img src={imageURL}></img>
-                            : <img src={image}></img>}
-                        <button onClick={retake}>retake</button>
-                        <ImagetoText image={image} />
+            {(showCamera) &&
+                <div className="flex justify-center">
+                    <div className='w-1/2'>
+                        <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} />
                     </div>
-                    : <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
-                    />
-            }
+                </div>}
+            {(image) &&
+                <div>
+                    {(imageURL)
+                        ?
+                        <img src={imageURL}></img>
+                        : <img src={image}></img>}
+                    <button onClick={retake}>retake</button>
+                    <ImagetoText image={image} />
+                </div>}
         </div>
     )
 }
