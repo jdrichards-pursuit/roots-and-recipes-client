@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
 import { X } from "lucide-react";
 import { Mic } from "lucide-react";
@@ -19,22 +19,11 @@ import {
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-function RecipeForm() {
+function RecipeForm({ setNewRecipe, newRecipe }) {
   const navigate = useNavigate();
 
   // user state
   const [userDetails, setUserDetails] = useState(null);
-  //  new recipe state
-  const [newRecipe, setNewRecipe] = useState({
-    name: "",
-    family: "",
-    chef: "",
-    status: "TRUE",
-    user_id: "",
-    photo: "",
-    ingredients: "",
-    steps: "",
-  });
 
   // console.log(userDetails);
   //State for all categories
@@ -48,7 +37,7 @@ function RecipeForm() {
   const [showModal, setShowModal] = useState(false);
   const [modalChoice, setModalChoice] = useState(null);
 
-  // STATE FOR THE INGREDIENTS
+  // // STATE FOR THE INGREDIENTS
   const [ingredientsInputs, setIngredientsInputs] = useState([]);
   // STATE FOR THE STEPS
   const [stepsInputs, setStepsInputs] = useState([]);
@@ -56,7 +45,14 @@ function RecipeForm() {
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
 
+
+
   const addRecipe = async () => {
+    // console.log(userDetails);
+    newRecipe.user_id = userDetails.id;
+    newRecipe.status = isPublic;
+    // console.log(localStorage.getItem("updatedRecipe"));
+    // newRecipe.photo = localStorage.getItem("updatedRecipes.photo");
     try {
       const response = await fetch(`${URL}/api/recipes`, {
         method: "POST",
@@ -71,7 +67,9 @@ function RecipeForm() {
       }
 
       const data = await response.json();
-      setNewRecipe(data); // Assuming you want to update the state with the new recipe
+      console.log(data);
+
+      // setNewRecipe(data); // Assuming you want to update the state with the new recipe
 
       // Navigate based on modalChoice
       if (modalChoice === "yes") {
@@ -87,11 +85,7 @@ function RecipeForm() {
     }
   };
 
-  //Handles category entry
-  // const handleTagEntry = (categories, recipe_id) => {
-  //   //Sends back a post fetch with {recipe_id: , category_id: }
-  //   //Iterate through each category and send a post fetch back
-  // };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -107,17 +101,26 @@ function RecipeForm() {
         );
         const data = await response.json();
         setRecipeID(data.id);
-        console.log(data);
+        // console.log(data);
+
+        // Handle tag entry with the fetched recipeID
+        if (selectedCategories.length > 0) {
+          await handleTagEntry(selectedCategories, data.id);
+        }
       }
 
+      // Clear local storage after handling tags
+      localStorage.removeItem("ingredientsInputs");
+      localStorage.removeItem("stepsInputs");
+      localStorage.removeItem("newRecipe");
+      localStorage.removeItem("photo");
+
+      // Show the modal after everything is done
       setShowModal(true);
     } catch (error) {
       console.error("Error:", error);
       // Handle the error appropriately (e.g., show a message to the user)
     }
-
-    selectedCategories.length > 0 &&
-      handleTagEntry(selectedCategories, recipeID);
   };
 
   // Handle modal choice function
@@ -135,12 +138,19 @@ function RecipeForm() {
   // Use Effect
   useEffect(() => {
     async function getUser() {
-      // this is a helper function that will check the state of the current user in firebase and fetch the user using the JWT token from localstorage and the uid
       const user = await getUserData();
-      // console.log("useEffect Profile:", user);
       if (user) {
         setUserDetails(user);
-        setNewRecipe({ ...newRecipe, user_id: user.id });
+        // setNewRecipe({
+        //   name: "",
+        //   family: "",
+        //   chef: "",
+        //   status: "TRUE",
+        //   user_id: user.id,
+        //   photo: "",
+        //   ingredients: "",
+        //   steps: "",
+        // });
       }
     }
 
@@ -150,15 +160,44 @@ function RecipeForm() {
       .catch((error) => console.error("Error fetching categories:", error));
 
     getUser();
+
+    // Restore ingredientsInputs and stepsInputs from localStorage
+    const storedIngredients =
+      JSON.parse(localStorage.getItem("ingredientsInputs")) || [];
+    const storedSteps = JSON.parse(localStorage.getItem("stepsInputs")) || [];
+    const storedRecipe = JSON.parse(localStorage.getItem("newRecipe")) || [];
+
+    setIngredientsInputs(storedIngredients);
+    setStepsInputs(storedSteps);
+    setNewRecipe(storedRecipe);
+
+    // Clean up localStorage if newRecipe name is empty
+    if (newRecipe.name === "") {
+      localStorage.removeItem("ingredientsInputs");
+      localStorage.removeItem("stepsInputs");
+      localStorage.removeItem("newRecipe");
+      localStorage.removeItem("photo");
+    }
   }, []);
 
+  const saveToLocalStorage = () => {
+    const updatedRecipe = {
+      ...newRecipe,
+      status: isPublic,
+      photo: newRecipe.photo,
+    };
+    localStorage.setItem("newRecipe", JSON.stringify(updatedRecipe));
+    localStorage.setItem(
+      "ingredientsInputs",
+      JSON.stringify(ingredientsInputs)
+    );
+    localStorage.setItem("stepsInputs", JSON.stringify(stepsInputs));
+  };
   // GIVE THE INGREDIENTS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.ingredients = ingredientsInputs.join(",");
   // GIVE THE STEPS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.steps = stepsInputs.join(",");
   // console.log("NEW RECIPE", newRecipe);
-
-  // console.log(userDetails.id);
   return (
     <div className="ml-28 border-2 border-black border-solid">
       <h1 className="text-center text-[#713A3A]">New Recipe</h1>
@@ -169,7 +208,7 @@ function RecipeForm() {
         </label>
         <input
           id="name"
-          value={newRecipe.name}
+          value={newRecipe.name || ""}
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           placeholder="Name of dish"
@@ -183,7 +222,7 @@ function RecipeForm() {
         </label>
         <input
           id="family"
-          value={newRecipe.family}
+          value={newRecipe.family || ""}
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           placeholder="Family"
@@ -197,7 +236,7 @@ function RecipeForm() {
         </label>
         <input
           id="chef"
-          value={newRecipe.chef}
+          value={newRecipe.chef || ""}
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           placeholder="Chef"
@@ -222,7 +261,7 @@ function RecipeForm() {
                   )
                 }
                 type="text"
-                value={ingredientInput}
+                value={ingredientInput || ""}
                 className="border-solid border-2 border-black p-2 mt-8"
               />
               <div
@@ -240,6 +279,7 @@ function RecipeForm() {
           );
         })}
 
+
         {/* PLUS BUTTON */}
         <div
           onClick={() =>
@@ -249,6 +289,7 @@ function RecipeForm() {
         >
           <Plus />
         </div>
+
 
         {/* Steps Input */}
         <label>
@@ -268,7 +309,7 @@ function RecipeForm() {
                     )
                   }
                   type="text"
-                  value={stepInput}
+                  value={stepInput || ""}
                   className="border-solid border-2 border-black p-2 mt-8"
                 />
 
@@ -288,11 +329,13 @@ function RecipeForm() {
 
         {/* PLUS BUTTON */}
 
+
         <div
           onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
           className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
         >
           <Plus />
+
         </div>
 
         {/* CATEGORIES */}
@@ -379,6 +422,14 @@ function RecipeForm() {
           </div>
         </div>
       )}
+
+      <Link
+        to="/dish_photo"
+        onClick={() => {
+          saveToLocalStorage();
+        }}>
+        <p>Take Photo of dish, maybe camera emoji </p>
+      </Link>
     </div>
   );
 }

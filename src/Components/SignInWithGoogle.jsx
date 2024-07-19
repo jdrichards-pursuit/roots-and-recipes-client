@@ -52,7 +52,7 @@ function SignInWithGoogle() {
       className="flex justify-center mt-4 cursor-pointer"
       onClick={googleLogin}
     >
-      <img src={googleBadge} className="w-48 h-12" alt="Sign in with Google" />
+      <img src={googleBadge} className="w-48 h-12 bg-white" alt="Sign in with Google" />
     </div>
   );
 }

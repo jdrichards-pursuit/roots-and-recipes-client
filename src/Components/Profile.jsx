@@ -9,12 +9,10 @@ import placeholderImage from "../assets/placeholder.png";
 
 function Profile({ setBurgerToggle }) {
   const navigate = useNavigate();
-
   const [userDetails, setUserDetails] = useState(null);
 
   async function handleLogout() {
     try {
-      //call function to log out of firebase, no need to call backend
       await logout();
       // toast.success("User logged out successfully!", {
       //   position: "top-center",
@@ -32,9 +30,7 @@ function Profile({ setBurgerToggle }) {
 
   useEffect(() => {
     async function getUser() {
-      // this is a helper function that will check the state of the current user in firebase and fetch the user using the JWT token from localstorage and the uid
       const user = await getUserData();
-      // console.log("useEffect Profile:", user);
       if (user) setUserDetails(user);
     }
     setBurgerToggle(true);
@@ -42,38 +38,41 @@ function Profile({ setBurgerToggle }) {
   }, []);
 
   return (
-    <div style={{ textAlign: "center" }}>
-      {/* {console.log(userDetails)} */}
+    <div className="flex flex-col items-center min-h-screen">
       {userDetails ? (
         <>
-          <img
-            src={userDetails.photo || placeholderImage}
-            alt={userDetails.first_name}
-            style={{
-              marginTop: 100,
-              marginBottom: 20,
-              borderRadius: "50%",
-              width: 150,
-              height: 150,
-            }}
-          />
-
-          <h1>{userDetails.first_name}'s Profile Page</h1>
-
-          <p>Email: {userDetails.email}</p>
-          <p>First Name: {userDetails.first_name}</p>
-          <p>
-            Last Name:{" "}
-            {userDetails.last_name ? userDetails.last_name : "Unknown"}
-          </p>
-          <p>Nickname: {userDetails.nickname}</p>
-
-          <button onClick={handleLogout}>Logout</button>
+          <div className="bg-[#C7DEF1] text-black p-6 rounded-lg shadow-lg mt-10 w-full max-w-4xl">
+            <div className="flex items-start">
+              <img
+                src={userDetails.photo || placeholderImage}
+                alt={userDetails.first_name}
+                className="rounded-full w-24 h-24 mr-6"
+              />
+              <div className="flex-1 text-center">
+                <h1 className="text-3xl font-bold">{userDetails.first_name}'s Profile Page</h1>
+                <p className="text-lg mt-2">Email: {userDetails.email}</p>
+                <p className="text-lg">Username: {userDetails.first_name}</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-center w-full mt-10 mb-10">
+            <button
+              onClick={handleLogout}
+              className="bg-red-400 text-white px-6 py-0 w-full max-w-4xl rounded hover:bg-red-500 transition duration-300"
+            >
+              Logout
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <h2>Loading...</h2>
-          <button onClick={handleLogout}>Logout</button>
+          <h2 className="text-2xl font-semibold mb-4">Loading...</h2>
+          <button
+            onClick={handleLogout}
+            className="bg-red-400 text-white px-6 py-0 w-full max-w-4xl rounded hover:bg-red-500 transition duration-300"
+          >
+            Logout
+          </button>
         </>
       )}
     </div>
