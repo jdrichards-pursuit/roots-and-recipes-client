@@ -16,11 +16,11 @@ function Profile({ setBurgerToggle }) {
     try {
       //call function to log out of firebase, no need to call backend
       await logout();
-      toast.success("User logged out successfully!", {
-        position: "top-center",
-      });
+      // toast.success("User logged out successfully!", {
+      //   position: "top-center",
+      // });
       navigate("/login");
-      console.log("User logged out successfully!");
+      // console.log("User logged out successfully!");
     } catch (error) {
       toast.error(error.message, {
         position: "bottom-center",
