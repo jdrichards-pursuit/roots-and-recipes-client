@@ -98,7 +98,6 @@ function Register() {
               type="text"
               id="first_name"
               name="first_name"
-              placeholder="First name"
               value={newUser.first_name}
               onChange={handleChange}
               required
@@ -118,7 +117,6 @@ function Register() {
               type="text"
               id="last_name"
               name="last_name"
-              placeholder="Last name"
               value={newUser.last_name}
               onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -136,7 +134,6 @@ function Register() {
               type="email"
               id="email"
               name="email"
-              placeholder="Enter email"
               value={newUser.email}
               onChange={handleChange}
               required
@@ -149,14 +146,13 @@ function Register() {
               htmlFor="nickname"
               className="block text-sm font-medium text-gray-700"
             >
-              Nickname
+              Nickname (Optional)
             </label>
 
             <input
               type="text"
               id="nickname"
               name="nickname"
-              placeholder="Enter username"
               value={newUser.nickname}
               onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -174,7 +170,6 @@ function Register() {
               type="password"
               id="password"
               name="password"
-              placeholder="Enter password"
               value={newUser.password}
               onChange={handleChange}
               required
