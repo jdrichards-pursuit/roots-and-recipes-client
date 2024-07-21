@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
-function Login({ setBurgerToggle, burgerToggle }) {
+function Login({ setBurgerToggle, burgerToggle, setNavBarToggle }) {
   const navigate = useNavigate();
 
   const [loginUser, setLoginNewUser] = useState({ password: "", email: "" });
@@ -41,18 +41,22 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
   useEffect(() => {
     setBurgerToggle(false);
+    setNavBarToggle(false);
   }, []);
-
 
   console.log(burgerToggle);
 
   return (
     <div className="w-full max-w-md bg-[#713A3A] p-8 rounded-lg shadow-md">
-      <h3 className="text-2xl font-bold mb-6 text-center text-[#FFDAB9]">Login</h3>
+      <h3 className="text-2xl font-bold mb-6 text-center text-[#FFDAB9]">
+        Login
+      </h3>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-[#FFDAB9]">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-[#FFDAB9]">
             Email Address
           </label>
           <input
@@ -67,7 +71,9 @@ function Login({ setBurgerToggle, burgerToggle }) {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-[#FFDAB9]">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-[#FFDAB9]">
             Password
           </label>
           <input
@@ -84,8 +90,7 @@ function Login({ setBurgerToggle, burgerToggle }) {
         <div>
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#7EB098] hover:bg-[#8CC7AB] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#7EB098] hover:bg-[#8CC7AB] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Submit
           </button>
         </div>
@@ -94,7 +99,9 @@ function Login({ setBurgerToggle, burgerToggle }) {
       <div className="mt-6 text-center">
         <p className="text-sm text-[#FFDAB9]">
           New user?{" "}
-          <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link
+            to="/register"
+            className="font-medium text-indigo-600 hover:text-indigo-500">
             Register Here
           </Link>
         </p>
@@ -103,7 +110,6 @@ function Login({ setBurgerToggle, burgerToggle }) {
 
       <div className="mt-4 flex justify-center items-center">
         <div className="flex justify-center items-center">
-
           <SignInWithGoogle />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -9,7 +9,7 @@ import {
 import { auth } from "../helpers/firebase";
 import { register } from "../helpers/register";
 
-function Register() {
+function Register({ setNavBarToggle }) {
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -23,6 +23,10 @@ function Register() {
   const handleChange = (e) => {
     setNewUser({ ...newUser, [e.target.id]: e.target.value });
   };
+
+  useEffect(() => {
+    setNavBarToggle(false);
+  }, []);
 
   const handleClearState = () => {
     setNewUser({
@@ -89,8 +93,7 @@ function Register() {
           <div>
             <label
               htmlFor="first_name"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               First Name
             </label>
 
@@ -109,8 +112,7 @@ function Register() {
           <div>
             <label
               htmlFor="last_name"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               Last Name
             </label>
 
@@ -128,8 +130,7 @@ function Register() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               Email Address
             </label>
             <input
@@ -147,8 +148,7 @@ function Register() {
           <div>
             <label
               htmlFor="nickname"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               Nickname
             </label>
 
@@ -167,8 +167,7 @@ function Register() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -186,8 +185,7 @@ function Register() {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Sign Up
             </button>
           </div>
@@ -198,8 +196,7 @@ function Register() {
             Already registered?{" "}
             <Link
               to="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
+              className="font-medium text-indigo-600 hover:text-indigo-500">
               Login
             </Link>
           </p>

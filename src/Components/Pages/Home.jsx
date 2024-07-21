@@ -6,7 +6,7 @@ import placeholderImage from "../../assets/recipe_place_holder.png";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-const Home = ({ setBurgerToggle }) => {
+const Home = ({ setBurgerToggle, setNavBarToggle }) => {
   const [allPublicRecipes, setAllPublicRecipes] = useState([]);
   const [allLunchRecipes, setAllLunchRecipes] = useState([]);
   const [allDinnerRecipes, setAllDinnerRecipes] = useState([]);
@@ -38,6 +38,7 @@ const Home = ({ setBurgerToggle }) => {
       })
       .catch((error) => console.error("Error fetching recipe:", error));
     setBurgerToggle(false);
+    setNavBarToggle(true);
   }, []);
 
   //SORT RECIPES ? 🤔
@@ -58,8 +59,7 @@ const Home = ({ setBurgerToggle }) => {
         {searchInput && (
           <button
             onClick={clearSearch}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-none px-1 py-0.5 rounded"
-          >
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-none px-1 py-0.5 rounded">
             x
           </button>
         )}
@@ -72,8 +72,7 @@ const Home = ({ setBurgerToggle }) => {
             {allLunchRecipes.map((singleLunchRecipe, index) => (
               <Link
                 key={singleLunchRecipe.id}
-                to={`/recipe_show/${singleLunchRecipe.id}`}
-              >
+                to={`/recipe_show/${singleLunchRecipe.id}`}>
                 <div className="flex-shrink-0">
                   <p className="text-center mb-2">{singleLunchRecipe.name}</p>
                   <div className="w-48 h-48 relative">
@@ -94,8 +93,7 @@ const Home = ({ setBurgerToggle }) => {
             {allDinnerRecipes.map((singleDinnerRecipe, index) => (
               <Link
                 key={singleDinnerRecipe.id}
-                to={`/recipe_show/${singleDinnerRecipe.id}`}
-              >
+                to={`/recipe_show/${singleDinnerRecipe.id}`}>
                 <div className="flex-shrink-0">
                   <p className="text-center mb-2">{singleDinnerRecipe.name}</p>
                   <div className="w-48 h-48 relative">
@@ -118,8 +116,7 @@ const Home = ({ setBurgerToggle }) => {
               (singleRecipe, index) => (
                 <Link
                   key={singleRecipe.id}
-                  to={`/recipe_show/${singleRecipe.id}`}
-                >
+                  to={`/recipe_show/${singleRecipe.id}`}>
                   <div className="flex-shrink-0">
                     <p className="text-center mb-2">{singleRecipe.name}</p>
                     <div className="w-48 h-48 relative">
@@ -148,8 +145,7 @@ const Home = ({ setBurgerToggle }) => {
             searchedRecipes.map((searchedRecipe, index) => (
               <Link
                 key={searchedRecipe.id}
-                to={`/recipe_show/${searchedRecipe.id}`}
-              >
+                to={`/recipe_show/${searchedRecipe.id}`}>
                 <div key={index} className="mb-4">
                   <p className="text-center mb-2">{searchedRecipe.name}</p>
                   <div className="w-48 h-48 relative mx-auto">
