@@ -6,7 +6,7 @@ import plusIconPng from "../../assets/plus_icon.png";
 import cookbookIconPng from "../../assets/cookbook_icon.png";
 import profileIconPng from "../../assets/profile_icon.png";
 
-const NavBar = ({ children, userName }) => {
+const NavBar = ({ children, userName, navBarToggle }) => {
   const location = useLocation();
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
@@ -19,7 +19,7 @@ const NavBar = ({ children, userName }) => {
       </header>
       <main className="flex-grow p-4 mt-16 mb-16">{children}</main>
       {/* Footer */}
-      {!isAuthPage && (
+      {!isAuthPage && navBarToggle && (
         <footer className="bg-[#713A3A] w-full p-4 flex justify-around fixed bottom-0 z-10">
           {/* Home Link */}
           <Link to="/home" className="flex flex-col items-center text-white">
