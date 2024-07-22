@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { getAuth } from "firebase/auth";
-// import { useParams } from "react-router-dom";
-import { Search } from "lucide-react";
+// import { getAuth } from "firebase/auth";
 
 import { getUserData } from "../../helpers/getUserData";
+
+import { capitalizeFirstLetter } from "../../helpers/helpers";
+import useHandleSearchChange from "../../helpers/useHandleSearchChange";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -13,17 +15,17 @@ export const MyCookbook = ({ setBurgerToggle }) => {
   const navigate = useNavigate();
 
   const [myRecipes, setMyRecipes] = useState([]);
-  // useState for filtered recipes
   const [recipes, setRecipes] = useState([]);
-  // useState for search bar inputs
-  const [input, setInput] = useState("");
+  // const [input, setInput] = useState("");
   const [userDetails, setUserDetails] = useState(null);
-  // const [allRecipes, setAllRecipes] = useState([]);
+  // const [heartStates, setHeartStates] = useState([]);
 
-  //STATE FOR HEARTS FUNCTIONALITY
-  const [heartStates, setHeartStates] = useState([]);
-
-  // const user = getAuth().currentUser;
+  const { searchInput, handleSearchChange, clearSearch } =
+    useHandleSearchChange(myRecipes, setRecipes, (isDefault) => {
+      if (isDefault) {
+        setRecipes(myRecipes);
+      }
+    });
 
   const fetchMyRecipes = (userId) => {
     const token = localStorage.getItem("token");
@@ -38,7 +40,7 @@ export const MyCookbook = ({ setBurgerToggle }) => {
           if (Array.isArray(data)) {
             setMyRecipes(data);
             setRecipes(data);
-            setHeartStates(new Array(data.length).fill(false));
+            // setHeartStates(new Array(data.length).fill(false));
           } else {
             console.error("Error fetching recipes:", data);
             setMyRecipes([]);
@@ -51,16 +53,10 @@ export const MyCookbook = ({ setBurgerToggle }) => {
 
   useEffect(() => {
     async function getUser() {
-      // this is a helper function that will check the state of the current user in firebase and fetch the user using the JWT token from localstorage and the uid
       const user = await getUserData();
-      // console.log("useEffect Profile:", user);
       if (user) {
         setUserDetails(user);
         fetchMyRecipes(user.id);
-
-        // setMyRecipes([...allRecipes]);
-
-        // setMyRecipes({ ...newRecipe, user_id: user.id });
       }
       setBurgerToggle(false);
     }
@@ -68,43 +64,44 @@ export const MyCookbook = ({ setBurgerToggle }) => {
     getUser();
   }, []);
 
-  // HEART TOGGLE
-  const toggleHeart = (index) => {
-    setHeartStates((prevStates) =>
-      prevStates.map((state, i) => (i === index ? !state : state))
-    );
-  };
+  // const toggleHeart = (index) => {
+  //   setHeartStates((prevStates) =>
+  //     prevStates.map((state, i) => (i === index ? !state : state))
+  //   );
+  // };
 
-  const handleSearchChange = (event) => {
-    const search = event.target.value;
-    setInput(search);
-    const result = search.length
-      ? myRecipes.filter((recipe) =>
-          recipe.name.toLowerCase().includes(search.toLowerCase())
-        )
-      : myRecipes;
-    setRecipes(result);
-  };
+  // Determine the display name based on nickname or first name
+  const displayName = userDetails
+    ? userDetails.nickname
+      ? `${capitalizeFirstLetter(userDetails.nickname)}'s Cookbook`
+      : `${capitalizeFirstLetter(
+          userDetails.first_name.split(" ")[0]
+        )}'s Cookbook`
+    : "My Cookbook";
 
   return (
     <div className="text-center">
-      <div className="bg-[#713A3A] text-[#FFDAB9]">MyCookbook</div>
-
-      {/* Continue with the search functionality */}
-      <div className=" bg-[#FFDAB9]">
-        <div className="mr-2">
-          <Search className="h-6 w-6 text-gray-300 ml-2" />
+      <div className="bg-[#713A3A] text-[#FFDAB9] mt-10">{displayName}</div>
+      <div className="bg-[#FFDAB9]">
+        <div className="relative inline-flex w-48 mr-2">
           <input
-            className="h-full flex-grow outline-none text-sm text-black rounded-xl"
+            className="h-full flex-grow outline-none text-lg text-black rounded-xl pr-8"
             type="text"
             id="search"
-            placeholder="Search.."
-            value={input}
+            placeholder="Search"
+            value={searchInput}
             onChange={handleSearchChange}
           />
+          {searchInput && (
+            <div
+              onClick={clearSearch}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2"
+            >
+              <ClearIcon />
+            </div>
+          )}
         </div>
 
-        {/* Map the users recipes onto the page */}
         {!myRecipes.length ? (
           <Link to={"/create_a_recipe"}>
             <p className="text-center bg-[#D9D9D9]">
@@ -113,7 +110,7 @@ export const MyCookbook = ({ setBurgerToggle }) => {
             </p>
           </Link>
         ) : recipes.length > 0 ? (
-          recipes.map((recipe, index) => (
+          recipes.map((recipe) => (
             <Link key={recipe.id} to={`/recipe_show/${recipe.id}`}>
               <div className="flex items-center mt-4 mx-10">
                 <div className="border-solid border-2 border-black rounded-xl flex-1">
@@ -121,20 +118,12 @@ export const MyCookbook = ({ setBurgerToggle }) => {
                     {recipe.name} <span className="ml-6">+</span>
                   </p>
                 </div>
-                {/* <span className="ml-4 text-2xl">🤍</span>
-                 */}
-                {/* <span
-                className="ml-4 text-2xl cursor-pointer"
-                onClick={() => toggleHeart(index)}
-              >
-                {heartStates[index] ? "❤️" : "🤍"}
-              </span> */}
               </div>
             </Link>
           ))
         ) : (
           <p className="text-center bg-[#D9D9D9] p-4">
-            No recipes of that name can be found
+            Sorry, recipe cannot be found
           </p>
         )}
       </div>
