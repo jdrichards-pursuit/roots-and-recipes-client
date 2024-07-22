@@ -15,9 +15,7 @@ const NavBar = ({ children, userName, navBarToggle }) => {
     <div className="flex flex-col min-h-screen bg-[#FFDAB9]">
       {/* Header */}
       <header className="bg-[#713A3A] text-center py-4 fixed top-0 w-full z-10">
-        <h1 className="text-2xl text-white">
-          {userName ? `${userName}'s Cookbook` : "Roots & Recipe Cookbook"}
-        </h1>
+        <h1 className="text-2xl text-white">Roots & Recipes</h1>
       </header>
       <main className="flex-grow p-4 mt-16 mb-16">{children}</main>
       {/* Footer */}
@@ -31,7 +29,8 @@ const NavBar = ({ children, userName, navBarToggle }) => {
           {/* Family Link */}
           <Link
             to="/family_cookbook"
-            className="flex flex-col items-center text-white">
+            className="flex flex-col items-center text-white"
+          >
             <img
               src={familyIconPng}
               alt="family icon"
@@ -42,14 +41,16 @@ const NavBar = ({ children, userName, navBarToggle }) => {
           {/* Add Recipe Link */}
           <Link
             to="/create_a_recipe"
-            className="flex flex-col items-center text-white">
+            className="flex flex-col items-center text-white"
+          >
             <img src={plusIconPng} alt="plus icon" className="w-8 h-8 mb-1" />
             <span className="text-xs">Add</span>
           </Link>
           {/* Cookbook Link */}
           <Link
             to="/cookbook"
-            className="flex flex-col items-center text-white">
+            className="flex flex-col items-center text-white"
+          >
             <img
               src={cookbookIconPng}
               alt="cookbook icon"

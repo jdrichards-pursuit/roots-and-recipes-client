@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import useHandleSearchChange from "../../helpers/useHandleSearchChange";
 import { Link } from "react-router-dom";
 import placeholderImage from "../../assets/recipe_place_holder.png";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -57,11 +58,12 @@ const Home = ({ setBurgerToggle, setNavBarToggle }) => {
           className="w-full p-2 border rounded"
         />
         {searchInput && (
-          <button
+          <div
             onClick={clearSearch}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-none px-1 py-0.5 rounded">
-            x
-          </button>
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-none px-1 py-0.5 rounded"
+          >
+            <ClearIcon className="text-xs" />
+          </div>
         )}
       </div>
 
