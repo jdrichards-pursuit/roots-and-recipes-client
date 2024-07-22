@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import { data } from "autoprefixer";
 import {
   handleTagClick,
+  handleTagEntry,
   handleTextChange,
   handleAddIngredientsInput,
   handleIngredientsInputChange,
@@ -24,6 +25,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
   // user state
   const [userDetails, setUserDetails] = useState(null);
+  const [familyName, setFamilyName] = useState(null);
 
   // console.log(userDetails);
   //State for all categories
@@ -44,8 +46,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
-
-
 
   const addRecipe = async () => {
     // console.log(userDetails);
@@ -85,8 +85,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   };
 
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -105,7 +103,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
         // Handle tag entry with the fetched recipeID
         if (selectedCategories.length > 0) {
-          await handleTagEntry(selectedCategories, data.id);
+          await handleTagEntry(categories, selectedCategories, data.id);
         }
       }
 
@@ -151,6 +149,13 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         //   ingredients: "",
         //   steps: "",
         // });
+        fetch(`${URL}/api/families`)
+          .then((res) => res.json())
+          .then((data) =>
+            setFamilyName(
+              data.find((f) => f.code === user.family_code).family_name
+            )
+          );
       }
     }
 
@@ -166,10 +171,13 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       JSON.parse(localStorage.getItem("ingredientsInputs")) || [];
     const storedSteps = JSON.parse(localStorage.getItem("stepsInputs")) || [];
     const storedRecipe = JSON.parse(localStorage.getItem("newRecipe")) || [];
+    const storedSelectedCategories =
+      JSON.parse(localStorage.getItem("selectedCategories")) || [];
 
     setIngredientsInputs(storedIngredients);
     setStepsInputs(storedSteps);
     setNewRecipe(storedRecipe);
+    setSelectedCategories(storedSelectedCategories);
 
     // Clean up localStorage if newRecipe name is empty
     if (newRecipe.name === "") {
@@ -177,14 +185,25 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       localStorage.removeItem("stepsInputs");
       localStorage.removeItem("newRecipe");
       localStorage.removeItem("photo");
+      localStorage.removeItem("selectedCategories");
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (userDetails && userDetails.family_code !== "000000") {
+  //     setNewRecipe((prevRecipe) => ({
+  //       ...prevRecipe,
+  //       family: familyName,
+  //     }));
+  //   }
+  // }, []);
 
   const saveToLocalStorage = () => {
     const updatedRecipe = {
       ...newRecipe,
       status: isPublic,
       photo: newRecipe.photo,
+      family: familyName,
     };
     localStorage.setItem("newRecipe", JSON.stringify(updatedRecipe));
     localStorage.setItem(
@@ -192,12 +211,19 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       JSON.stringify(ingredientsInputs)
     );
     localStorage.setItem("stepsInputs", JSON.stringify(stepsInputs));
+    localStorage.setItem(
+      "selectedCategories",
+      JSON.stringify(selectedCategories)
+    );
   };
   // GIVE THE INGREDIENTS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.ingredients = ingredientsInputs.join(",");
   // GIVE THE STEPS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.steps = stepsInputs.join(",");
+  newRecipe.family = familyName;
+
   // console.log("NEW RECIPE", newRecipe);
+  console.log(selectedCategories);
   return (
     <div className="ml-28 border-2 border-black border-solid">
       <h1 className="text-center text-[#713A3A]">New Recipe</h1>
@@ -216,19 +242,25 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
 
-        {/* Family name input */}
-        <label>
-          <h2>Family</h2>
-        </label>
-        <input
-          id="family"
-          value={newRecipe.family || ""}
-          type="text"
-          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-          placeholder="Family"
-          // required
-          className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
-        />
+        {/* Family name input (DO WE NEED THIS? BRING THIS UP)*/}
+        {/* {userDetails && userDetails.family_code === "000000" && (
+          <>
+            <label>
+              <h2>Family</h2>
+            </label>
+            <input
+              id="family"
+              value={newRecipe.family || ""}
+              type="text"
+              onChange={(event) =>
+                handleTextChange(event, setNewRecipe, newRecipe)
+              }
+              placeholder="Family"
+              // required
+              className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
+            />
+          </>
+        )} */}
 
         {/* Chef Input (if needed) */}
         <label>
@@ -271,25 +303,21 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                     setIngredientsInputs,
                     ingredientsInputs
                   )
-                }
-              >
+                }>
                 <X />
               </div>
             </div>
           );
         })}
 
-
         {/* PLUS BUTTON */}
         <div
           onClick={() =>
             handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
           }
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
           <Plus />
         </div>
-
 
         {/* Steps Input */}
         <label>
@@ -319,8 +347,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               <div
                 onClick={() =>
                   handleStepDelete(index, setStepsInputs, stepsInputs)
-                }
-              >
+                }>
                 <X />
               </div>
             </div>
@@ -329,34 +356,32 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
         {/* PLUS BUTTON */}
 
-
         <div
           onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
           <Plus />
-
         </div>
 
         {/* CATEGORIES */}
         <div>
           {categories.length > 0 &&
             categories.map((category, index) => {
-              const isSelected = selectedCategories.includes(category);
+              const isSelected = selectedCategories.includes(
+                category.category_name
+              );
               return (
                 <p
                   key={index}
                   onClick={() =>
                     handleTagClick(
-                      category,
+                      category.category_name,
                       selectedCategories,
                       setSelectedCategories
                     )
                   }
                   className={`inline-block px-2 py-1 rounded-full ${
                     isSelected ? "bg-gray-200" : ""
-                  }`}
-                >
+                  }`}>
                   #{category.category_name}
                 </p>
               );
@@ -372,8 +397,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             onClick={handlePublicToggleClick}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
-            }`}
-          >
+            }`}>
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
@@ -391,8 +415,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           />
           <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
-          >
+            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2">
             Cancel
           </p>
         </div>
@@ -408,14 +431,12 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
-              >
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
-              >
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
                 No
               </button>
             </div>

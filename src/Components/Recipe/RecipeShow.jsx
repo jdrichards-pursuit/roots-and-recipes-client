@@ -9,6 +9,7 @@ const RecipeShow = () => {
 
   //  STATE TO STORE THE RECIPE
   const [singleRecipe, setSingleRecipe] = useState(null);
+  const [recipeCategories, setRecipeCategories] = useState([]);
   // had to change the initial state from being empty to null. i guess to let it be known there will be something there soon or to indicate "loading state"
 
   useEffect(() => {
@@ -16,6 +17,13 @@ const RecipeShow = () => {
       .then((res) => res.json())
       .then((data) => {
         setSingleRecipe(data);
+      })
+      .catch((error) => console.error("Error fetching recipe:", error));
+
+    fetch(`${URL}/api/categories/recipes/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setRecipeCategories(data.map((elem) => elem.category_name));
       })
       .catch((error) => console.error("Error fetching recipe:", error));
   }, [id]);
@@ -34,18 +42,18 @@ const RecipeShow = () => {
   const ingredientList = ingredients.split(",").map((item) => item.trim());
   const stepsList = steps.split(",").map((item) => item.trim());
 
-  console.log(singleRecipe);
-
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
       <img src={photo || placeholderImage} alt={name} className="mb-4" />
 
       <p className="text-lg mb-2">Chef: {chef}</p>
-      <p className="text-lg mb-2 font-bold">
-        Family:
-        <span className="font-thin"> {family}</span>
-      </p>
+      {family !== "defaultFamily" && (
+        <p className="text-lg mb-2 font-bold">
+          Family:
+          <span className="font-thin"> {family}</span>
+        </p>
+      )}
       <p className="text-lg mb-2">
         Created at: {new Date(created_at).toLocaleDateString()}
       </p>
@@ -63,6 +71,14 @@ const RecipeShow = () => {
           <li key={index}>{step}</li>
         ))}
       </ol>
+
+      <div>
+        <h1>Categories</h1>
+        {recipeCategories.length > 0 &&
+          recipeCategories.map((category, index) => {
+            return <li key={index}>{category}</li>;
+          })}
+      </div>
     </div>
   );
 };

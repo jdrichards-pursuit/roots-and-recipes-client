@@ -44,7 +44,7 @@ function Login({ setBurgerToggle, burgerToggle, setNavBarToggle }) {
     setNavBarToggle(false);
   }, []);
 
-  console.log(burgerToggle);
+  // console.log(burgerToggle);
 
   return (
     <div className="w-full max-w-md bg-[#713A3A] p-8 rounded-lg shadow-md">
