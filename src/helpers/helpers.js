@@ -19,8 +19,6 @@ export const handleTextChange = (event, setNewRecipe, newRecipe) => {
   setNewRecipe({ ...newRecipe, [event.target.id]: event.target.value });
 };
 
-// helpers.js
-
 export const handleAddIngredientsInput = (
   setIngredientsInputs,
   ingredientsInputs
@@ -76,4 +74,9 @@ export const handlePublicToggle = (
 ) => {
   setIsPublic(!isPublic);
   setNewRecipe({ ...newRecipe, status: !isPublic ? "TRUE" : "FALSE" });
+};
+
+export const capitalizeFirstLetter = (str) => {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };
