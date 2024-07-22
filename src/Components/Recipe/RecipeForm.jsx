@@ -92,33 +92,26 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         );
         const data = await response.json();
         setRecipeID(data.id);
-        // console.log(data);
-
 
         // Handle tag entry with the fetched recipeID
         if (selectedCategories.length > 0) {
           await handleTagEntry(categories, selectedCategories, data.id);
-          
+        }
+
         if (userDetails.family_code !== "000000") {
           setShowModal(false);
           console.log("close");
         } else {
           setShowModal(true);
-
           console.log("open");
         }
 
-        // Handle tag entry with the fetched recipeID
-        // if (selectedCategories.length > 0) {
-        //   await handleTagEntry(selectedCategories, data.id);
-        // }
+        // Clear local storage after handling tags
+        localStorage.removeItem("ingredientsInputs");
+        localStorage.removeItem("stepsInputs");
+        localStorage.removeItem("newRecipe");
+        localStorage.removeItem("photo");
       }
-
-      // Clear local storage after handling tags
-      localStorage.removeItem("ingredientsInputs");
-      localStorage.removeItem("stepsInputs");
-      localStorage.removeItem("newRecipe");
-      localStorage.removeItem("photo");
 
       // Show the modal after everything is done
       // setShowModal(true);
@@ -248,7 +241,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
 
-
         {/* Chef Input */}
         <label>
           <h2>Chef</h2>
@@ -290,7 +282,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                     setIngredientsInputs,
                     ingredientsInputs
                   )
-                }>
+                }
+              >
                 <X />
               </div>
             </div>
@@ -302,7 +295,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           onClick={() =>
             handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
           }
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
           <Plus />
         </div>
 
@@ -335,7 +329,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               <div
                 onClick={() =>
                   handleStepDelete(index, setStepsInputs, stepsInputs)
-                }>
+                }
+              >
                 <X />
               </div>
             </div>
@@ -346,7 +341,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
         <div
           onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
           <Plus />
         </div>
 
@@ -369,7 +365,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                   }
                   className={`inline-block px-2 py-1 rounded-full ${
                     isSelected ? "bg-gray-200" : ""
-                  }`}>
+                  }`}
+                >
                   #{category.category_name}
                 </p>
               );
@@ -397,7 +394,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             onClick={handlePublicToggleClick}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
-            }`}>
+            }`}
+          >
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
@@ -415,7 +413,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           />
           <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2">
+            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
+          >
             Cancel
           </p>
         </div>
@@ -431,12 +430,14 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
+              >
                 No
               </button>
             </div>
