@@ -36,7 +36,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   const [recipeID, setRecipeID] = useState();
-
+  console.log(selectedCategories);
   // STATES FOR THE MODAL
   const [showModal, setShowModal] = useState(false);
   const [modalChoice, setModalChoice] = useState(null);
@@ -79,7 +79,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    console.log("handleSubmit called");
+    // event.preventDefault();
 
     try {
       // Wait for addRecipe to complete
@@ -98,19 +99,21 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           await handleTagEntry(categories, selectedCategories, data.id);
         }
 
-        if (userDetails.family_code !== "000000") {
-          setShowModal(false);
-          console.log("close");
-        } else {
-          setShowModal(true);
-          console.log("open");
-        }
+        // if (userDetails.family_code === "000000") {
+        //   setShowModal(false);
+        //   console.log("close");
+        //   navigate("/cookbook");
+        // } else {
+        //   setShowModal(true);
+        //   console.log("open");
+        // }
 
         // Clear local storage after handling tags
         localStorage.removeItem("ingredientsInputs");
         localStorage.removeItem("stepsInputs");
         localStorage.removeItem("newRecipe");
         localStorage.removeItem("photo");
+        localStorage.removeItem("selectedCategories");
       }
 
       // Show the modal after everything is done
@@ -125,16 +128,20 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     setModalChoice(choice);
     try {
       // await addRecipe(); // This will add recipe after the user's choice??
-      setShowModal(false); // Close modal after choice
       if (choice === "yes") {
+        await handleSubmit();
         navigate(`/family_cookbook`);
       } else {
+        newRecipe.family = "defaultFamily";
+        console.log(newRecipe);
+        await handleSubmit();
         navigate(`/cookbook`);
       }
     } catch (error) {
       console.error("Error adding recipe:", error);
       // Handle error if necessary
     }
+    setShowModal(false); // Close modal after choice
   };
 
   // HANDLE PUBLIC TOGGLE
@@ -222,12 +229,21 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   newRecipe.steps = stepsInputs.join(",");
   newRecipe.family = familyName;
 
+  const conditionalSubmit = async (event) => {
+    event.preventDefault();
+    if (userDetails.family_code === "000000") {
+      await handleSubmit();
+      navigate("/cookbook");
+    } else {
+      setShowModal(true);
+    }
+  };
+
   // console.log("NEW RECIPE", newRecipe);
-  console.log(selectedCategories);
   return (
     <div className="ml-28 border-2 border-black border-solid">
       <h1 className="text-center text-[#713A3A]">New Recipe</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={conditionalSubmit}>
         {/* Dish Name Input */}
         <label>
           <h2>Name of dish</h2>
@@ -282,8 +298,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                     setIngredientsInputs,
                     ingredientsInputs
                   )
-                }
-              >
+                }>
                 <X />
               </div>
             </div>
@@ -295,8 +310,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           onClick={() =>
             handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
           }
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
           <Plus />
         </div>
 
@@ -329,8 +343,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               <div
                 onClick={() =>
                   handleStepDelete(index, setStepsInputs, stepsInputs)
-                }
-              >
+                }>
                 <X />
               </div>
             </div>
@@ -341,8 +354,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
         <div
           onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
           <Plus />
         </div>
 
@@ -365,8 +377,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                   }
                   className={`inline-block px-2 py-1 rounded-full ${
                     isSelected ? "bg-gray-200" : ""
-                  }`}
-                >
+                  }`}>
                   #{category.category_name}
                 </p>
               );
@@ -376,8 +387,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           to="/dish_photo"
           onClick={() => {
             saveToLocalStorage();
-          }}
-        >
+          }}>
           <p className="text-center bg-[#BCB9B9] p-2 inline-block ml-4">
             Take a photo of your dish
           </p>
@@ -394,8 +404,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             onClick={handlePublicToggleClick}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
-            }`}
-          >
+            }`}>
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
@@ -413,8 +422,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           />
           <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
-          >
+            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2">
             Cancel
           </p>
         </div>
@@ -430,14 +438,12 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
-              >
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
-              >
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
                 No
               </button>
             </div>
