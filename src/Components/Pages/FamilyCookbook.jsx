@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
 import JoinFamilyForm from "../Family/JoinFamilyForm";
 import FamilyForm from "../Family/FamilyForm";
+import recipePlaceHolder from "../../assets/recipe_place_holder.png";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -62,31 +63,41 @@ const FamilyCookbook = ({ setBurgerToggle }) => {
         </>
       )}
 
-      <h1>Members</h1>
-      {familyMembers.map((member, index) => {
-        return (
-          <div key={index}>
-            <img
-              src={member.photo}
-              alt="photo"
-              className="w-24 h-24 border-2 border-black rounded-full"
-            />
-            <h4>{member.nickname || member.first_name}</h4>
-          </div>
-        );
-      })}
-      {familyRecipes.length > 0 &&
-        familyRecipes.map((recipe, index) => (
-          <Link key={index} to={`/recipe_show/${recipe.id}`}>
-            <img
-              src={recipe.photo}
-              alt="photo"
-              className="w-24 h-24 border-2 border-black rounded-full"
-            />
-            <h4>{recipe.name}</h4>
-            <h4>{recipe.chef}</h4>
-          </Link>
-        ))}
+      {familyMembers.length > 0 && (
+        <div className="border-2 border-solid border-black">
+          <h1>Members</h1>
+          {familyMembers.map((member, index) => {
+            return (
+              <div key={index}>
+                <img
+                  src={member.photo}
+                  alt="photo"
+                  className="w-24 h-24 border-2 border-black rounded-full"
+                />
+                <h4>{member.nickname || member.first_name}</h4>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {familyRecipes.length > 0 && (
+        <div className="border-2 border-solid border-black mt-4">
+          <h1>Family Recipes</h1>
+          {familyRecipes.length > 0 &&
+            familyRecipes.map((recipe, index) => (
+              <Link key={index} to={`/recipe_show/${recipe.id}`}>
+                <img
+                  src={recipe.photo || recipePlaceHolder}
+                  alt="photo"
+                  className="w-24 h-24 border-2 border-black rounded-full"
+                />
+                <h4>{recipe.name}</h4>
+                <h4>{recipe.chef}</h4>
+              </Link>
+            ))}
+        </div>
+      )}
     </div>
   );
 };

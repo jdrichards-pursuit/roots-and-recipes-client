@@ -9,8 +9,7 @@ export const handleTagClick = (
   if (selectedCategories.includes(category)) {
     setSelectedCategories(
       selectedCategories.filter(
-        (selectedCategory) =>
-          selectedCategory.category_name !== category.category_name
+        (selectedCategory) => selectedCategory !== category
       )
     );
   } else {

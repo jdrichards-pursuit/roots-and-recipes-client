@@ -12,6 +12,7 @@ const RecipeShow = () => {
   const [recipeCategories, setRecipeCategories] = useState([]);
   // had to change the initial state from being empty to null. i guess to let it be known there will be something there soon or to indicate "loading state"
 
+  console.log(singleRecipe);
   useEffect(() => {
     fetch(`${URL}/api/recipes/single_recipe/${id}`)
       .then((res) => res.json())
@@ -52,6 +53,12 @@ const RecipeShow = () => {
         <span className="font-thin"> {family}</span>
       </p>
       <p className="text-lg mb-2">Chef: {chef}</p>
+       {family !== "defaultFamily" && (
+      <p className="text-lg mb-2 font-bold">
+        Family:
+        <span className="font-thin"> {family}</span>
+      </p>
+       )}
       <p className="text-lg mb-2">
         Created at: {new Date(created_at).toLocaleDateString()}
       </p>
@@ -73,7 +80,7 @@ const RecipeShow = () => {
       </ol>
 
       <div>
-        <h1>Categories</h1>
+        <h1 className="text-xl font-semibold mb-2">Categories</h1>
         {recipeCategories.length > 0 &&
           recipeCategories.map((category, index) => {
             return <li key={index}>{category}</li>;
