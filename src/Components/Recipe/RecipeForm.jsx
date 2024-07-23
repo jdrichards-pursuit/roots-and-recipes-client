@@ -4,9 +4,12 @@ import { getUserData } from "../../helpers/getUserData";
 import { X } from "lucide-react";
 import { Mic } from "lucide-react";
 import { Plus } from "lucide-react";
+import { Camera } from "lucide-react";
+
 import { data } from "autoprefixer";
 import {
   handleTagClick,
+  handleTagEntry,
   handleTextChange,
   handleAddIngredientsInput,
   handleIngredientsInputChange,
@@ -24,6 +27,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
   // user state
   const [userDetails, setUserDetails] = useState(null);
+  const [familyName, setFamilyName] = useState(null);
 
   // console.log(userDetails);
   //State for all categories
@@ -44,8 +48,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
-
-
 
   const addRecipe = async () => {
     // console.log(userDetails);
@@ -69,23 +71,12 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       const data = await response.json();
       console.log(data);
 
-      // setNewRecipe(data); // Assuming you want to update the state with the new recipe
-
-      // Navigate based on modalChoice
-      if (modalChoice === "yes") {
-        navigate(`family_cookbook`);
-      } else {
-        navigate(`/cookbook`);
-      }
-
       return data; // Return the added recipe or necessary data
     } catch (error) {
       console.error("Error adding recipe:", error);
       throw error; // Rethrow the error for handling in the calling function
     }
   };
-
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -101,33 +92,49 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         );
         const data = await response.json();
         setRecipeID(data.id);
-        // console.log(data);
 
         // Handle tag entry with the fetched recipeID
         if (selectedCategories.length > 0) {
-          await handleTagEntry(selectedCategories, data.id);
+          await handleTagEntry(categories, selectedCategories, data.id);
         }
+
+        if (userDetails.family_code !== "000000") {
+          setShowModal(false);
+          console.log("close");
+        } else {
+          setShowModal(true);
+          console.log("open");
+        }
+
+        // Clear local storage after handling tags
+        localStorage.removeItem("ingredientsInputs");
+        localStorage.removeItem("stepsInputs");
+        localStorage.removeItem("newRecipe");
+        localStorage.removeItem("photo");
       }
 
-      // Clear local storage after handling tags
-      localStorage.removeItem("ingredientsInputs");
-      localStorage.removeItem("stepsInputs");
-      localStorage.removeItem("newRecipe");
-      localStorage.removeItem("photo");
-
       // Show the modal after everything is done
-      setShowModal(true);
+      // setShowModal(true);
     } catch (error) {
       console.error("Error:", error);
       // Handle the error appropriately (e.g., show a message to the user)
     }
   };
 
-  // Handle modal choice function
-  const handleModalChoice = (choice) => {
+  const handleModalChoice = async (choice) => {
     setModalChoice(choice);
-    setShowModal(false); // Close modal after choice
-    // addRecipe(); // Proceed to add recipe after user's choice
+    try {
+      // await addRecipe(); // This will add recipe after the user's choice??
+      setShowModal(false); // Close modal after choice
+      if (choice === "yes") {
+        navigate(`/family_cookbook`);
+      } else {
+        navigate(`/cookbook`);
+      }
+    } catch (error) {
+      console.error("Error adding recipe:", error);
+      // Handle error if necessary
+    }
   };
 
   // HANDLE PUBLIC TOGGLE
@@ -141,16 +148,14 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       const user = await getUserData();
       if (user) {
         setUserDetails(user);
-        // setNewRecipe({
-        //   name: "",
-        //   family: "",
-        //   chef: "",
-        //   status: "TRUE",
-        //   user_id: user.id,
-        //   photo: "",
-        //   ingredients: "",
-        //   steps: "",
-        // });
+
+        fetch(`${URL}/api/families`)
+          .then((res) => res.json())
+          .then((data) =>
+            setFamilyName(
+              data.find((f) => f.code === user.family_code).family_name
+            )
+          );
       }
     }
 
@@ -166,10 +171,13 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       JSON.parse(localStorage.getItem("ingredientsInputs")) || [];
     const storedSteps = JSON.parse(localStorage.getItem("stepsInputs")) || [];
     const storedRecipe = JSON.parse(localStorage.getItem("newRecipe")) || [];
+    const storedSelectedCategories =
+      JSON.parse(localStorage.getItem("selectedCategories")) || [];
 
     setIngredientsInputs(storedIngredients);
     setStepsInputs(storedSteps);
     setNewRecipe(storedRecipe);
+    setSelectedCategories(storedSelectedCategories);
 
     // Clean up localStorage if newRecipe name is empty
     if (newRecipe.name === "") {
@@ -177,14 +185,25 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       localStorage.removeItem("stepsInputs");
       localStorage.removeItem("newRecipe");
       localStorage.removeItem("photo");
+      localStorage.removeItem("selectedCategories");
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (userDetails && userDetails.family_code !== "000000") {
+  //     setNewRecipe((prevRecipe) => ({
+  //       ...prevRecipe,
+  //       family: familyName,
+  //     }));
+  //   }
+  // }, []);
 
   const saveToLocalStorage = () => {
     const updatedRecipe = {
       ...newRecipe,
       status: isPublic,
       photo: newRecipe.photo,
+      family: familyName,
     };
     localStorage.setItem("newRecipe", JSON.stringify(updatedRecipe));
     localStorage.setItem(
@@ -192,12 +211,19 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       JSON.stringify(ingredientsInputs)
     );
     localStorage.setItem("stepsInputs", JSON.stringify(stepsInputs));
+    localStorage.setItem(
+      "selectedCategories",
+      JSON.stringify(selectedCategories)
+    );
   };
   // GIVE THE INGREDIENTS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.ingredients = ingredientsInputs.join(",");
   // GIVE THE STEPS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.steps = stepsInputs.join(",");
+  newRecipe.family = familyName;
+
   // console.log("NEW RECIPE", newRecipe);
+  console.log(selectedCategories);
   return (
     <div className="ml-28 border-2 border-black border-solid">
       <h1 className="text-center text-[#713A3A]">New Recipe</h1>
@@ -211,26 +237,11 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           value={newRecipe.name || ""}
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-          placeholder="Name of dish"
           // required
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
 
-        {/* Family name input */}
-        <label>
-          <h2>Family</h2>
-        </label>
-        <input
-          id="family"
-          value={newRecipe.family || ""}
-          type="text"
-          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-          placeholder="Family"
-          // required
-          className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
-        />
-
-        {/* Chef Input (if needed) */}
+        {/* Chef Input */}
         <label>
           <h2>Chef</h2>
         </label>
@@ -239,7 +250,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           value={newRecipe.chef || ""}
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-          placeholder="Chef"
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
 
@@ -264,6 +274,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                 value={ingredientInput || ""}
                 className="border-solid border-2 border-black p-2 mt-8"
               />
+              {/* DELETE AN INGREDIENT */}
               <div
                 onClick={() =>
                   handleIngredientDelete(
@@ -279,7 +290,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           );
         })}
 
-
         {/* PLUS BUTTON */}
         <div
           onClick={() =>
@@ -289,7 +299,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         >
           <Plus />
         </div>
-
 
         {/* Steps Input */}
         <label>
@@ -316,6 +325,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                 <Mic className="mt-8" />
               </div>
 
+              {/* DELETE A STEP */}
               <div
                 onClick={() =>
                   handleStepDelete(index, setStepsInputs, stepsInputs)
@@ -329,26 +339,26 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
         {/* PLUS BUTTON */}
 
-
         <div
           onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
           className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
         >
           <Plus />
-
         </div>
 
         {/* CATEGORIES */}
         <div>
           {categories.length > 0 &&
             categories.map((category, index) => {
-              const isSelected = selectedCategories.includes(category);
+              const isSelected = selectedCategories.includes(
+                category.category_name
+              );
               return (
                 <p
                   key={index}
                   onClick={() =>
                     handleTagClick(
-                      category,
+                      category.category_name,
                       selectedCategories,
                       setSelectedCategories
                     )
@@ -362,8 +372,20 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               );
             })}
         </div>
+        <Link
+          to="/dish_photo"
+          onClick={() => {
+            saveToLocalStorage();
+          }}
+        >
+          <p className="text-center bg-[#BCB9B9] p-2 inline-block ml-4">
+            Take a photo of your dish
+          </p>
 
-        {/* Public Toggle */}
+          <div className="flex justify-center items-center">
+            <Camera className="w-8 h-8" /> {/* Adjust the size as needed */}
+          </div>
+        </Link>
 
         {/* Public Toggle */}
         <div className="flex justify-center items-center mt-4">
@@ -422,14 +444,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           </div>
         </div>
       )}
-
-      <Link
-        to="/dish_photo"
-        onClick={() => {
-          saveToLocalStorage();
-        }}>
-        <p>Take Photo of dish, maybe camera emoji </p>
-      </Link>
     </div>
   );
 }

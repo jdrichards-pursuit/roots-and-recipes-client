@@ -1,3 +1,6 @@
+import { data } from "autoprefixer";
+const URL = import.meta.env.VITE_BASE_URL;
+
 export const handleTagClick = (
   category,
   selectedCategories,
@@ -15,11 +18,28 @@ export const handleTagClick = (
   }
 };
 
+export const handleTagEntry = (categories, selectedCategories, id) => {
+  const categoryEntries = categories.filter((category) =>
+    selectedCategories.includes(category.category_name)
+  );
+
+  // console.log(categoryIds);
+
+  // console.log(categories, selectedCategories, id);
+
+  categoryEntries.map((entry) => {
+    fetch(`${URL}/api/categories/${id}/${entry.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
+  });
+};
+
 export const handleTextChange = (event, setNewRecipe, newRecipe) => {
   setNewRecipe({ ...newRecipe, [event.target.id]: event.target.value });
 };
-
-// helpers.js
 
 export const handleAddIngredientsInput = (
   setIngredientsInputs,
@@ -76,4 +96,9 @@ export const handlePublicToggle = (
 ) => {
   setIsPublic(!isPublic);
   setNewRecipe({ ...newRecipe, status: !isPublic ? "TRUE" : "FALSE" });
+};
+
+export const capitalizeFirstLetter = (str) => {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };

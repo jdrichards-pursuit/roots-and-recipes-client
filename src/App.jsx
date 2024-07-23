@@ -28,6 +28,7 @@ import { DishCameraView } from "./Components/DishCameraView";
 function App() {
   const [user, setUser] = useState(null);
   const [burgerToggle, setBurgerToggle] = useState(false);
+  const [navBarToggle, setNavBarToggle] = useState(true);
 
   //  new recipe state
   const [newRecipe, setNewRecipe] = useState({
@@ -49,7 +50,9 @@ function App() {
   }, []);
 
   return (
-    <NavBar userName={user ? user.displayName : null}>
+    <NavBar
+      userName={user ? user.displayName : null}
+      navBarToggle={navBarToggle}>
       <BurgerMenu burgerToggle={burgerToggle} />
       <Routes>
         <Route
@@ -61,6 +64,7 @@ function App() {
               <Login
                 setBurgerToggle={setBurgerToggle}
                 burgerToggle={burgerToggle}
+                setNavBarToggle={setNavBarToggle}
               />
             )
           }
@@ -71,30 +75,54 @@ function App() {
             <Login
               setBurgerToggle={setBurgerToggle}
               burgerToggle={burgerToggle}
+              setNavBarToggle={setNavBarToggle}
             />
           }
         />
-        <Route path="/register" element={<SignUp />} />
+        <Route
+          path="/register"
+          element={<SignUp setNavBarToggle={setNavBarToggle} />}
+        />
         {user && (
           <>
             <Route
               path="/profile"
-              element={<Profile setBurgerToggle={setBurgerToggle} />}
+              element={
+                <Profile
+                  setBurgerToggle={setBurgerToggle}
+                  setNavBarToggle={setNavBarToggle}
+                />
+              }
             />
             <Route path="/family_form" element={<FamilyForm />} />
             <Route path="/join_family" element={<JoinFamilyForm />} />
 
             <Route
               path="/family_cookbook"
-              element={<FamilyCookbook setBurgerToggle={setBurgerToggle} />}
+              element={
+                <FamilyCookbook
+                  setBurgerToggle={setBurgerToggle}
+                  setNavBarToggle={setNavBarToggle}
+                />
+              }
             />
             <Route
               path="/cookbook"
-              element={<MyCookbook setBurgerToggle={setBurgerToggle} />}
+              element={
+                <MyCookbook
+                  setBurgerToggle={setBurgerToggle}
+                  setNavBarToggle={setNavBarToggle}
+                />
+              }
             />
             <Route
               path="/home"
-              element={<Home setBurgerToggle={setBurgerToggle} />}
+              element={
+                <Home
+                  setBurgerToggle={setBurgerToggle}
+                  setNavBarToggle={setNavBarToggle}
+                />
+              }
             />
             <Route
               path="/recipe_form"
@@ -103,6 +131,7 @@ function App() {
                   setBurgerToggle={setBurgerToggle}
                   setNewRecipe={setNewRecipe}
                   newRecipe={newRecipe}
+                  setNavBarToggle={setNavBarToggle}
                 />
               }
             />
@@ -113,11 +142,20 @@ function App() {
                   setBurgerToggle={setBurgerToggle}
                   newRecipe={newRecipe}
                   setNewRecipe={setNewRecipe}
+                  setNavBarToggle={setNavBarToggle}
                 />
               }
             />
 
-            <Route path="/recipe_list" element={<RecipeList />} />
+            <Route
+              path="/recipe_list"
+              element={
+                <RecipeList
+                  setNavBarToggle={setNavBarToggle}
+                  setBurgerToggle={setBurgerToggle}
+                />
+              }
+            />
             <Route path="/recipe_show/:id" element={<RecipeShow />} />
             <Route path="/about_us" element={<AboutUs />} />
             <Route path="/faq" element={<FAQ />} />

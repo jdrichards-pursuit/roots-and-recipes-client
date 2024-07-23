@@ -6,7 +6,7 @@ import plusIconPng from "../../assets/plus_icon.png";
 import cookbookIconPng from "../../assets/cookbook_icon.png";
 import profileIconPng from "../../assets/profile_icon.png";
 
-const NavBar = ({ children, userName }) => {
+const NavBar = ({ children, userName, navBarToggle }) => {
   const location = useLocation();
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
@@ -31,7 +31,8 @@ const NavBar = ({ children, userName }) => {
           {/* Family Link */}
           <Link
             to="/family_cookbook"
-            className="flex flex-col items-center text-white">
+            className="flex flex-col items-center text-white"
+          >
             <img
               src={familyIconPng}
               alt="family icon"
@@ -42,14 +43,16 @@ const NavBar = ({ children, userName }) => {
           {/* Add Recipe Link */}
           <Link
             to="/create_a_recipe"
-            className="flex flex-col items-center text-white">
+            className="flex flex-col items-center text-white"
+          >
             <img src={plusIconPng} alt="plus icon" className="w-8 h-8 mb-1" />
             <span className="text-xs">Add</span>
           </Link>
           {/* Cookbook Link */}
           <Link
             to="/cookbook"
-            className="flex flex-col items-center text-white">
+            className="flex flex-col items-center text-white"
+          >
             <img
               src={cookbookIconPng}
               alt="cookbook icon"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -9,7 +9,7 @@ import {
 import { auth } from "../helpers/firebase";
 import { register } from "../helpers/register";
 
-function Register() {
+function Register({ setNavBarToggle }) {
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -23,6 +23,10 @@ function Register() {
   const handleChange = (e) => {
     setNewUser({ ...newUser, [e.target.id]: e.target.value });
   };
+
+  useEffect(() => {
+    setNavBarToggle(false);
+  }, []);
 
   const handleClearState = () => {
     setNewUser({
@@ -89,8 +93,7 @@ function Register() {
           <div>
             <label
               htmlFor="first_name"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               First Name
             </label>
 
@@ -98,7 +101,6 @@ function Register() {
               type="text"
               id="first_name"
               name="first_name"
-              placeholder="First name"
               value={newUser.first_name}
               onChange={handleChange}
               required
@@ -109,8 +111,7 @@ function Register() {
           <div>
             <label
               htmlFor="last_name"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               Last Name
             </label>
 
@@ -118,7 +119,6 @@ function Register() {
               type="text"
               id="last_name"
               name="last_name"
-              placeholder="Last name"
               value={newUser.last_name}
               onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -128,15 +128,13 @@ function Register() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               Email Address
             </label>
             <input
               type="email"
               id="email"
               name="email"
-              placeholder="Enter email"
               value={newUser.email}
               onChange={handleChange}
               required
@@ -149,17 +147,15 @@ function Register() {
               htmlFor="nickname"
               className="block text-sm font-medium text-gray-700"
             >
-              Nickname
+              Nickname (Optional)
             </label>
 
             <input
               type="text"
               id="nickname"
               name="nickname"
-              placeholder="Enter username"
               value={newUser.nickname}
               onChange={handleChange}
-              required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
@@ -167,15 +163,13 @@ function Register() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+              className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
               type="password"
               id="password"
               name="password"
-              placeholder="Enter password"
               value={newUser.password}
               onChange={handleChange}
               required
@@ -186,8 +180,7 @@ function Register() {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Sign Up
             </button>
           </div>
@@ -198,8 +191,7 @@ function Register() {
             Already registered?{" "}
             <Link
               to="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
+              className="font-medium text-indigo-600 hover:text-indigo-500">
               Login
             </Link>
           </p>

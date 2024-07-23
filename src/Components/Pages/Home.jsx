@@ -3,10 +3,11 @@ import { getAuth } from "firebase/auth";
 import useHandleSearchChange from "../../helpers/useHandleSearchChange";
 import { Link } from "react-router-dom";
 import placeholderImage from "../../assets/recipe_place_holder.png";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-const Home = ({ setBurgerToggle }) => {
+const Home = ({ setBurgerToggle, setNavBarToggle }) => {
   const [allPublicRecipes, setAllPublicRecipes] = useState([]);
   const [allLunchRecipes, setAllLunchRecipes] = useState([]);
   const [allDinnerRecipes, setAllDinnerRecipes] = useState([]);
@@ -38,6 +39,7 @@ const Home = ({ setBurgerToggle }) => {
       })
       .catch((error) => console.error("Error fetching recipe:", error));
     setBurgerToggle(false);
+    setNavBarToggle(true);
   }, []);
 
   //SORT RECIPES ? 🤔
@@ -56,12 +58,12 @@ const Home = ({ setBurgerToggle }) => {
           className="w-full p-2 border rounded shadow-md"
         />
         {searchInput && (
-          <button
+          <div
             onClick={clearSearch}
             className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-none px-1 py-0.5 rounded"
           >
-            x
-          </button>
+            <ClearIcon className="text-xs" />
+          </div>
         )}
       </div>
 
@@ -151,6 +153,7 @@ const Home = ({ setBurgerToggle }) => {
                     className="object-cover w-full h-full rounded"
                   />
                   <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">{searchedRecipe.name}</p>
+
                 </div>
               </Link>
             ))
