@@ -12,9 +12,9 @@ const NavBar = ({ children, userName }) => {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FFDAB9]">
+    <div className="flex flex-col min-h-screen bg-gradient-to-t from-[#FFDAB9] to-[#fec088] via-[#FFDAB9] via-opacity-80 ">
       {/* Header */}
-      <header className="bg-[#713A3A] text-center py-4 fixed top-0 w-full z-10">
+      <header className="bg-[#713A3A] text-center py-4 fixed top-0 w-full z-10 shadow-md bg-gradient-to-t  from-[#713A3A] to-[#512929]  ">
         <h1 className="text-2xl text-white">
           {userName ? `${userName}'s Cookbook` : "Roots & Recipe Cookbook"}
         </h1>
@@ -22,7 +22,7 @@ const NavBar = ({ children, userName }) => {
       <main className="flex-grow p-4 mt-16 mb-16">{children}</main>
       {/* Footer */}
       {!isAuthPage && (
-        <footer className="bg-[#713A3A] w-full p-4 flex justify-around fixed bottom-0 z-10">
+        <footer className="bg-[#713A3A] w-full p-4 flex justify-around fixed bottom-0 z-10 shadow-md bg-gradient-to-t from-[#512929] to-[#713A3A]">
           {/* Home Link */}
           <Link to="/home" className="flex flex-col items-center text-white">
             <img src={homeIconPng} alt="home icon" className="w-6 h-6 mb-1" />
