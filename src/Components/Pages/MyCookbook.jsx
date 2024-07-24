@@ -8,6 +8,7 @@ import useHandleSearchChange from "../../helpers/useHandleSearchChange";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -100,7 +101,8 @@ export const MyCookbook = ({ setBurgerToggle }) => {
           {searchInput && (
             <div
               onClick={clearSearch}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2">
+              className="absolute right-0 top-1/2 transform -translate-y-1/2"
+            >
               <ClearIcon />
             </div>
           )}
@@ -115,18 +117,16 @@ export const MyCookbook = ({ setBurgerToggle }) => {
           </Link>
         ) : recipes.length > 0 ? (
           recipes.map((recipe) => (
-            <>
-              <Link key={recipe.id} to={`/recipe_show/${recipe.id}`}>
-                <div className="flex items-center mt-4 mx-10">
-                  <div className="border-solid border-2 border-black rounded-xl flex-1">
-                    <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
-                      {recipe.name} <span className="ml-6">+</span>
-                    </p>
-                  </div>
+            <div key={recipe.id} className="flex items-center mt-4 mx-10">
+              <HighlightOffIcon />
+              <Link to={`/recipe_show/${recipe.id}`} className="flex-1 ml-2">
+                <div className="border-solid border-2 border-black rounded-xl">
+                  <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
+                    {recipe.name} <span className="ml-6">+</span>
+                  </p>
                 </div>
               </Link>
-              <button onClick={() => handleClick(recipe)}>CLICK ME</button>
-            </>
+            </div>
           ))
         ) : (
           <p className="text-center bg-[#D9D9D9] p-4">
