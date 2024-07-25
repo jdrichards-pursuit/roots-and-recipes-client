@@ -43,9 +43,13 @@ const TakePhoto = () => {
     }
 
     function handleImageUpload(e) {
-        const objectUrl = URL.createObjectURL(e.target.files[0])
-        setImage(objectUrl)
-        setToggleRetake(false);
+        if (e.target.files[0].size > 10485760) {
+            alert("This image is to large.")
+        } else {
+            const objectUrl = URL.createObjectURL(e.target.files[0])
+            setImage(objectUrl)
+            setToggleRetake(false);
+        }
     }
 
     function handleCameraToggle() {
