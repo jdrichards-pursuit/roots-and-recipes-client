@@ -46,7 +46,6 @@ const TakePhoto = () => {
         setImage(e.target.files[0])
         const objectUrl = URL.createObjectURL(e.target.files[0])
         setImageURL(objectUrl)
-        console.log(objectUrl.slice(5))
     }
 
     function handleCameraChange() {
