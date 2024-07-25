@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
-import { X } from "lucide-react";
-import { Mic } from "lucide-react";
-import { Plus } from "lucide-react";
-import { Camera } from "lucide-react";
+import { X, Mic, Plus, Camera } from "lucide-react";
 
-import { data } from "autoprefixer";
 import {
   handleTagClick,
   handleTagEntry,
-  handleTextChange,
+  // handleTextChange,
   handleAddIngredientsInput,
   handleIngredientsInputChange,
   handleIngredientDelete,
@@ -18,6 +14,7 @@ import {
   handleStepsInputChange,
   handleStepDelete,
   handlePublicToggle,
+  capitalizeFirstLetter,
 } from "../../helpers/helpers";
 
 const URL = import.meta.env.VITE_BASE_URL;
@@ -28,33 +25,31 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // user state
   const [userDetails, setUserDetails] = useState(null);
   const [familyName, setFamilyName] = useState(null);
-
-  // console.log(userDetails);
   //State for all categories
   const [categories, setCategories] = useState([]);
   //State for selected categories
   const [selectedCategories, setSelectedCategories] = useState([]);
-
   const [recipeID, setRecipeID] = useState();
   console.log(selectedCategories);
   // STATES FOR THE MODAL
   const [showModal, setShowModal] = useState(false);
   const [modalChoice, setModalChoice] = useState(null);
-
   // // STATE FOR THE INGREDIENTS
   const [ingredientsInputs, setIngredientsInputs] = useState([]);
   // STATE FOR THE STEPS
   const [stepsInputs, setStepsInputs] = useState([]);
-
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
 
+  // New state for checkbox
+  // const [useSelfAsChef, setUseSelfAsChef] = useState(false);
+  const [isSelfChef, setIsSelfChef] = useState(false);
+
   const addRecipe = async () => {
-    // console.log(userDetails);
     newRecipe.user_id = userDetails.id;
     newRecipe.status = isPublic;
-    // console.log(localStorage.getItem("updatedRecipe"));
-    // newRecipe.photo = localStorage.getItem("updatedRecipes.photo");
+    newRecipe.chef = isSelfChef ? userDetails.nickname : newRecipe.chef;
+
     try {
       const response = await fetch(`${URL}/api/recipes`, {
         method: "POST",
@@ -71,7 +66,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       const data = await response.json();
       console.log(data);
 
-      return data; // Return the added recipe or necessary data
+      return data;
     } catch (error) {
       console.error("Error adding recipe:", error);
       throw error; // Rethrow the error for handling in the calling function
@@ -79,13 +74,9 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   };
 
   const handleSubmit = async (event) => {
-    console.log("handleSubmit called");
-    // event.preventDefault();
-
     try {
       // Wait for addRecipe to complete
       await addRecipe();
-
       // Fetch the latest recipe after adding
       if (userDetails) {
         const response = await fetch(
@@ -93,20 +84,10 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         );
         const data = await response.json();
         setRecipeID(data.id);
-
         // Handle tag entry with the fetched recipeID
         if (selectedCategories.length > 0) {
           await handleTagEntry(categories, selectedCategories, data.id);
         }
-
-        // if (userDetails.family_code === "000000") {
-        //   setShowModal(false);
-        //   console.log("close");
-        //   navigate("/cookbook");
-        // } else {
-        //   setShowModal(true);
-        //   console.log("open");
-        // }
 
         // Clear local storage after handling tags
         localStorage.removeItem("ingredientsInputs");
@@ -115,41 +96,44 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         localStorage.removeItem("photo");
         localStorage.removeItem("selectedCategories");
       }
-
-      // Show the modal after everything is done
-      // setShowModal(true);
     } catch (error) {
       console.error("Error:", error);
-      // Handle the error appropriately (e.g., show a message to the user)
+    }
+  };
+
+  const handleTextChange = (event, setNewRecipe, newRecipe) => {
+    if (event.target.id === "chef" && isSelfChef) {
+      setNewRecipe({
+        ...newRecipe,
+        chef: userDetails.nickname || userDetails.first_name,
+      });
+    } else {
+      setNewRecipe({ ...newRecipe, [event.target.id]: event.target.value });
     }
   };
 
   const handleModalChoice = async (choice) => {
     setModalChoice(choice);
     try {
-      // await addRecipe(); // This will add recipe after the user's choice??
       if (choice === "yes") {
         await handleSubmit();
         navigate(`/family_cookbook`);
       } else {
         newRecipe.family = "defaultFamily";
-        console.log(newRecipe);
         await handleSubmit();
         navigate(`/cookbook`);
       }
     } catch (error) {
       console.error("Error adding recipe:", error);
-      // Handle error if necessary
     }
-    setShowModal(false); // Close modal after choice
+    setShowModal(false);
   };
-
   // HANDLE PUBLIC TOGGLE
   const handlePublicToggleClick = () => {
     handlePublicToggle(isPublic, setIsPublic, newRecipe, setNewRecipe);
   };
 
-  // Use Effect
+  // Use Effect/GET request
   useEffect(() => {
     async function getUser() {
       const user = await getUserData();
@@ -196,15 +180,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (userDetails && userDetails.family_code !== "000000") {
-  //     setNewRecipe((prevRecipe) => ({
-  //       ...prevRecipe,
-  //       family: familyName,
-  //     }));
-  //   }
-  // }, []);
-
   const saveToLocalStorage = () => {
     const updatedRecipe = {
       ...newRecipe,
@@ -223,6 +198,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       JSON.stringify(selectedCategories)
     );
   };
+
   // GIVE THE INGREDIENTS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.ingredients = ingredientsInputs.join(",");
   // GIVE THE STEPS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
@@ -239,7 +215,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   };
 
-  // console.log("NEW RECIPE", newRecipe);
   return (
     <div className="ml-28 border-2 border-black border-solid">
       <h1 className="text-center text-[#713A3A]">New Recipe</h1>
@@ -253,17 +228,55 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           value={newRecipe.name || ""}
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-          // required
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
 
         {/* Chef Input */}
+        {/* <label>
+          <h2>Chef</h2>
+        </label>
+        <div className="flex items-center">
+          <input
+            id="chef"
+            value={
+              useSelfAsChef ? userDetails?.nickname || "" : newRecipe.chef || ""
+            }
+            type="text"
+            onChange={(event) =>
+              handleTextChange(event, setNewRecipe, newRecipe)
+            }
+            className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
+            disabled={useSelfAsChef}
+          />
+          <label className="ml-2">
+            <input
+              type="checkbox"
+              checked={useSelfAsChef}
+              onChange={(e) => setUseSelfAsChef(e.target.checked)}
+              className="mr-1"
+            />
+            Self
+          </label>
+        </div> */}
+
         <label>
           <h2>Chef</h2>
+          <input
+            type="checkbox"
+            id="selfChef"
+            checked={isSelfChef}
+            onChange={() => setIsSelfChef(!isSelfChef)}
+          />
+          <span>Self</span>
         </label>
         <input
           id="chef"
-          value={newRecipe.chef || ""}
+          value={
+            isSelfChef
+              ? capitalizeFirstLetter(userDetails?.nickname) ||
+                capitalizeFirstLetter(userDetails?.first_name)
+              : capitalizeFirstLetter(newRecipe.chef) || ""
+          }
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
@@ -273,44 +286,42 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         <label>
           <h2>Ingredients</h2>
         </label>
-
-        {ingredientsInputs.map((ingredientInput, index) => {
-          return (
-            <div key={index}>
-              <input
-                onChange={(e) =>
-                  handleIngredientsInputChange(
-                    index,
-                    e,
-                    setIngredientsInputs,
-                    ingredientsInputs
-                  )
-                }
-                type="text"
-                value={ingredientInput || ""}
-                className="border-solid border-2 border-black p-2 mt-8"
-              />
-              {/* DELETE AN INGREDIENT */}
-              <div
-                onClick={() =>
-                  handleIngredientDelete(
-                    index,
-                    setIngredientsInputs,
-                    ingredientsInputs
-                  )
-                }>
-                <X />
-              </div>
+        {ingredientsInputs.map((ingredientInput, index) => (
+          <div key={index}>
+            <input
+              onChange={(e) =>
+                handleIngredientsInputChange(
+                  index,
+                  e,
+                  setIngredientsInputs,
+                  ingredientsInputs
+                )
+              }
+              type="text"
+              value={ingredientInput || ""}
+              className="border-solid border-2 border-black p-2 mt-8"
+            />
+            {/* DELETE AN INGREDIENT */}
+            <div
+              onClick={() =>
+                handleIngredientDelete(
+                  index,
+                  setIngredientsInputs,
+                  ingredientsInputs
+                )
+              }
+            >
+              <X />
             </div>
-          );
-        })}
-
+          </div>
+        ))}
         {/* PLUS BUTTON */}
         <div
           onClick={() =>
             handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
           }
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
           <Plus />
         </div>
 
@@ -318,43 +329,36 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         <label>
           <h2>Steps</h2>
         </label>
-        {stepsInputs.map((stepInput, index) => {
-          return (
-            <div key={index}>
-              <div className="flex items-center space-x-2 mt-8">
-                <input
-                  onChange={(e) =>
-                    handleStepsInputChange(
-                      index,
-                      e,
-                      setStepsInputs,
-                      stepsInputs
-                    )
-                  }
-                  type="text"
-                  value={stepInput || ""}
-                  className="border-solid border-2 border-black p-2 mt-8"
-                />
-
-                <Mic className="mt-8" />
-              </div>
-
-              {/* DELETE A STEP */}
-              <div
-                onClick={() =>
-                  handleStepDelete(index, setStepsInputs, stepsInputs)
-                }>
-                <X />
-              </div>
+        {stepsInputs.map((stepInput, index) => (
+          <div key={index}>
+            <div className="flex items-center space-x-2 mt-8">
+              <input
+                onChange={(e) =>
+                  handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
+                }
+                type="text"
+                value={stepInput || ""}
+                className="border-solid border-2 border-black p-2 mt-8"
+              />
+              <Mic className="mt-8" />
             </div>
-          );
-        })}
 
+            {/* DELETE A STEP */}
+
+            <div
+              onClick={() =>
+                handleStepDelete(index, setStepsInputs, stepsInputs)
+              }
+            >
+              <X />
+            </div>
+          </div>
+        ))}
         {/* PLUS BUTTON */}
-
         <div
           onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center">
+          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
+        >
           <Plus />
         </div>
 
@@ -377,7 +381,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                   }
                   className={`inline-block px-2 py-1 rounded-full ${
                     isSelected ? "bg-gray-200" : ""
-                  }`}>
+                  }`}
+                >
                   #{category.category_name}
                 </p>
               );
@@ -387,13 +392,13 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           to="/dish_photo"
           onClick={() => {
             saveToLocalStorage();
-          }}>
+          }}
+        >
           <p className="text-center bg-[#BCB9B9] p-2 inline-block ml-4">
             Take a photo of your dish
           </p>
-
           <div className="flex justify-center items-center">
-            <Camera className="w-8 h-8" /> {/* Adjust the size as needed */}
+            <Camera className="w-8 h-8" />
           </div>
         </Link>
 
@@ -404,7 +409,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             onClick={handlePublicToggleClick}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
-            }`}>
+            }`}
+          >
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
@@ -422,7 +428,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           />
           <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2">
+            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
+          >
             Cancel
           </p>
         </div>
@@ -438,12 +445,14 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
+              >
                 No
               </button>
             </div>
