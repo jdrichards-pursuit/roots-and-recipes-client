@@ -10,12 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.24.3",
-    "@google/generative-ai": "^0.15.0",
+    "@cloudinary/react": "^1.13.0",
     "autoprefixer": "^10.4.19",
     "firebase": "^10.12.2",
     "lucide-react": "^0.407.0",
-    "openai": "^4.52.7",
+    "openai": "^4.53.0",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "react-easy-crop": "^5.0.7",
