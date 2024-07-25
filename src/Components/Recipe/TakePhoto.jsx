@@ -65,7 +65,7 @@ const TakePhoto = () => {
                                 <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} />
                             </div>
                         </div>}
-                    {(!toggleForm && image) &&
+                    {(image) &&
                         <div>
                             {(imageURL)
                                 ?

@@ -8,9 +8,6 @@ const CreatARecipe = () => {
   return (
     <div>
       <div className="border-solid border-2 border-black p-2 items-center text-center text-[#713A3A] bg-[#FFEFB9] rounded-2xl">
-        <div className="flex justify-between mb-2">
-          <h2 className="flex-1">Add a Recipe</h2>
-        </div>
         <TakePhoto />
       </div>
       <br />
