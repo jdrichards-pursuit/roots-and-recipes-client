@@ -1,4 +1,4 @@
-import { Camera } from 'react-html5-camera-photo';
+import { Camera, FACING_MODES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import { useState } from 'react';
 import RecipeForm from './RecipeForm';
@@ -73,6 +73,7 @@ const TakePhoto = () => {
                         <div className="flex justify-center">
                             <div className='w-1/2'>
                                 <Camera
+                                    idealFacingMode={FACING_MODES.ENVIRONMENT}
                                     onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
                                     onCameraError={(error) => { handleCameraError(error); }} />
                             </div>
