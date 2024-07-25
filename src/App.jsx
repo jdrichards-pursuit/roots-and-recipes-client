@@ -11,6 +11,7 @@ import JoinFamilyForm from "./Components/Family/JoinFamilyForm";
 import FamilyCookbook from "./Components/Pages/FamilyCookbook";
 import Home from "./Components/Pages/Home";
 import RecipeForm from "./Components/Recipe/RecipeForm";
+import RecipeEditForm from "./Components/Recipe/RecipeEditForm";
 import RecipeList from "./Components/Recipe/RecipeList";
 import RecipeShow from "./Components/Recipe/RecipeShow";
 import AboutUs from "./Components/Hamburger/AboutUs";
@@ -52,7 +53,8 @@ function App() {
   return (
     <NavBar
       userName={user ? user.displayName : null}
-      navBarToggle={navBarToggle}>
+      navBarToggle={navBarToggle}
+    >
       <BurgerMenu burgerToggle={burgerToggle} />
       <Routes>
         <Route
@@ -135,6 +137,16 @@ function App() {
                 />
               }
             />
+            <Route
+              path="/edit/:recipe_id"
+              element={
+                <RecipeEditForm
+                  setNewRecipe={setNewRecipe}
+                  newRecipe={newRecipe}
+                />
+              }
+            />
+
             <Route
               path="/dish_photo"
               element={
