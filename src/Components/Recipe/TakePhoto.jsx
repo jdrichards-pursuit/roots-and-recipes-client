@@ -10,6 +10,7 @@ const TakePhoto = () => {
     const [imageURL, setImageURL] = useState('')
     const [showCamera, setShowCamera] = useState(false);
     const [toggleForm, setToggleForm] = useState(false);
+    const [cameraError, setCameraError] = useState(false);
 
     const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET_KEY;
     const cloudName = import.meta.env.VITE_CLOUD_NAME;
@@ -30,6 +31,7 @@ const TakePhoto = () => {
     }
 
     function handleTakePhotoAnimationDone(dataUri) {
+        console.log("blocked camera: ", dataUri)
         setImageURL('')
         setImage(dataUri)
         setShowCamera(false);
@@ -49,6 +51,13 @@ const TakePhoto = () => {
         setShowCamera(!showCamera);
     }
 
+    function handleCameraError(e) {
+        console.log('handleCameraError', e);
+        setCameraError(true)
+        setShowCamera(false)
+        setImage("")
+    }
+
     return (
         <>
             {(!toggleForm) &&
@@ -62,9 +71,13 @@ const TakePhoto = () => {
                     {(showCamera) &&
                         <div className="flex justify-center">
                             <div className='w-1/2'>
-                                <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} />
+                                <Camera
+                                    onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
+                                    onCameraError={(error) => { handleCameraError(error); }} />
                             </div>
                         </div>}
+                    {(cameraError) &&
+                        <div>Camera Access is Off</div>}
                     {(image) &&
                         <div>
                             {(imageURL)
