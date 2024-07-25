@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import placeholderImage from "../../assets/recipe_place_holder.png";
+import { capitalizeFirstLetter } from "../../helpers/helpers";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -46,47 +47,51 @@ const RecipeShow = () => {
   return (
     <div className="p-4 bg-[#C7DEF1] rounded-lg shadow-lg">
       <div className="bg-white rounded-md p-4 mb-3">
-      <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
-      <img src={photo || placeholderImage} alt={name} className="mb-4 shadow-xl" />
-      <p className="text-lg mb-2 font-bold">
-        Family:
-        <span className="font-thin"> {family}</span>
-      </p>
-      <p className="text-lg mb-2">Chef: {chef}</p>
-       {family !== "defaultFamily" && (
-      <p className="text-lg mb-2 font-bold">
-        Family:
-        <span className="font-thin"> {family}</span>
-      </p>
-       )}
-      <p className="text-lg mb-2">
-        Created at: {new Date(created_at).toLocaleDateString()}
-      </p>
-    </div>
-    <div className="bg-white shadow-lg rounded-md p-4" >
-      <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
-      <ul className="list-disc ml-5 mb-4">
-        {ingredientList.map((ingredient, index) => (
-          <li key={index}>{ingredient}</li>
-        ))}
-      </ul>
-    </div>
-    <div className="bg-white shadow-lg rounded-md p-4 mt-3">
-      <h2 className="text-xl font-semibold mb-2">Steps</h2>
-      <ol className="list-decimal ml-5">
-        {stepsList.map((step, index) => (
-          <li key={index}>{step}</li>
-        ))}
-      </ol>
-
-      <div>
-        <h1 className="text-xl font-semibold mb-2">Categories</h1>
-        {recipeCategories.length > 0 &&
-          recipeCategories.map((category, index) => {
-            return <li key={index}>{category}</li>;
-          })}
+        <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
+        <img
+          src={photo || placeholderImage}
+          alt={name}
+          className="mb-4 shadow-xl"
+        />
+        <p className="text-lg mb-2 font-bold">
+          Family:
+          <span className="font-thin"> {family}</span>
+        </p>
+        <p className="text-lg mb-2">Chef: {capitalizeFirstLetter(chef)}</p>
+        {family !== "defaultFamily" && (
+          <p className="text-lg mb-2 font-bold">
+            Family:
+            <span className="font-thin"> {family}</span>
+          </p>
+        )}
+        <p className="text-lg mb-2">
+          Created at: {new Date(created_at).toLocaleDateString()}
+        </p>
       </div>
-    </div>
+      <div className="bg-white shadow-lg rounded-md p-4">
+        <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
+        <ul className="list-disc ml-5 mb-4">
+          {ingredientList.map((ingredient, index) => (
+            <li key={index}>{ingredient}</li>
+          ))}
+        </ul>
+      </div>
+      <div className="bg-white shadow-lg rounded-md p-4 mt-3">
+        <h2 className="text-xl font-semibold mb-2">Steps</h2>
+        <ol className="list-decimal ml-5">
+          {stepsList.map((step, index) => (
+            <li key={index}>{step}</li>
+          ))}
+        </ol>
+
+        <div>
+          <h1 className="text-xl font-semibold mb-2">Categories</h1>
+          {recipeCategories.length > 0 &&
+            recipeCategories.map((category, index) => {
+              return <li key={index}>{category}</li>;
+            })}
+        </div>
+      </div>
     </div>
   );
 };
