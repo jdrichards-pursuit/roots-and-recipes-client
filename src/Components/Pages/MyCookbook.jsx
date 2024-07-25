@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import EditIcon from "@mui/icons-material/Edit";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -64,6 +65,7 @@ export const MyCookbook = ({ setBurgerToggle }) => {
 
     getUser();
   }, []);
+  console.log("User Details:", userDetails);
 
   const handleClick = (recipe) => {
     console.log(recipe);
@@ -116,13 +118,15 @@ export const MyCookbook = ({ setBurgerToggle }) => {
             </p>
           </Link>
         ) : recipes.length > 0 ? (
-          recipes.map((recipe) => (
-            <div key={recipe.id} className="flex items-center mt-4 mx-10">
-              <HighlightOffIcon />
-              <Link to={`/recipe_show/${recipe.id}`} className="flex-1 ml-2">
+          recipes.map(({ id, name }) => (
+            <div key={id} className="flex items-center mt-4 mx-10">
+              <div>
+                <EditIcon onClick={() => navigate(`/edit/${id}`)} />
+              </div>
+              <Link to={`/recipe_show/${id}`} className="flex-1 ml-2">
                 <div className="border-solid border-2 border-black rounded-xl">
                   <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
-                    {recipe.name} <span className="ml-6">+</span>
+                    {name} <span className="ml-6">+</span>
                   </p>
                 </div>
               </Link>
