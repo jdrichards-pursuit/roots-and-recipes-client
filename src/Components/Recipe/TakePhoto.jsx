@@ -7,10 +7,10 @@ import { Camera as CameraIcon } from "lucide-react";
 
 const TakePhoto = () => {
     const [image, setImage] = useState('');
-    const [imageURL, setImageURL] = useState('')
     const [showCamera, setShowCamera] = useState(false);
     const [toggleForm, setToggleForm] = useState(false);
     const [cameraError, setCameraError] = useState(false);
+    const [toggleRetake, setToggleRetake] = useState(false);
 
     const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET_KEY;
     const cloudName = import.meta.env.VITE_CLOUD_NAME;
@@ -32,22 +32,23 @@ const TakePhoto = () => {
 
     function handleTakePhotoAnimationDone(dataUri) {
         console.log("blocked camera: ", dataUri)
-        setImageURL('')
         setImage(dataUri)
         setShowCamera(false);
+        setToggleRetake(true)
     }
 
     function retake() {
         setImage("");
+        setShowCamera(true)
     }
 
     function handleImageUpload(e) {
-        setImage(e.target.files[0])
         const objectUrl = URL.createObjectURL(e.target.files[0])
-        setImageURL(objectUrl)
+        setImage(objectUrl)
+        setToggleRetake(false);
     }
 
-    function handleCameraChange() {
+    function handleCameraToggle() {
         setShowCamera(!showCamera);
     }
 
@@ -66,7 +67,7 @@ const TakePhoto = () => {
                     <input type="file" accept="image/*" onChange={handleImageUpload} />
                     <h3>Take a Picture</h3>
                     <div className="flex justify-center">
-                        <CameraIcon onClick={handleCameraChange} />
+                        <CameraIcon onClick={handleCameraToggle} />
                     </div>
                     {(showCamera) &&
                         <div className="flex justify-center">
@@ -80,12 +81,17 @@ const TakePhoto = () => {
                         <div>Camera Access is Off</div>}
                     {(image) &&
                         <div>
-                            {(imageURL)
-                                ?
-                                <img src={imageURL}></img>
-                                : <img src={image}></img>}
-                            <button onClick={retake}>retake</button>
-                            <button onClick={uploadImagetoCloudinary}>Use this Image</button>
+                            <img src={image}></img>
+                            <div className='flex flex-row justify-center'>
+                                {toggleRetake &&
+                                    <button onClick={retake}
+                                        className='bg-[#C7DEF1] m-5 border-solid border-2 border-[#713A3A] rounded-xl text-[#713A3A]'
+                                    >retake</button>}
+                                <button onClick={uploadImagetoCloudinary}
+                                    className='bg-[#C7DEF1] w-40 m-5 border-solid border-2 border-[#713A3A] rounded-xl text-[#713A3A]'
+                                >Use this Image</button>
+                            </div>
+
                         </div>}
                 </div>
             }
