@@ -339,13 +339,11 @@ function RecipeForm() {
         <div className="flex items-center mb-4">
           <div
             onClick={handlePublicToggle}
-            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-              isPublic ? "bg-blue-500" : "bg-gray-300"
-            }`}>
+            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${isPublic ? "bg-blue-500" : "bg-gray-300"
+              }`}>
             <div
-              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
-                isPublic ? "translate-x-8" : ""
-              } transition-transform duration-300`}
+              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${isPublic ? "translate-x-8" : ""
+                } transition-transform duration-300`}
             />
           </div>
           <span className="ml-3">{isPublic ? "Public" : "Private"}</span>
