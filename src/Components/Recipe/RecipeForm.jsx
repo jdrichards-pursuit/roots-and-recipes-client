@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
+import { callOpenAI } from "../../helpers/openAI.js";
 import { X } from "lucide-react";
 import { Mic } from "lucide-react";
 import { Plus } from "lucide-react";
@@ -22,9 +23,8 @@ import {
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-function RecipeForm({ setNewRecipe, newRecipe }) {
+function RecipeForm({ image, setNewRecipe, newRecipe }) {
   const navigate = useNavigate();
-
   // user state
   const [userDetails, setUserDetails] = useState(null);
   const [familyName, setFamilyName] = useState(null);
@@ -48,6 +48,44 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
+
+  // USEEFFECT FOR GETTING THE INGREDIENTS AND STEPS FROM AN IMAGE
+  useEffect(() => {
+    async function extractTextFromImage() {
+      const response = await callOpenAI(image)
+      console.log(response)
+      setIngredientsInputs([...response.ingredients])
+      setStepsInputs([...response.steps])
+    }
+    if (image) {
+      extractTextFromImage()
+    }
+  }, [])
+
+  // Function to add a new recipe
+  // const addRecipe = () => {
+  //   fetch(`${URL}/api/recipes`, {
+  //     method: "POST",
+  //     body: JSON.stringify(newRecipe),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // console.log("New recipe added:", data);
+  //       setNewRecipe(data);
+
+  //       if (modalChoice === "yes") {
+  //         navigate(`family_cookbook`);
+  //       } else {
+  //         navigate(`/cookbook`);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error adding recipe:", error);
+  //     });
+  // };
 
   const addRecipe = async () => {
     // console.log(userDetails);
@@ -375,9 +413,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                       setSelectedCategories
                     )
                   }
-                  className={`inline-block px-2 py-1 rounded-full ${
-                    isSelected ? "bg-gray-200" : ""
-                  }`}>
+                  className={`inline-block px-2 py-1 rounded-full ${isSelected ? "bg-gray-200" : ""
+                    }`}>
                   #{category.category_name}
                 </p>
               );
@@ -402,13 +439,11 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           <span className="mr-3">{isPublic ? "Public" : "Private"}</span>
           <div
             onClick={handlePublicToggleClick}
-            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-              isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
-            }`}>
+            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
+              }`}>
             <div
-              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
-                isPublic ? "translate-x-8" : ""
-              } transition-transform duration-300`}
+              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${isPublic ? "translate-x-8" : ""
+                } transition-transform duration-300`}
             />
           </div>
         </div>
