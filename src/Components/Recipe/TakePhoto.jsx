@@ -105,5 +105,4 @@ const TakePhoto = () => {
         </>
     )
 }
-
-export default TakePhoto
+export default TakePhoto;
