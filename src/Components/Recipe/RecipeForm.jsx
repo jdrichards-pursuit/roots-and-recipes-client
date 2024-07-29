@@ -21,7 +21,6 @@ const URL = import.meta.env.VITE_BASE_URL;
 
 function RecipeForm({ setNewRecipe, newRecipe }) {
   const navigate = useNavigate();
-
   // user state
   const [userDetails, setUserDetails] = useState(null);
   const [familyName, setFamilyName] = useState(null);
@@ -41,9 +40,10 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
 
+
   // New state for checkbox
-  // const [useSelfAsChef, setUseSelfAsChef] = useState(false);
   const [isSelfChef, setIsSelfChef] = useState(false);
+
 
   const addRecipe = async () => {
     newRecipe.user_id = userDetails.id;
@@ -232,33 +232,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         />
 
         {/* Chef Input */}
-        {/* <label>
-          <h2>Chef</h2>
-        </label>
-        <div className="flex items-center">
-          <input
-            id="chef"
-            value={
-              useSelfAsChef ? userDetails?.nickname || "" : newRecipe.chef || ""
-            }
-            type="text"
-            onChange={(event) =>
-              handleTextChange(event, setNewRecipe, newRecipe)
-            }
-            className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
-            disabled={useSelfAsChef}
-          />
-          <label className="ml-2">
-            <input
-              type="checkbox"
-              checked={useSelfAsChef}
-              onChange={(e) => setUseSelfAsChef(e.target.checked)}
-              className="mr-1"
-            />
-            Self
-          </label>
-        </div> */}
-
         <label>
           <h2>Chef</h2>
           <input
@@ -301,6 +274,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               value={ingredientInput || ""}
               className="border-solid border-2 border-black p-2 mt-8"
             />
+                
             {/* DELETE AN INGREDIENT */}
             <div
               onClick={() =>
@@ -344,7 +318,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             </div>
 
             {/* DELETE A STEP */}
-
             <div
               onClick={() =>
                 handleStepDelete(index, setStepsInputs, stepsInputs)
@@ -379,10 +352,12 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                       setSelectedCategories
                     )
                   }
+
                   className={`inline-block px-2 py-1 rounded-full ${
                     isSelected ? "bg-gray-200" : ""
                   }`}
                 >
+
                   #{category.category_name}
                 </p>
               );
@@ -407,14 +382,15 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           <span className="mr-3">{isPublic ? "Public" : "Private"}</span>
           <div
             onClick={handlePublicToggleClick}
+
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
             }`}
           >
+
             <div
-              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
-                isPublic ? "translate-x-8" : ""
-              } transition-transform duration-300`}
+              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${isPublic ? "translate-x-8" : ""
+                } transition-transform duration-300`}
             />
           </div>
         </div>
