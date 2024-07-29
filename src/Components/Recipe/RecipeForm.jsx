@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
-import { callOpenAI } from "../../helpers/openAI.js";
 import { X } from "lucide-react";
 import { Mic } from "lucide-react";
 import { Plus } from "lucide-react";
@@ -23,7 +22,7 @@ import {
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-function RecipeForm({ image, setNewRecipe, newRecipe }) {
+function RecipeForm({ setNewRecipe, newRecipe }) {
   const navigate = useNavigate();
   // user state
   const [userDetails, setUserDetails] = useState(null);
@@ -49,18 +48,6 @@ function RecipeForm({ image, setNewRecipe, newRecipe }) {
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
 
-  // USEEFFECT FOR GETTING THE INGREDIENTS AND STEPS FROM AN IMAGE
-  useEffect(() => {
-    async function extractTextFromImage() {
-      const response = await callOpenAI(image)
-      console.log(response)
-      setIngredientsInputs([...response.ingredients])
-      setStepsInputs([...response.steps])
-    }
-    if (image) {
-      extractTextFromImage()
-    }
-  }, [])
 
   // Function to add a new recipe
   // const addRecipe = () => {
