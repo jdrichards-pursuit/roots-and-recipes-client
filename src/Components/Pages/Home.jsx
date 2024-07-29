@@ -49,7 +49,6 @@ const Home = ({ setBurgerToggle, setNavBarToggle }) => {
 
   return (
     <div className="p-4">
-      <h1>name</h1>
       <div className="mb-4 relative">
         <input
           type="text"
