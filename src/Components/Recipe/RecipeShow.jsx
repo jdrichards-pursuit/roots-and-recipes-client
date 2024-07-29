@@ -7,6 +7,7 @@ const URL = import.meta.env.VITE_BASE_URL;
 
 const RecipeShow = () => {
   const { id } = useParams();
+  const [rate, setRate] = useState(1);
 
   //  STATE TO STORE THE RECIPE
   const [singleRecipe, setSingleRecipe] = useState(null);
@@ -43,6 +44,59 @@ const RecipeShow = () => {
   // Split ingredients and steps into arrays
   const ingredientList = ingredients.split(",").map((item) => item.trim());
   const stepsList = steps.split(",").map((item) => item.trim());
+
+  function handleRead() {
+    if (!singleRecipe.ingredients || !singleRecipe.steps) {
+      console.error(
+        "Single Recipe does not have the expected structure",
+        singleRecipe
+      );
+      return;
+    }
+
+    const introductionUtterance = new SpeechSynthesisUtterance(
+      `This is the ${name} recipe from ${chef}.......`
+    );
+    const ingredientsUtterance = new SpeechSynthesisUtterance(
+      `Here are the Ingredients........ ${ingredients}`
+    );
+    const instructionsUtterance = new SpeechSynthesisUtterance(
+      `And now the steps for preparation. ${steps}`
+    );
+
+    // Set the rate of speech
+    introductionUtterance.rate = rate;
+    ingredientsUtterance.rate = rate;
+    instructionsUtterance.rate = rate;
+
+    // Speak the ingredients and instructions
+    window.speechSynthesis.speak(introductionUtterance);
+    window.speechSynthesis.speak(ingredientsUtterance);
+    window.speechSynthesis.speak(instructionsUtterance);
+  }
+
+  // Pause the speech
+  function handlePause() {
+    window.speechSynthesis.pause();
+  }
+  // Resume the speech
+  function handleResume() {
+    window.speechSynthesis.resume();
+  }
+
+  // Stop the speech
+  function handleStop() {
+    window.speechSynthesis.cancel();
+  }
+  // Increase the rate of speech, you must press stop if you want to adjust the speed and the recording is already playing. Then press play again.
+  function increaseRate() {
+    setRate((prevRate) => Math.min(prevRate + 0.1, 10)); // Max rate is 10
+  }
+
+  // Decrease the rate of speech, you must press stop if you want to adjust the speed and the recording is already playing. Then press play again.
+  function decreaseRate() {
+    setRate((prevRate) => Math.max(prevRate - 0.1, 0.1)); // Min rate is 0.1
+  }
 
   return (
     <div className="p-4 bg-[#C7DEF1] rounded-lg shadow-lg">
@@ -90,6 +144,20 @@ const RecipeShow = () => {
             recipeCategories.map((category, index) => {
               return <li key={index}>{category}</li>;
             })}
+        </div>
+      </div>
+
+      <div>
+        <button style={{ width: "160px", height: "40px" }} onClick={handleRead}>
+          Play Recipe
+        </button>
+        <button onClick={handlePause}>Pause</button>
+        <button onClick={handleResume}>Resume</button>
+        <button onClick={handleStop}>Stop</button>
+        <div>
+          <button onClick={decreaseRate}>-</button>
+          <span> Speed: {rate.toFixed(1)} </span>
+          <button onClick={increaseRate}>+</button>
         </div>
       </div>
     </div>
