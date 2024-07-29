@@ -11,6 +11,7 @@ import JoinFamilyForm from "./Components/Family/JoinFamilyForm";
 import FamilyCookbook from "./Components/Pages/FamilyCookbook";
 import Home from "./Components/Pages/Home";
 import RecipeForm from "./Components/Recipe/RecipeForm";
+import RecipeEditForm from "./Components/Recipe/RecipeEditForm";
 import RecipeList from "./Components/Recipe/RecipeList";
 import RecipeShow from "./Components/Recipe/RecipeShow";
 import AboutUs from "./Components/Hamburger/AboutUs";
@@ -18,7 +19,7 @@ import BurgerMenu from "./Components/Hamburger/BurgerMenu";
 import ContactUs from "./Components/Hamburger/ContactUs";
 import FAQ from "./Components/Hamburger/FAQ";
 import { MyCookbook } from "./Components/Pages/MyCookbook";
-import NavBar from "./Components/Pages/NavBar";
+import Layout from "./Components/Pages/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
@@ -51,9 +52,10 @@ function App() {
   }, []);
 
   return (
-    <NavBar
+    <Layout
       userName={user ? user.displayName : null}
-      navBarToggle={navBarToggle}>
+      navBarToggle={navBarToggle}
+    >
       <BurgerMenu burgerToggle={burgerToggle} />
       <Routes>
         <Route
@@ -137,6 +139,16 @@ function App() {
               }
             />
             <Route
+              path="/edit/:recipe_id"
+              element={
+                <RecipeEditForm
+                  setNewRecipe={setNewRecipe}
+                  newRecipe={newRecipe}
+                />
+              }
+            />
+
+            <Route
               path="/dish_photo"
               element={
                 <DishCameraView
@@ -169,7 +181,7 @@ function App() {
         )}
       </Routes>
       <ToastContainer />
-    </NavBar>
+    </Layout>
   );
 }
 

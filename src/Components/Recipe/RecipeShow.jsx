@@ -1,7 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import { getUserData } from "../../helpers/getUserData";
+
+import { PlayIcon, PauseIcon, StopIcon, MinusCircleIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
+
 import placeholderImage from "../../assets/recipe_place_holder.png";
+import { capitalizeFirstLetter } from "../../helpers/helpers";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -9,14 +14,15 @@ const RecipeShow = () => {
   const { id } = useParams();
   const [rate, setRate] = useState(1);
 
-  //  STATE TO STORE THE RECIPE
   const [singleRecipe, setSingleRecipe] = useState(null);
   const [recipeCategories, setRecipeCategories] = useState([]);
+
   const [user, setUser] = useState({});
   const [familyName, setFamilyName] = useState("");
   // had to change the initial state from being empty to null. i guess to let it be known there will be something there soon or to indicate "loading state"
 
-  // console.log(singleRecipe);
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,18 +60,15 @@ const RecipeShow = () => {
     fetchData();
   }, [id]);
 
-  // I had to add the id to the dependency array to get rid of the error i was receiving when refreshing the page
-  // This dependency array includes 'id' to refetch data if the 'id' changes
-  console.log(singleRecipe);
   if (!singleRecipe) {
     return <div>Loading...</div>;
   }
+
 
   // Destructure the properties from the singleRecipe object
   const { name, ingredients, chef, family_id, created_at, photo, steps } =
     singleRecipe;
 
-  // Split ingredients and steps into arrays
   const ingredientList = ingredients.split(",").map((item) => item.trim());
   const stepsList = steps.split(",").map((item) => item.trim());
 
@@ -78,7 +81,7 @@ const RecipeShow = () => {
       return;
     }
 
-    // console.log("Reading ingredients and instructions");
+
     const introductionUtterance = new SpeechSynthesisUtterance(
       `This is the ${name} recipe from ${chef}.......`
     );
@@ -89,16 +92,19 @@ const RecipeShow = () => {
       `And now the steps for preparation. ${steps}`
     );
 
+
     // Set the rate of speech
     introductionUtterance.rate = rate;
     ingredientsUtterance.rate = rate;
     instructionsUtterance.rate = rate;
+
 
     // Speak the ingredients and instructions
     window.speechSynthesis.speak(introductionUtterance);
     window.speechSynthesis.speak(ingredientsUtterance);
     window.speechSynthesis.speak(instructionsUtterance);
   }
+
 
   // Pause the speech
   function handlePause() {
@@ -109,77 +115,109 @@ const RecipeShow = () => {
     window.speechSynthesis.resume();
   }
 
-  // Stop the speech
   function handleStop() {
     window.speechSynthesis.cancel();
   }
-  // Increase the rate of speech, you must press stop if you want to adjust the speed and the recording is already playing. Then press play again.
+
   function increaseRate() {
-    setRate((prevRate) => Math.min(prevRate + 0.1, 10)); // Max rate is 10
+    setRate((prevRate) => Math.min(prevRate + 0.1, 10));
   }
 
-  // Decrease the rate of speech, you must press stop if you want to adjust the speed and the recording is already playing. Then press play again.
   function decreaseRate() {
-    setRate((prevRate) => Math.max(prevRate - 0.1, 0.1)); // Min rate is 0.1
+    setRate((prevRate) => Math.max(prevRate - 0.1, 0.1));
   }
 
   return (
-    <div className="p-4 bg-[#C7DEF1] rounded-lg shadow-lg">
-      <div className="bg-white rounded-md p-4 mb-3">
-        <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
-        <img
-          src={photo || placeholderImage}
-          alt={name}
-          className="mb-4 shadow-xl"
-        />
-        <p className="text-lg mb-2">Chef: {chef}</p>
-        {family_id !== 1 &&
-          familyName.length > 0 &&
-          familyName !== "defaultFamily" && (
-            <p className="text-lg mb-2 font-bold">
-              Family:
-              <span className="font-thin"> {familyName}</span>
-            </p>
-          )}
-        <p className="text-lg mb-2">
-          Created at: {new Date(created_at).toLocaleDateString()}
-        </p>
-      </div>
-      <div className="bg-white shadow-lg rounded-md p-4">
-        <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
-        <ul className="list-disc ml-5 mb-4">
-          {ingredientList.map((ingredient, index) => (
-            <li key={index}>{ingredient}</li>
-          ))}
-        </ul>
-      </div>
-      <div className="bg-white shadow-lg rounded-md p-4 mt-3">
-        <h2 className="text-xl font-semibold mb-2">Steps</h2>
-        <ol className="list-decimal ml-5">
-          {stepsList.map((step, index) => (
-            <li key={index}>{step}</li>
-          ))}
-        </ol>
-
-        <div>
-          <h1 className="text-xl font-semibold mb-2">Categories</h1>
-          {recipeCategories.length > 0 &&
-            recipeCategories.map((category, index) => {
-              return <li key={index}>{category}</li>;
-            })}
+    <div className="bg-transparent min-h-screen py-8">
+      <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-4xl">
+        <h1 className="text-4xl font-bold mb-6 text-center text-gray-800">{name}</h1>
+        <div className="bg-gray-200 rounded-lg p-4 mb-6">
+          <p className="text-lg mb-2">
+            <span className="font-bold">Family:</span> {family}
+          </p>
+          <p className="text-lg mb-2">
+            <span className="font-bold">Chef:</span> {chef}
+          </p>
+          <p className="text-lg mb-2">
+            <span className="font-bold">Created at:</span> {new Date(created_at).toLocaleDateString()}
+          </p>
         </div>
-      </div>
-      <div>
-        <button style={{ width: "160px", height: "40px" }} onClick={handleRead}>
-          Play Recipe
-        </button>
-        <button onClick={handlePause}>Pause</button>
-        <button onClick={handleResume}>Resume</button>
-        <button onClick={handleStop}>Stop</button>
-        <div>
-          <button onClick={decreaseRate}>-</button>
-          <span> Speed: {rate.toFixed(1)} </span>
-          <button onClick={increaseRate}>+</button>
+        <div className="flex flex-col lg:flex-row items-start lg:items-center lg:space-x-8">
+          <img
+            src={photo || placeholderImage}
+            alt={name}
+            className="w-full lg:w-1/3 mb-4 lg:mb-0 rounded-lg shadow-md"
+          />
+          <div className="w-full lg:w-2/3">
+            <div className="bg-white shadow-md rounded-lg p-6">
+              <h2 className="text-2xl font-semibold mb-4">Ingredients</h2>
+              <ul className="list-disc list-inside space-y-2">
+                {ingredientList.map((ingredient, index) => (
+                  <li key={index}>{ingredient}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 mt-6">
+          <h2 className="text-2xl font-semibold mb-4">Steps</h2>
+          <ol className="list-decimal list-inside space-y-2">
+            {stepsList.map((step, index) => (
+              <li key={index}>{step}</li>
+            ))}
+          </ol>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 mt-6">
+          <h2 className="text-2xl font-semibold mb-4">Categories</h2>
+          <ul className="list-inside space-y-2">
+            {recipeCategories.length > 0 &&
+              recipeCategories.map((category, index) => (
+                <li key={index}>{category}</li>
+              ))}
+          </ul>
+        </div>
+        <div className="mt-8">
+          <div className="flex flex-wrap justify-center items-center space-x-2">
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition flex items-center"
+              onClick={handleRead}
+            >
+              <PlayIcon className="w-5 h-5 m-1" />
+            </button>
+            <button
+              className="bg-gray-600 text-white px-4 py-2 rounded-md shadow hover:bg-gray-700 transition flex items-center"
+              onClick={handlePause}
+            >
+              <PauseIcon className="w-5 h-5 m-1" />
+            </button>
+            <button
+              className="bg-gray-600 text-white px-4 py-2 rounded-md shadow hover:bg-gray-700 transition flex items-center"
+              onClick={handleResume}
+            >
+              <ArrowPathIcon className="w-5 h-5 m-1" />
+            </button>
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 transition flex items-center"
+              onClick={handleStop}
+            >
+              <StopIcon className="w-5 h-5 m-1" />
+            </button>
+          </div>
+          <div className="flex items-center justify-center space-x-2 mt-4">
+            <button
+              className="bg-yellow-600 text-white p-1 rounded-md shadow hover:bg-yellow-700 transition flex items-center"
+              onClick={decreaseRate}
+            >
+              <MinusCircleIcon className="w-5 h-5 m-1" />
+            </button>
+            <span className="text-lg font-semibold">Speed: {rate.toFixed(1)}</span>
+            <button
+              className="bg-yellow-600 text-white p-1 rounded-md shadow hover:bg-yellow-700 transition flex items-center"
+              onClick={increaseRate}
+            >
+              <PlusCircleIcon className="w-5 h-5 m-1" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

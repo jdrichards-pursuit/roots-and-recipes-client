@@ -8,6 +8,8 @@ import useHandleSearchChange from "../../helpers/useHandleSearchChange";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import EditIcon from "@mui/icons-material/Edit";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -65,6 +67,7 @@ export const MyCookbook = ({ setBurgerToggle }) => {
 
     getUser();
   }, []);
+  console.log("User Details:", userDetails);
 
   const handleClick = (recipe) => {
     if (userDetails.family_code !== "000000") {
@@ -129,7 +132,8 @@ export const MyCookbook = ({ setBurgerToggle }) => {
           {searchInput && (
             <div
               onClick={clearSearch}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2">
+              className="absolute right-0 top-1/2 transform -translate-y-1/2"
+            >
               <ClearIcon />
             </div>
           )}
@@ -143,19 +147,18 @@ export const MyCookbook = ({ setBurgerToggle }) => {
             </p>
           </Link>
         ) : recipes.length > 0 ? (
-          recipes.map((recipe) => (
-            <div key={recipe.id}>
-              <Link to={`/recipe_show/${recipe.id}`}>
-                <div className="flex items-center mt-4 mx-10">
-                  <div className="border-solid border-2 border-black rounded-xl flex-1">
-                    <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
-                      {recipe.name}
-                      {/* <span className="ml-12">+</span> */}
-                    </p>
-                  </div>
+          recipes.map(({ id, name }) => (
+            <div key={id} className="flex items-center mt-4 mx-10">
+              <div>
+                <EditIcon onClick={() => navigate(`/edit/${id}`)} />
+              </div>
+              <Link to={`/recipe_show/${id}`} className="flex-1 ml-2">
+                <div className="border-solid border-2 border-black rounded-xl">
+                  <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
+                    {name} <span className="ml-6">+</span>
+                  </p>
                 </div>
               </Link>
-              <button onClick={() => handleClick(recipe)}>+</button>
             </div>
           ))
         ) : (
