@@ -96,9 +96,9 @@ const Layout = ({ children }) => {
                 />
                 <span>Family</span>
               </Link>
-              <Link to="/recipe_form" className="flex items-center space-x-2">
+              <Link to="/create_a_recipe" className="flex items-center space-x-2">
                 <img src={plusIconPng} alt="plus icon" className="w-8 h-8" />
-                <span>Add</span>
+                <span>Add </span>
               </Link>
               <Link to="/cookbook" className="flex items-center space-x-2">
                 <img
