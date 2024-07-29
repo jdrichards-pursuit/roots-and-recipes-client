@@ -1,36 +1,45 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import hamburgerMenuIconPng from "../../assets/ham_menu_icon.png";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
-const BurgerMenu = ({burgerToggle}) => {
+const BurgerMenu = () => {
   const [hamMenuToggle, setHamMenuToggle] = useState(false);
 
   return (
-    burgerToggle && (<div>
-      <span>
-        <img
-          src={hamburgerMenuIconPng}
-          alt="hamburger menu icon"
-          onClick={() => {
-            setHamMenuToggle(!hamMenuToggle);
-          }}
-        />
-      </span>
-
+    <div className="relative">
+      <button
+        className="text-white focus:outline-none"
+        onClick={() => setHamMenuToggle(!hamMenuToggle)}
+      >
+        {hamMenuToggle ? (
+          <AiOutlineClose size={24} />
+        ) : (
+          <AiOutlineMenu size={24} />
+        )}
+      </button>
       {hamMenuToggle && (
-        <div>
-          <Link to={`/about_us`}>
-            <h2>About Us</h2>
+        <div className="absolute right-0 mt-2 w-48 bg-[#713A3A] rounded shadow-lg z-20">
+          <Link
+            to="/about_us"
+            className="block px-4 py-2 text-white hover:bg-[#512929]"
+          >
+            About Us
           </Link>
-          <Link to={`/faq`}>
-            <h2>FAQ</h2>
+          <Link
+            to="/faq"
+            className="block px-4 py-2 text-white hover:bg-[#512929]"
+          >
+            FAQ
           </Link>
-          <Link to={`/contact_us`}>
-            <h2>Contact Us</h2>
+          <Link
+            to="/contact_us"
+            className="block px-4 py-2 text-white hover:bg-[#512929]"
+          >
+            Contact Us
           </Link>
         </div>
       )}
-    </div>)
+    </div>
   );
 };
 
