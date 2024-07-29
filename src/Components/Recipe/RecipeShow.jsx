@@ -12,7 +12,6 @@ const RecipeShow = () => {
 
   const [singleRecipe, setSingleRecipe] = useState(null);
   const [recipeCategories, setRecipeCategories] = useState([]);
-  const [rate, setRate] = useState(1);
 
   useEffect(() => {
     fetch(`${URL}/api/recipes/single_recipe/${id}`)
