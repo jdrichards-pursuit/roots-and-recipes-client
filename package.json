@@ -31,7 +31,8 @@
     "react-toastify": "^10.0.5",
     "slick-carousel": "^1.8.1",
     "tesseract.js": "^5.1.0",
-    "toastify": "^2.0.1"
+    "toastify": "^2.0.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
+import { getUserData } from "../../helpers/getUserData";
+
 import { PlayIcon, PauseIcon, StopIcon, MinusCircleIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
+
 import placeholderImage from "../../assets/recipe_place_holder.png";
 import { capitalizeFirstLetter } from "../../helpers/helpers";
 
@@ -13,27 +17,56 @@ const RecipeShow = () => {
   const [singleRecipe, setSingleRecipe] = useState(null);
   const [recipeCategories, setRecipeCategories] = useState([]);
 
-  useEffect(() => {
-    fetch(`${URL}/api/recipes/single_recipe/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSingleRecipe(data);
-      })
-      .catch((error) => console.error("Error fetching recipe:", error));
+  const [user, setUser] = useState({});
+  const [familyName, setFamilyName] = useState("");
+  // had to change the initial state from being empty to null. i guess to let it be known there will be something there soon or to indicate "loading state"
 
-    fetch(`${URL}/api/categories/recipes/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setRecipeCategories(data.map((elem) => elem.category_name));
-      })
-      .catch((error) => console.error("Error fetching recipe:", error));
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch user data and wait for it to complete
+        const user = await getUserData();
+        if (user) setUser(user);
+
+        // Fetch single recipe and wait for it to complete
+        const recipeResponse = await fetch(
+          `${URL}/api/recipes/single_recipe/${id}`
+        );
+        const recipeData = await recipeResponse.json();
+        setSingleRecipe(recipeData);
+
+        // Fetch recipe categories and wait for it to complete
+        const categoriesResponse = await fetch(
+          `${URL}/api/categories/recipes/${id}`
+        );
+        const categoriesData = await categoriesResponse.json();
+        setRecipeCategories(categoriesData.map((elem) => elem.category_name));
+
+        // Fetch family name by family id only if user id is available
+        if (user?.id) {
+          const familyResponse = await fetch(
+            `${URL}/api/families/name/${user.id}`
+          );
+          const familyData = await familyResponse.json();
+          setFamilyName(familyData);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   if (!singleRecipe) {
     return <div>Loading...</div>;
   }
 
-  const { name, ingredients, chef, family, created_at, photo, steps } =
+
+  // Destructure the properties from the singleRecipe object
+  const { name, ingredients, chef, family_id, created_at, photo, steps } =
     singleRecipe;
 
   const ingredientList = ingredients.split(",").map((item) => item.trim());
@@ -47,6 +80,7 @@ const RecipeShow = () => {
       );
       return;
     }
+
 
     const introductionUtterance = new SpeechSynthesisUtterance(
       `This is the ${name} recipe from ${chef}.......`
@@ -80,8 +114,6 @@ const RecipeShow = () => {
   function handleResume() {
     window.speechSynthesis.resume();
   }
-
-
 
   function handleStop() {
     window.speechSynthesis.cancel();
@@ -186,7 +218,6 @@ const RecipeShow = () => {
               <PlusCircleIcon className="w-5 h-5 m-1" />
             </button>
           </div>
-
         </div>
       </div>
     </div>

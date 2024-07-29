@@ -29,7 +29,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   //State for selected categories
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [recipeID, setRecipeID] = useState();
-  console.log(selectedCategories);
+  // console.log(selectedCategories);
   // STATES FOR THE MODAL
   const [showModal, setShowModal] = useState(false);
   const [modalChoice, setModalChoice] = useState(null);
@@ -41,6 +41,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   const [isPublic, setIsPublic] = useState(true);
 
 
+  const [familyID, setFamilyID] = useState(true);
+
   // New state for checkbox
   const [isSelfChef, setIsSelfChef] = useState(false);
 
@@ -48,7 +50,9 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   const addRecipe = async () => {
     newRecipe.user_id = userDetails.id;
     newRecipe.status = isPublic;
+
     newRecipe.chef = isSelfChef ? userDetails.nickname : newRecipe.chef;
+
 
     try {
       const response = await fetch(`${URL}/api/recipes`, {
@@ -116,10 +120,18 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     setModalChoice(choice);
     try {
       if (choice === "yes") {
+        if (userDetails && userDetails.family_code !== "000000") {
+          newRecipe.family_id = familyID.id;
+        } else {
+          newRecipe.family_id = 1;
+        }
         await handleSubmit();
         navigate(`/family_cookbook`);
       } else {
-        newRecipe.family = "defaultFamily";
+
+        newRecipe.family_id = 1;
+
+
         await handleSubmit();
         navigate(`/cookbook`);
       }
@@ -147,15 +159,18 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               data.find((f) => f.code === user.family_code).family_name
             )
           );
+        fetch(`${URL}/api/families/id/${user.family_code}`)
+          .then((res) => res.json())
+          .then((data) => setFamilyID(data))
+          .catch((error) => console.error("Error fetching categories:", error));
       }
     }
 
+    getUser();
     fetch(`${URL}/api/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error("Error fetching categories:", error));
-
-    getUser();
 
     // Restore ingredientsInputs and stepsInputs from localStorage
     const storedIngredients =
@@ -184,8 +199,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     const updatedRecipe = {
       ...newRecipe,
       status: isPublic,
+      family_id: familyID.id,
       photo: newRecipe.photo,
-      family: familyName,
     };
     localStorage.setItem("newRecipe", JSON.stringify(updatedRecipe));
     localStorage.setItem(
@@ -203,7 +218,6 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   newRecipe.ingredients = ingredientsInputs.join(",");
   // GIVE THE STEPS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.steps = stepsInputs.join(",");
-  newRecipe.family = familyName;
 
   const conditionalSubmit = async (event) => {
     event.preventDefault();
