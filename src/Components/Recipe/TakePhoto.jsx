@@ -1,12 +1,13 @@
 import { Camera, FACING_MODES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import { useState } from 'react';
-import RecipeForm from './RecipeForm';
+import EditRecipePhotoForm from './EditRecipePhotoForm';
 import { Camera as CameraIcon } from "lucide-react";
 
 
 const TakePhoto = () => {
     const [image, setImage] = useState('');
+    const [file, setFile] = useState(null);
     const [showCamera, setShowCamera] = useState(false);
     const [toggleForm, setToggleForm] = useState(false);
     const [cameraError, setCameraError] = useState(false);
@@ -17,7 +18,7 @@ const TakePhoto = () => {
 
     async function uploadImagetoCloudinary() {
         const recipeImage = new FormData();
-        recipeImage.append("file", image);
+        recipeImage.append("file", file);
         recipeImage.append("cloud_name", cloudName);
         recipeImage.append("upload_preset", uploadPreset);
         const response = await fetch(
@@ -26,12 +27,11 @@ const TakePhoto = () => {
         );
 
         const data = await response.json();
-        setImage(data.url.toString())
+        setImage(data.secure_url);
         setToggleForm(true);
     }
 
     function handleTakePhotoAnimationDone(dataUri) {
-        console.log("blocked camera: ", dataUri)
         setImage(dataUri)
         setShowCamera(false);
         setToggleRetake(true)
@@ -39,6 +39,7 @@ const TakePhoto = () => {
 
     function retake() {
         setImage("");
+        setFile(null);
         setShowCamera(true)
     }
 
@@ -48,6 +49,7 @@ const TakePhoto = () => {
         } else {
             const objectUrl = URL.createObjectURL(e.target.files[0])
             setImage(objectUrl)
+            setFile(e.target.files[0])
             setToggleRetake(false);
         }
     }
@@ -61,6 +63,7 @@ const TakePhoto = () => {
         setCameraError(true)
         setShowCamera(false)
         setImage("")
+        setFile(null)
     }
 
     return (
@@ -100,8 +103,7 @@ const TakePhoto = () => {
                         </div>}
                 </div>
             }
-            {toggleForm && < RecipeForm image={image} />
-            }
+            {toggleForm && < EditRecipePhotoForm image={image} />}
         </>
     )
 }
