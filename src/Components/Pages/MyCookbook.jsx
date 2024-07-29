@@ -18,6 +18,8 @@ export const MyCookbook = ({ setBurgerToggle }) => {
   const [recipes, setRecipes] = useState([]);
   // const [input, setInput] = useState("");
   const [userDetails, setUserDetails] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalChoice, setModalChoice] = useState("");
   // const [heartStates, setHeartStates] = useState([]);
 
   const { searchInput, handleSearchChange, clearSearch } =
@@ -65,10 +67,37 @@ export const MyCookbook = ({ setBurgerToggle }) => {
   }, []);
 
   const handleClick = (recipe) => {
-    console.log(recipe);
-    //Grab recipe
-    //fetch that deletes this recipe form the database
+    if (userDetails.family_code !== "000000") {
+      fetch(
+        `${URL}/api/families/recipe/${recipe.id}/${userDetails.family_code}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .catch((error) => console.error("Error:", error));
+    }
+    navigate("/family_cookbook", window.location.reload);
   };
+
+  // const handleModalChoice = async (choice) => {
+  //   setModalChoice(choice);
+  //   try {
+  //     if (choice === "Submit") {
+  //       await handleFamilySubmit();
+  //       navigate(`/family_cookbook`);
+  //     } else {
+  //       setFamilyName("");
+  //       navigate(`/family_cookbook`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding recipe:", error);
+  //   }
+  //   setShowModal(false); // Close modal after choice
+  // };
   // const toggleHeart = (index) => {
   //   setHeartStates((prevStates) =>
   //     prevStates.map((state, i) => (i === index ? !state : state))
@@ -115,18 +144,19 @@ export const MyCookbook = ({ setBurgerToggle }) => {
           </Link>
         ) : recipes.length > 0 ? (
           recipes.map((recipe) => (
-            <>
-              <Link key={recipe.id} to={`/recipe_show/${recipe.id}`}>
+            <div key={recipe.id}>
+              <Link to={`/recipe_show/${recipe.id}`}>
                 <div className="flex items-center mt-4 mx-10">
                   <div className="border-solid border-2 border-black rounded-xl flex-1">
                     <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
-                      {recipe.name} <span className="ml-6">+</span>
+                      {recipe.name}
+                      {/* <span className="ml-12">+</span> */}
                     </p>
                   </div>
                 </div>
               </Link>
-              <button onClick={() => handleClick(recipe)}>CLICK ME</button>
-            </>
+              <button onClick={() => handleClick(recipe)}>+</button>
+            </div>
           ))
         ) : (
           <p className="text-center bg-[#D9D9D9] p-4">
@@ -134,6 +164,29 @@ export const MyCookbook = ({ setBurgerToggle }) => {
           </p>
         )}
       </div>
+
+      {/* {showModal && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="bg-white p-5 rounded-lg shadow-lg text-center">
+            <p className="mb-3">
+              Would you like to delete your family or give another user
+              ownership of the group?
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => handleModalChoice("Reassign Owner")}
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                Reassign Owner
+              </button>
+              <button
+                onClick={() => handleModalChoice("Delete Family")}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+                Delete Family
+              </button>
+            </div>
+          </div>
+        </div>
+      )} */}
     </div>
   );
 };

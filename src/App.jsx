@@ -24,6 +24,7 @@ import "./index.css";
 
 import CreatARecipe from "./Components/Pages/CreatARecipe";
 import { DishCameraView } from "./Components/DishCameraView";
+import { FamilyMembers } from "./Components/Pages/FamilyMembers";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -33,7 +34,7 @@ function App() {
   //  new recipe state
   const [newRecipe, setNewRecipe] = useState({
     name: "",
-    family: "",
+    family_id: 1,
     chef: "",
     status: "TRUE",
     user_id: "",
@@ -156,6 +157,8 @@ function App() {
                 />
               }
             />
+
+            <Route path="/family_members" element={<FamilyMembers />} />
             <Route path="/recipe_show/:id" element={<RecipeShow />} />
             <Route path="/about_us" element={<AboutUs />} />
             <Route path="/faq" element={<FAQ />} />

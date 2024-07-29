@@ -6,7 +6,7 @@ const URL = import.meta.env.VITE_BASE_URL;
 const JoinFamilyForm = () => {
   const [allFamilyCodes, setAllFamilyCodes] = useState([]);
   const [familyCodeInput, setFamilyCodeInput] = useState("");
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({});
   const [modal, setModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState("");
   const navigate = useNavigate();
@@ -29,7 +29,6 @@ const JoinFamilyForm = () => {
 
   const handleRoleChange = (event) => {
     setSelectedRole(event.target.value);
-    console.log(event.target.value);
   };
 
   useEffect(() => {
@@ -89,13 +88,20 @@ const JoinFamilyForm = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log(user);
-          setModal(true);
+          if (
+            allFamilyCodes.some((code) => code.family_code === familyCodeInput)
+          ) {
+            setModal(true);
+          } else {
+            setFamilyCodeInput("");
+            alert(`INVALID FAMILY CODE`);
+          }
         }}>
         <input
           type="text"
           name="code"
           id="code"
+          value={familyCodeInput}
           placeholder="Enter Family Code"
           onChange={handleJoinFamilyChange}
         />
