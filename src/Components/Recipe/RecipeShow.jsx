@@ -2,11 +2,13 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { PlayIcon, PauseIcon, StopIcon, MinusCircleIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
 import placeholderImage from "../../assets/recipe_place_holder.png";
+import { capitalizeFirstLetter } from "../../helpers/helpers";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
 const RecipeShow = () => {
   const { id } = useParams();
+  const [rate, setRate] = useState(1);
 
   const [singleRecipe, setSingleRecipe] = useState(null);
   const [recipeCategories, setRecipeCategories] = useState([]);
@@ -57,22 +59,30 @@ const RecipeShow = () => {
       `And now the steps for preparation. ${steps}`
     );
 
+
+    // Set the rate of speech
     introductionUtterance.rate = rate;
     ingredientsUtterance.rate = rate;
     instructionsUtterance.rate = rate;
 
+
+    // Speak the ingredients and instructions
     window.speechSynthesis.speak(introductionUtterance);
     window.speechSynthesis.speak(ingredientsUtterance);
     window.speechSynthesis.speak(instructionsUtterance);
   }
 
+
+  // Pause the speech
   function handlePause() {
     window.speechSynthesis.pause();
   }
-
+  // Resume the speech
   function handleResume() {
     window.speechSynthesis.resume();
   }
+
+
 
   function handleStop() {
     window.speechSynthesis.cancel();
@@ -177,6 +187,7 @@ const RecipeShow = () => {
               <PlusCircleIcon className="w-5 h-5 m-1" />
             </button>
           </div>
+
         </div>
       </div>
     </div>

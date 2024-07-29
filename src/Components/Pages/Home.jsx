@@ -109,7 +109,11 @@ const Home = ({ setBurgerToggle, setNavBarToggle }) => {
                     alt={`Recipe ${singleLunchRecipe.name}`}
                     className="object-cover w-full h-48"
                   />
-                  <p className="card-text">{singleLunchRecipe.name}</p>
+
+                  <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
+                    {singleLunchRecipe.name}
+                  </p>
+
                 </div>
               </Link>
             ))}
@@ -131,7 +135,11 @@ const Home = ({ setBurgerToggle, setNavBarToggle }) => {
                     alt={`Recipe ${singleDinnerRecipe.name}`}
                     className="object-cover w-full h-48"
                   />
-                  <p className="card-text">{singleDinnerRecipe.name}</p>
+
+                  <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
+                    {singleDinnerRecipe.name}
+                  </p>
+
                 </div>
               </Link>
             ))}
@@ -154,7 +162,11 @@ const Home = ({ setBurgerToggle, setNavBarToggle }) => {
                       alt={`Recipe ${singleRecipe.name}`}
                       className="object-cover w-full h-48"
                     />
-                    <p className="card-text">{singleRecipe.name}</p>
+
+                    <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
+                      {singleRecipe.name}
+                    </p>
+
                   </div>
                 </Link>
               )
@@ -181,7 +193,11 @@ const Home = ({ setBurgerToggle, setNavBarToggle }) => {
                     alt={`Recipe ${searchedRecipe.name}`}
                     className="object-cover w-full h-48"
                   />
-                  <p className="card-text">{searchedRecipe.name}</p>
+
+                  <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
+                    {searchedRecipe.name}
+                  </p>
+
                 </div>
               </Link>
             ))

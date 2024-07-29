@@ -6,6 +6,7 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
   const camera = useRef(null);
   const [image, setImage] = useState(null);
   const [cameraToggle, setCameraToggle] = useState(true);
+  const [facingMode, setFacingMode] = useState("environment");
 
   const navigate = useNavigate();
 
@@ -44,18 +45,23 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
     localStorage.setItem("newRecipe", JSON.stringify(updatedRecipe));
   };
 
+  const toggleFacingMode = () => {
+    setFacingMode((prevMode) =>
+      prevMode === "environment" ? "user" : "environment"
+    );
+  };
+
   return (
     <div style={{ position: "relative", width: "300px", height: "300px" }}>
-      {" "}
-      {/* Adjust size here */}
       {cameraToggle && (
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <Camera
+            key={facingMode} // Force re-render when facingMode changes
             ref={camera}
             aspectRatio={1}
+            facingMode={facingMode}
             style={{ width: "100%", height: "100%" }}
-          />{" "}
-          {/* Ensure the camera fits the container */}
+          />
         </div>
       )}
       {!cameraToggle && (
@@ -69,28 +75,43 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
               }));
               navigate("/recipe_form");
               saveToLocalStorage();
-              // console.log(image);
-            }}>
+            }}
+          >
             Check
           </button>
           <button onClick={() => setCameraToggle(true)}>Retake</button>
         </div>
       )}
-      {/* Smaller image */}
       {cameraToggle && (
-        <button
-          onClick={handleTakePhoto}
-          style={{
-            position: "absolute",
-            bottom: "10px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontSize: "20px",
-            padding: "10px 20px",
-            zIndex: 100,
-          }}>
-          Take photo
-        </button>
+        <>
+          <button
+            onClick={handleTakePhoto}
+            style={{
+              position: "absolute",
+              bottom: "10px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              fontSize: "20px",
+              padding: "10px 20px",
+              zIndex: 100,
+            }}
+          >
+            Take photo
+          </button>
+          <button
+            onClick={toggleFacingMode}
+            style={{
+              position: "absolute",
+              bottom: "10px",
+              right: "10px",
+              fontSize: "20px",
+              padding: "10px 20px",
+              zIndex: 100,
+            }}
+          >
+            Switch Camera
+          </button>
+        </>
       )}
     </div>
   );
