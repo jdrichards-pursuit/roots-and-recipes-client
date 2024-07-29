@@ -133,7 +133,7 @@ const RecipeShow = () => {
         <h1 className="text-4xl font-bold mb-6 text-center text-gray-800">{name}</h1>
         <div className="bg-gray-200 rounded-lg p-4 mb-6">
           <p className="text-lg mb-2">
-            <span className="font-bold">Family:</span> {family}
+            <span className="font-bold">Family:</span> {familyName}
           </p>
           <p className="text-lg mb-2">
             <span className="font-bold">Chef:</span> {chef}
