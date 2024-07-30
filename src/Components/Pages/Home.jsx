@@ -10,7 +10,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-const Home = ({ setBurgerToggle, setNavBarToggle }) => {
+const Home = ({ setNavBarToggle }) => {
   const [allPublicRecipes, setAllPublicRecipes] = useState([]);
   const [allLunchRecipes, setAllLunchRecipes] = useState([]);
   const [allDinnerRecipes, setAllDinnerRecipes] = useState([]);
@@ -41,7 +41,6 @@ const Home = ({ setBurgerToggle, setNavBarToggle }) => {
         setAllDinnerRecipes(data);
       })
       .catch((error) => console.error("Error fetching recipe:", error));
-    setBurgerToggle(false);
     setNavBarToggle(true);
   }, []);
 

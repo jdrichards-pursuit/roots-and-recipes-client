@@ -7,7 +7,7 @@ import { logout } from "../helpers/logout";
 
 import placeholderImage from "../assets/placeholder.png";
 
-function Profile({ setBurgerToggle }) {
+function Profile() {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState(null);
 
@@ -33,7 +33,6 @@ function Profile({ setBurgerToggle }) {
       const user = await getUserData();
       if (user) setUserDetails(user);
     }
-    setBurgerToggle(true);
     getUser();
   }, []);
 
