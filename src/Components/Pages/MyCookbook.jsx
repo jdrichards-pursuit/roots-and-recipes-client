@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
+import AddCircleIcon from "@mui/icons-material/AddCircle"; // Importing the AddCircleIcon
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -137,19 +138,17 @@ export const MyCookbook = () => {
             .sort((a, b) => a.id - b.id)
             .map((recipe) => (
               <div key={recipe.id} className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4">
-                <div>
-                  <EditIcon onClick={() => navigate(`/edit/${recipe.id}`)} />
-                </div>
                 <Link to={`/recipe_show/${recipe.id}`} className="flex-1 ml-2">
-                  <div className="border-solid border-2 border-black rounded-xl">
-                    <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
+                  <div className="rounded-xl">
+                    <p className="p-4 rounded-lg text-black text-lg">
                       {recipe.name}
                     </p>
                   </div>
                 </Link>
-                <span className="ml-6" onClick={() => handleClick(recipe)}>
-                  +
-                </span>
+                <div className="flex items-center">
+                  <EditIcon onClick={() => navigate(`/edit/${recipe.id}`)} className="cursor-pointer mr-2" />
+                  <AddCircleIcon onClick={() => handleClick(recipe)} className="text-[#713A3A] cursor-pointer" />
+                </div>
               </div>
             ))
 
