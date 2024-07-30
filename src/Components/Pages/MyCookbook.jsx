@@ -65,10 +65,9 @@ export const MyCookbook = () => {
 
     getUser();
   }, []);
-  console.log("User Details:", userDetails);
 
   const handleClick = (recipe) => {
-    if (userDetails.family_code !== "000000") {
+    if (userDetails && userDetails.family_code !== "000000") {
       fetch(
         `${URL}/api/families/recipe/${recipe.id}/${userDetails.family_code}`,
         {
@@ -133,28 +132,27 @@ export const MyCookbook = () => {
             </p>
           </Link>
         ) : recipes.length > 0 ? (
-          recipes.map(({ id, name }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4"
-            >
-              <Link to={`/recipe_show/${id}`} className="flex-1">
-                <p className="text-lg font-medium text-[#713A3A]">{name}</p>
-              </Link>
-              <div className="flex items-center space-x-4">
-                <EditIcon
-                  className="text-[#713A3A] cursor-pointer"
-                  onClick={() => navigate(`/edit/${id}`)}
-                />
-                <span
-                  className="text-2xl font-bold text-[#713A3A] cursor-pointer"
-                  onClick={() => handleClick({ id })}
-                >
+
+          recipes
+            .sort((a, b) => a.id - b.id)
+            .map((recipe) => (
+              <div key={recipe.id} className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4">
+                <div>
+                  <EditIcon onClick={() => navigate(`/edit/${recipe.id}`)} />
+                </div>
+                <Link to={`/recipe_show/${recipe.id}`} className="flex-1 ml-2">
+                  <div className="border-solid border-2 border-black rounded-xl">
+                    <p className="p-4 rounded-lg text-[#FFFFFF] bg-[#713A3A]">
+                      {recipe.name}
+                    </p>
+                  </div>
+                </Link>
+                <span className="ml-6" onClick={() => handleClick(recipe)}>
                   +
                 </span>
               </div>
-            </div>
-          ))
+            ))
+
         ) : (
           <p className="text-center bg-[#D9D9D9] p-4 rounded-lg shadow-md">
             Sorry, recipe cannot be found
