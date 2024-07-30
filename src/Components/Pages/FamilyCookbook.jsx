@@ -7,7 +7,7 @@ import recipePlaceHolder from "../../assets/recipe_place_holder.png";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
-const FamilyCookbook = ({ setBurgerToggle }) => {
+const FamilyCookbook = () => {
   const [familyCode, setFamilyCode] = useState("");
   const [user, setUser] = useState("");
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -37,7 +37,6 @@ const FamilyCookbook = ({ setBurgerToggle }) => {
     }
 
     fetchData();
-    setBurgerToggle(false);
   }, []);
 
   useEffect(() => {
@@ -117,51 +116,68 @@ const FamilyCookbook = ({ setBurgerToggle }) => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       {familyCode === "000000" ? (
-        <>
+        <div className="flex flex-col items-center justify-center min-h-screen">
           <JoinFamilyForm />
-          <h2>or</h2>
+          <h2 className="text-2xl font-bold my-4">or</h2>
           <FamilyForm />
-        </>
+        </div>
       ) : (
-        <button onClick={handleLeaveFamily}>Leave Family</button>
+        <button
+          onClick={handleLeaveFamily}
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4"
+        >
+          Leave Family
+        </button>
       )}
 
       {familyMembers.length > 0 && (
-        <div className="border-2 border-solid border-black">
-          <h1>{familyName}'s Family Cookbook</h1>
-          <h1>Members</h1>
-          {familyMembers.map((member, index) => {
-            return (
-              <div key={index}>
+        <div className="bg-white shadow-lg rounded-lg p-6 mt-6">
+          <h1 className="text-3xl font-bold text-center mb-6">
+            {familyName}'s Family Cookbook
+          </h1>
+          <h2 className="text-2xl font-semibold mb-4">Members</h2>
+          <div className="flex flex-wrap justify-center">
+            {familyMembers.map((member, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center m-4 p-4 bg-gray-100 rounded-lg shadow-md"
+              >
                 <img
                   src={member.photo}
                   alt="photo"
-                  className="w-24 h-24 border-2 border-black rounded-full"
+                  className="w-24 h-24 border-2 border-gray-300 rounded-full mb-2"
                 />
-                <h4>{member.nickname || member.first_name}</h4>
+                <h4 className="text-lg font-medium">
+                  {member.nickname || member.first_name}
+                </h4>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       )}
 
       {familyRecipes.length > 0 && (
-        <div className="border-2 border-solid border-black mt-4">
-          <h1>Family Recipes</h1>
-          {familyRecipes.length > 0 &&
-            familyRecipes.map((recipe, index) => (
-              <Link key={index} to={`/recipe_show/${recipe.id}`}>
+        <div className="bg-white shadow-lg rounded-lg p-6 mt-6">
+          <h2 className="text-2xl font-semibold mb-4">Family Recipes</h2>
+          <div className="flex flex-wrap justify-center">
+            {familyRecipes.map((recipe, index) => (
+              <Link
+                key={index}
+                to={`/recipe_show/${recipe.id}`}
+                className="flex flex-col items-center m-4 p-4 bg-gray-100 rounded-lg shadow-md"
+              >
                 <img
                   src={recipe.photo || recipePlaceHolder}
-                  alt="photo"
-                  className="w-24 h-24 border-2 border-black rounded-full"
+                  alt="recipe"
+                  className="w-24 h-24 border-2 border-gray-300 rounded-full mb-2"
                 />
-                <h4>{recipe.name}</h4>
-                <h4>{recipe.chef}</h4>
+                <h4 className="text-lg font-medium">{recipe.name}</h4>
+                <h4 className="text-sm text-gray-600">{recipe.chef}</h4>
               </Link>
             ))}
+          </div>
         </div>
       )}
 
@@ -175,12 +191,14 @@ const FamilyCookbook = ({ setBurgerToggle }) => {
             <div className="flex justify-center">
               <button
                 onClick={() => handleOwnerModalChoice("Reassign Owner")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
                 Reassign Owner
               </button>
               <button
                 onClick={() => handleOwnerModalChoice("Delete Family")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
+              >
                 Delete Family
               </button>
             </div>
@@ -195,12 +213,14 @@ const FamilyCookbook = ({ setBurgerToggle }) => {
             <div className="flex justify-center">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
                 yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
+              >
                 no
               </button>
             </div>
