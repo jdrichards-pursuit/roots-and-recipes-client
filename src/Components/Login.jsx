@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
-function Login({ setBurgerToggle, burgerToggle, setNavBarToggle }) {
+function Login({ setNavBarToggle }) {
   const navigate = useNavigate();
 
   const [loginUser, setLoginNewUser] = useState({ password: "", email: "" });
@@ -40,7 +40,6 @@ function Login({ setBurgerToggle, burgerToggle, setNavBarToggle }) {
   };
 
   useEffect(() => {
-    setBurgerToggle(false);
     setNavBarToggle(false);
   }, []);
 
