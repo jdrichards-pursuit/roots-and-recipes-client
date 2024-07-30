@@ -118,6 +118,7 @@ function App() {
               element={
                 <RecipeForm
                   newRecipe={newRecipe}
+                  setNewRecipe={setNewRecipe}
                   setNavBarToggle={setNavBarToggle}
                 />
               }
