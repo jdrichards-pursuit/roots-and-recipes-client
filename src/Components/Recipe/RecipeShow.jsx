@@ -133,7 +133,7 @@ const RecipeShow = () => {
         <h1 className="text-4xl font-bold mb-6 text-center text-gray-800">
           {name}
         </h1>
-        <div className="bg-gray-200 rounded-lg p-4 mb-6">
+        <div className="bg-gray-100 rounded-lg p-4 mb-6">
           {family_id !== 1 &&
             familyName.length > 0 &&
             familyName !== "defaultFamily" && (
@@ -149,6 +149,17 @@ const RecipeShow = () => {
             <span className="font-bold">Created at:</span>{" "}
             {new Date(created_at).toLocaleDateString()}
           </p>
+          <h2 className="text-lg font-semibold mb-2">Categories</h2>
+          <ul className="list-inside flex flex-row">
+            {recipeCategories.length > 0 &&
+              recipeCategories.map((category, index) => (
+                <li
+                  key={index}
+                  className="text-sm text-white rounded-full bg-neutral-900 px-4 py-2 ml-2 w-fit ">
+                  {category}
+                </li>
+              ))}
+          </ul>
         </div>
         <div className="flex flex-col lg:flex-row items-start lg:items-center lg:space-x-8">
           <img
@@ -157,32 +168,28 @@ const RecipeShow = () => {
             className="w-full lg:w-1/3 mb-4 lg:mb-0 rounded-lg shadow-md"
           />
           <div className="w-full lg:w-2/3">
-            <div className="bg-white shadow-md rounded-lg p-6">
-              <h2 className="text-2xl font-semibold mb-4">Ingredients</h2>
-              <ul className="list-disc list-inside space-y-2">
+            <div className="bg-white shadow-md rounded-lg p-6 ">
+              <h2 className="text-2xl font-semibold mb-2 -mt-4">Ingredients</h2>
+              <ul className=" grid grid-cols-2 gap-1 list-disc list-inside ">
                 {ingredientList.map((ingredient, index) => (
-                  <li key={index}>{ingredient}</li>
+                  <li key={index} className="text-base">
+                    {ingredient}
+                  </li>
                 ))}
               </ul>
             </div>
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6 mt-6">
-          <h2 className="text-2xl font-semibold mb-4">Steps</h2>
+          <h2 className="text-2xl font-semibold mb-4 -mt-4">Steps</h2>
           <ol className="list-decimal list-inside space-y-2">
             {stepsList.map((step, index) => (
-              <li key={index}>{step}</li>
+              <li key={index} className="text-sm w-max-xs">
+                <span className="break-words">{step}</span>{" "}
+                {/* Adjust the width as needed */}
+              </li>
             ))}
           </ol>
-        </div>
-        <div className="bg-white shadow-md rounded-lg p-6 mt-6">
-          <h2 className="text-2xl font-semibold mb-4">Categories</h2>
-          <ul className="list-inside space-y-2">
-            {recipeCategories.length > 0 &&
-              recipeCategories.map((category, index) => (
-                <li key={index}>{category}</li>
-              ))}
-          </ul>
         </div>
         <div className="mt-8">
           <div className="flex flex-wrap justify-center items-center space-x-2">
