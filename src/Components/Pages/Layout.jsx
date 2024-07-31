@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
               <Link to="/family_cookbook" className="nav-item">
                 Family
               </Link>
-              <Link to="/recipe_form" className="nav-item">
+              <Link to="/create_a_recipe" className="nav-item">
                 Add
               </Link>
               <Link to="/cookbook" className="nav-item">
