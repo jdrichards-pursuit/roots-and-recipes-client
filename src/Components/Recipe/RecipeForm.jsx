@@ -39,7 +39,13 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   const [isPublic, setIsPublic] = useState(true);
   // New state for checkbox
   const [isSelfChef, setIsSelfChef] = useState(false);
+
+  // STATE FOR RECORDING
+  const [recordingIndex, setRecordingIndex] = useState(null);
+  const [recordingInputValue, setRecordingInputValue] = useState('');
+
   const [familyID, setFamilyID] = useState(true);
+
 
   const addRecipe = async () => {
     newRecipe.user_id = userDetails.id;
@@ -219,6 +225,58 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   };
 
+  // This function is to use the speech recognition API and set up the method to handle the speech recognition
+  //https://github.com/jdrichards-pursuit/recipe-speech-to-input/blob/main/src/RecipeForm.jsx
+  const startRecognition = (callback, index) => {
+    const recognition = new window.webkitSpeechRecognition() || window.SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setRecordingIndex(index);
+    };
+
+    recognition.onresult = (event) => {
+      const speechResult = event.results[0][0].transcript;
+      callback(speechResult);
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.onerror = () => {
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.onend = () => {
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.start();
+  };
+
+  const handleIngredientSpeechToText = (index) => {
+    const newInputs = [...ingredientsInputs];
+    startRecognition(
+      (text) =>
+        newInputs[index] = text, 0,
+      setIngredientsInputs(newInputs),
+      setRecordingInputValue('ingredient' + index)
+    )
+  }
+
+  const handleStepsSpeechToText = (index) => {
+    const newInputs = [...stepsInputs];
+    startRecognition(
+      (text) =>
+        newInputs[index] = text, 0,
+      setStepsInputs(newInputs),
+      setRecordingInputValue("step" + index)
+    )
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg bg-white shadow-md">
       <h1 className="text-center text-3xl font-semibold text-[#713A3A] mb-6">New Recipe</h1>
@@ -234,6 +292,19 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
           />
         </div>
+                  {/*AUDIO RECORD BUTTON*/}
+        <button
+          type="button"
+          onClick={() =>
+            startRecognition(
+              (text) => setNewRecipe({ ...newRecipe, name: text }),
+              0, setRecordingInputValue('name')
+            )
+          }
+        >
+          <Mic className="mt-8" />
+        </button>
+        {recordingIndex === 0 && recordingInputValue === 'name' && <span>🔴</span>}
 
         {/* Chef Input */}
         <div>
@@ -259,6 +330,34 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
             className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
           />
+
+          <span>Self</span>
+        </label>
+        <input
+          id="chef"
+          value={
+            isSelfChef
+              ? capitalizeFirstLetter(userDetails?.nickname) ||
+              capitalizeFirstLetter(userDetails?.first_name)
+              : capitalizeFirstLetter(newRecipe.chef) || ""
+          }
+          type="text"
+          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
+          className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
+        />
+                  {/*AUDIO RECORD BUTTON*/}
+        <button
+          type="button"
+          onClick={() =>
+            startRecognition(
+              (text) => setNewRecipe({ ...newRecipe, chef: text }),
+              0, setRecordingInputValue('chef')
+            )
+          }
+        >
+          <Mic className="mt-8" />
+        </button>
+        {recordingIndex === 0 && recordingInputValue === 'chef' && <span>🔴</span>}
         </div>
 
         {/* Ingredients Input */}
@@ -279,6 +378,16 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                 value={ingredientInput || ""}
                 className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
               />
+                  {/*AUDIO RECORD BUTTON*/}
+                  <button
+              type="button"
+              onClick={() => handleIngredientSpeechToText(index)
+              }
+            >
+              <Mic className="mt-8" />
+            </button>
+            {recordingInputValue === 'ingredient' + index && <span>🔴</span>}
+             
               <button
                 type="button"
                 onClick={() =>
@@ -319,8 +428,18 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                 value={stepInput || ""}
                 className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
               />
-              <Mic className="text-gray-500" />
-              <button
+                  {/*AUDIO RECORD BUTTON*/}
+                  <button
+                  type="button"
+                  onClick={() => handleStepsSpeechToText(index)
+                  }
+                >
+                  <Mic className="text-gray-500" />
+                </button>
+                {recordingInputValue === 'step' + index && <span>🔴</span>}
+              </div>
+
+                 <button
                 type="button"
                 onClick={() => handleStepDelete(index, setStepsInputs, stepsInputs)}
                 className="text-red-500 hover:text-red-700"
@@ -410,7 +529,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             Cancel
           </button>
         </div>
-      </form>
+      </form >
 
       {/* MODAL */}
       {showModal && (
@@ -432,9 +551,9 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               </button>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 }
 
