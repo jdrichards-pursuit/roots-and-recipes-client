@@ -46,6 +46,9 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // New state for checkbox
   const [isSelfChef, setIsSelfChef] = useState(false);
 
+  // STATE FOR RECORDING
+  const [recordingIndex, setRecordingIndex] = useState(null);
+  const [recordingInputValue, setRecordingInputValue] = useState('');
 
   const addRecipe = async () => {
     newRecipe.user_id = userDetails.id;
@@ -229,6 +232,58 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   };
 
+  // This function is to use the speech recognition API and set up the method to handle the speech recognition
+  //https://github.com/jdrichards-pursuit/recipe-speech-to-input/blob/main/src/RecipeForm.jsx
+  const startRecognition = (callback, index) => {
+    const recognition = new window.webkitSpeechRecognition() || window.SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setRecordingIndex(index);
+    };
+
+    recognition.onresult = (event) => {
+      const speechResult = event.results[0][0].transcript;
+      callback(speechResult);
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.onerror = () => {
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.onend = () => {
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.start();
+  };
+
+  const handleIngredientSpeechToText = (index) => {
+    const newInputs = [...ingredientsInputs];
+    startRecognition(
+      (text) =>
+        newInputs[index] = text, 0,
+      setIngredientsInputs(newInputs),
+      setRecordingInputValue('ingredient' + index)
+    )
+  }
+
+  const handleStepsSpeechToText = (index) => {
+    const newInputs = [...stepsInputs];
+    startRecognition(
+      (text) =>
+        newInputs[index] = text, 0,
+      setStepsInputs(newInputs),
+      setRecordingInputValue("step" + index)
+    )
+  }
+
   return (
     <div className="ml-28 border-2 border-black border-solid">
       <h1 className="text-center text-[#713A3A]">New Recipe</h1>
@@ -244,6 +299,19 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
+
+        <button
+          type="button"
+          onClick={() =>
+            startRecognition(
+              (text) => setNewRecipe({ ...newRecipe, name: text }),
+              0, setRecordingInputValue('name')
+            )
+          }
+        >
+          <Mic className="mt-8" />
+        </button>
+        {recordingIndex === 0 && recordingInputValue === 'name' && <span>🔴</span>}
 
         {/* Chef Input */}
         <label>
@@ -261,13 +329,26 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           value={
             isSelfChef
               ? capitalizeFirstLetter(userDetails?.nickname) ||
-                capitalizeFirstLetter(userDetails?.first_name)
+              capitalizeFirstLetter(userDetails?.first_name)
               : capitalizeFirstLetter(newRecipe.chef) || ""
           }
           type="text"
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
+        <button
+          type="button"
+          onClick={() =>
+            startRecognition(
+              (text) => setNewRecipe({ ...newRecipe, chef: text }),
+              0, setRecordingInputValue('chef')
+            )
+          }
+        >
+          <Mic className="mt-8" />
+        </button>
+        {recordingIndex === 0 && recordingInputValue === 'chef' && <span>🔴</span>}
+
 
         {/* Ingredients Input */}
         <label>
@@ -288,7 +369,15 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               value={ingredientInput || ""}
               className="border-solid border-2 border-black p-2 mt-8"
             />
-                
+            <button
+              type="button"
+              onClick={() => handleIngredientSpeechToText(index)
+              }
+            >
+              <Mic className="mt-8" />
+            </button>
+            {recordingInputValue === 'ingredient' + index && <span>🔴</span>}
+
             {/* DELETE AN INGREDIENT */}
             <div
               onClick={() =>
@@ -302,7 +391,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               <X />
             </div>
           </div>
-        ))}
+        ))
+        }
         {/* PLUS BUTTON */}
         <div
           onClick={() =>
@@ -317,30 +407,40 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         <label>
           <h2>Steps</h2>
         </label>
-        {stepsInputs.map((stepInput, index) => (
-          <div key={index}>
-            <div className="flex items-center space-x-2 mt-8">
-              <input
-                onChange={(e) =>
-                  handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
-                }
-                type="text"
-                value={stepInput || ""}
-                className="border-solid border-2 border-black p-2 mt-8"
-              />
-              <Mic className="mt-8" />
-            </div>
+        {
+          stepsInputs.map((stepInput, index) => (
+            <div key={index}>
+              <div className="flex items-center space-x-2 mt-8">
+                <input
+                  onChange={(e) =>
+                    handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
+                  }
+                  type="text"
+                  value={stepInput || ""}
+                  className="border-solid border-2 border-black p-2 mt-8"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleStepsSpeechToText(index)
+                  }
+                >
+                  <Mic className="mt-8" />
+                </button>
+                {recordingInputValue === 'step' + index && <span>🔴</span>}
+              </div>
 
-            {/* DELETE A STEP */}
-            <div
-              onClick={() =>
-                handleStepDelete(index, setStepsInputs, stepsInputs)
-              }
-            >
-              <X />
+
+              {/* DELETE A STEP */}
+              <div
+                onClick={() =>
+                  handleStepDelete(index, setStepsInputs, stepsInputs)
+                }
+              >
+                <X />
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
         {/* PLUS BUTTON */}
         <div
           onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
@@ -367,9 +467,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                     )
                   }
 
-                  className={`inline-block px-2 py-1 rounded-full ${
-                    isSelected ? "bg-gray-200" : ""
-                  }`}
+                  className={`inline-block px-2 py-1 rounded-full ${isSelected ? "bg-gray-200" : ""
+                    }`}
                 >
 
                   #{category.category_name}
@@ -397,9 +496,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           <div
             onClick={handlePublicToggleClick}
 
-            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-              isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
-            }`}
+            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
+              }`}
           >
 
             <div
@@ -423,33 +521,35 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             Cancel
           </p>
         </div>
-      </form>
+      </form >
 
       {/* MODAL */}
-      {showModal && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-          <div className="bg-white p-5 rounded-lg shadow-lg text-center">
-            <p className="mb-3">
-              Would you like to add this recipe to your family?
-            </p>
-            <div className="flex justify-center">
-              <button
-                onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
-              >
-                No
-              </button>
+      {
+        showModal && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="bg-white p-5 rounded-lg shadow-lg text-center">
+              <p className="mb-3">
+                Would you like to add this recipe to your family?
+              </p>
+              <div className="flex justify-center">
+                <button
+                  onClick={() => handleModalChoice("yes")}
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => handleModalChoice("no")}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
+                >
+                  No
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 }
 
