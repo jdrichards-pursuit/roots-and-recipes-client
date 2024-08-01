@@ -6,7 +6,6 @@ import { X, Mic, Plus, Camera } from "lucide-react";
 import {
   handleTagClick,
   handleTagEntry,
-  // handleTextChange,
   handleAddIngredientsInput,
   handleIngredientsInputChange,
   handleIngredientDelete,
@@ -24,25 +23,20 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // user state
   const [userDetails, setUserDetails] = useState(null);
   const [familyName, setFamilyName] = useState(null);
-  //State for all categories
+  // State for all categories
   const [categories, setCategories] = useState([]);
-  //State for selected categories
+  // State for selected categories
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [recipeID, setRecipeID] = useState();
-  // console.log(selectedCategories);
   // STATES FOR THE MODAL
   const [showModal, setShowModal] = useState(false);
   const [modalChoice, setModalChoice] = useState(null);
-  // // STATE FOR THE INGREDIENTS
+  // STATE FOR THE INGREDIENTS
   const [ingredientsInputs, setIngredientsInputs] = useState([]);
   // STATE FOR THE STEPS
   const [stepsInputs, setStepsInputs] = useState([]);
   // STATE FOR PUBLIC TOGGLE
   const [isPublic, setIsPublic] = useState(true);
-
-
-  const [familyID, setFamilyID] = useState(true);
-
   // New state for checkbox
   const [isSelfChef, setIsSelfChef] = useState(false);
 
@@ -50,12 +44,13 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   const [recordingIndex, setRecordingIndex] = useState(null);
   const [recordingInputValue, setRecordingInputValue] = useState('');
 
+  const [familyID, setFamilyID] = useState(true);
+
+
   const addRecipe = async () => {
     newRecipe.user_id = userDetails.id;
     newRecipe.status = isPublic;
-
     newRecipe.chef = isSelfChef ? userDetails.nickname : newRecipe.chef;
-
 
     try {
       const response = await fetch(`${URL}/api/recipes`, {
@@ -131,10 +126,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         await handleSubmit();
         navigate(`/family_cookbook`);
       } else {
-
         newRecipe.family_id = 1;
-
-
         await handleSubmit();
         navigate(`/cookbook`);
       }
@@ -143,6 +135,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
     setShowModal(false);
   };
+
   // HANDLE PUBLIC TOGGLE
   const handlePublicToggleClick = () => {
     handlePublicToggle(isPublic, setIsPublic, newRecipe, setNewRecipe);
@@ -285,21 +278,21 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   }
 
   return (
-    <div className="ml-28 border-2 border-black border-solid">
-      <h1 className="text-center text-[#713A3A]">New Recipe</h1>
-      <form onSubmit={conditionalSubmit}>
+    <div className="max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg bg-white shadow-md">
+      <h1 className="text-center text-3xl font-semibold text-[#713A3A] mb-6">New Recipe</h1>
+      <form onSubmit={conditionalSubmit} className="space-y-6">
         {/* Dish Name Input */}
-        <label>
-          <h2>Name of dish</h2>
-        </label>
-        <input
-          id="name"
-          value={newRecipe.name || ""}
-          type="text"
-          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-          className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
-        />
-
+        <div>
+          <label className="block text-lg font-medium mb-2">Name of dish</label>
+          <input
+            id="name"
+            value={newRecipe.name || ""}
+            type="text"
+            onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
+            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+          />
+        </div>
+                  {/*AUDIO RECORD BUTTON*/}
         <button
           type="button"
           onClick={() =>
@@ -314,14 +307,30 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         {recordingIndex === 0 && recordingInputValue === 'name' && <span>🔴</span>}
 
         {/* Chef Input */}
-        <label>
-          <h2>Chef</h2>
+        <div>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="selfChef"
+              checked={isSelfChef}
+              onChange={() => setIsSelfChef(!isSelfChef)}
+              className="mr-2"
+            />
+            <span>Self</span>
+          </label>
           <input
-            type="checkbox"
-            id="selfChef"
-            checked={isSelfChef}
-            onChange={() => setIsSelfChef(!isSelfChef)}
+            id="chef"
+            value={
+              isSelfChef
+                ? capitalizeFirstLetter(userDetails?.nickname) ||
+                  capitalizeFirstLetter(userDetails?.first_name)
+                : capitalizeFirstLetter(newRecipe.chef) || ""
+            }
+            type="text"
+            onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
+            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
           />
+
           <span>Self</span>
         </label>
         <input
@@ -336,6 +345,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
           className="shadow-md border-2 border-black hover:bg-white bg-zinc-100 rounded-lg py-2 px-3"
         />
+                  {/*AUDIO RECORD BUTTON*/}
         <button
           type="button"
           onClick={() =>
@@ -348,28 +358,28 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           <Mic className="mt-8" />
         </button>
         {recordingIndex === 0 && recordingInputValue === 'chef' && <span>🔴</span>}
-
+        </div>
 
         {/* Ingredients Input */}
-        <label>
-          <h2>Ingredients</h2>
-        </label>
-        {ingredientsInputs.map((ingredientInput, index) => (
-          <div key={index}>
-            <input
-              onChange={(e) =>
-                handleIngredientsInputChange(
-                  index,
-                  e,
-                  setIngredientsInputs,
-                  ingredientsInputs
-                )
-              }
-              type="text"
-              value={ingredientInput || ""}
-              className="border-solid border-2 border-black p-2 mt-8"
-            />
-            <button
+        <div>
+          <label className="block text-lg font-medium mb-2">Ingredients</label>
+          {ingredientsInputs.map((ingredientInput, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-4">
+              <input
+                onChange={(e) =>
+                  handleIngredientsInputChange(
+                    index,
+                    e,
+                    setIngredientsInputs,
+                    ingredientsInputs
+                  )
+                }
+                type="text"
+                value={ingredientInput || ""}
+                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+              />
+                  {/*AUDIO RECORD BUTTON*/}
+                  <button
               type="button"
               onClick={() => handleIngredientSpeechToText(index)
               }
@@ -377,87 +387,86 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
               <Mic className="mt-8" />
             </button>
             {recordingInputValue === 'ingredient' + index && <span>🔴</span>}
-
-            {/* DELETE AN INGREDIENT */}
-            <div
-              onClick={() =>
-                handleIngredientDelete(
-                  index,
-                  setIngredientsInputs,
-                  ingredientsInputs
-                )
-              }
-            >
-              <X />
+             
+              <button
+                type="button"
+                onClick={() =>
+                  handleIngredientDelete(
+                    index,
+                    setIngredientsInputs,
+                    ingredientsInputs
+                  )
+                }
+                className="text-red-500 hover:text-red-700"
+              >
+                <X />
+              </button>
             </div>
-          </div>
-        ))
-        }
-        {/* PLUS BUTTON */}
-        <div
-          onClick={() =>
-            handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
-          }
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
-          <Plus />
+          ))}
+          {/* PLUS BUTTON */}
+          <button
+            type="button"
+            onClick={() =>
+              handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
+            }
+            className="bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center"
+          >
+            <Plus />
+          </button>
         </div>
 
         {/* Steps Input */}
-        <label>
-          <h2>Steps</h2>
-        </label>
-        {
-          stepsInputs.map((stepInput, index) => (
-            <div key={index}>
-              <div className="flex items-center space-x-2 mt-8">
-                <input
-                  onChange={(e) =>
-                    handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
-                  }
-                  type="text"
-                  value={stepInput || ""}
-                  className="border-solid border-2 border-black p-2 mt-8"
-                />
-                <button
+        <div>
+          <label className="block text-lg font-medium mb-2">Steps</label>
+          {stepsInputs.map((stepInput, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-4">
+              <input
+                onChange={(e) =>
+                  handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
+                }
+                type="text"
+                value={stepInput || ""}
+                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+              />
+                  {/*AUDIO RECORD BUTTON*/}
+                  <button
                   type="button"
                   onClick={() => handleStepsSpeechToText(index)
                   }
                 >
-                  <Mic className="mt-8" />
+                  <Mic className="text-gray-500" />
                 </button>
                 {recordingInputValue === 'step' + index && <span>🔴</span>}
               </div>
 
-
-              {/* DELETE A STEP */}
-              <div
-                onClick={() =>
-                  handleStepDelete(index, setStepsInputs, stepsInputs)
-                }
+                 <button
+                type="button"
+                onClick={() => handleStepDelete(index, setStepsInputs, stepsInputs)}
+                className="text-red-500 hover:text-red-700"
               >
                 <X />
-              </div>
+              </button>
             </div>
-          ))
-        }
-        {/* PLUS BUTTON */}
-        <div
-          onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
-          className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center"
-        >
-          <Plus />
+          ))}
+          {/* PLUS BUTTON */}
+          <button
+            type="button"
+            onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
+            className="bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center"
+          >
+            <Plus />
+          </button>
         </div>
 
         {/* CATEGORIES */}
-        <div>
+        <div className="flex flex-wrap gap-2 mb-4">
           {categories.length > 0 &&
             categories.map((category, index) => {
               const isSelected = selectedCategories.includes(
                 category.category_name
               );
               return (
-                <p
+                <button
                   key={index}
                   onClick={() =>
                     handleTagClick(
@@ -466,40 +475,39 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                       setSelectedCategories
                     )
                   }
-
-                  className={`inline-block px-2 py-1 rounded-full ${isSelected ? "bg-gray-200" : ""
-                    }`}
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    isSelected ? "bg-gray-200" : "bg-gray-100"
+                  } border border-gray-300`}
                 >
-
                   #{category.category_name}
-                </p>
+                </button>
               );
             })}
         </div>
-        <Link
-          to="/dish_photo"
-          onClick={() => {
-            saveToLocalStorage();
-          }}
-        >
-          <p className="text-center bg-[#BCB9B9] p-2 inline-block ml-4">
-            Take a photo of your dish
-          </p>
-          <div className="flex justify-center items-center">
-            <Camera className="w-8 h-8" />
-          </div>
-        </Link>
+
+        {/* Photo Link */}
+        <div className="flex items-center space-x-2">
+          <Link
+            to="/dish_photo"
+            onClick={() => {
+              saveToLocalStorage();
+            }}
+            className="flex items-center space-x-2 bg-gray-200 text-gray-800 rounded-lg p-2"
+          >
+            <p>Take a photo of your dish</p>
+            <Camera className="w-6 h-6" />
+          </Link>
+        </div>
 
         {/* Public Toggle */}
-        <div className="flex justify-center items-center mt-4">
-          <span className="mr-3">{isPublic ? "Public" : "Private"}</span>
+        <div className="flex items-center space-x-4 mt-4">
+          <span className="text-lg">{isPublic ? "Public" : "Private"}</span>
           <div
             onClick={handlePublicToggleClick}
-
-            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${isPublic ? "bg-[#3A00E5]" : "bg-gray-300"
-              }`}
+            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
+              isPublic ? "bg-blue-600" : "bg-gray-300"
+            }`}
           >
-
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${isPublic ? "translate-x-8" : ""
                 } transition-transform duration-300`}
@@ -508,43 +516,39 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         </div>
 
         {/* Submit/Save Button */}
-        <div className="flex justify-between mt-10">
+        <div className="flex justify-between mt-8 space-x-2">
           <input
             type="submit"
             value="Save"
-            className="bg-emerald-500 hover:bg-green-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
+            className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-4 py-2 shadow-md w-1/2"
           />
-          <p
+          <button
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 rounded-lg px-1 py-0 shadow-md w-1/2 mb-10 ml-2"
+            className="bg-red-400 hover:bg-red-500 text-white rounded-lg px-4 py-2 shadow-md w-1/2"
           >
             Cancel
-          </p>
+          </button>
         </div>
       </form >
 
       {/* MODAL */}
-      {
-        showModal && (
-          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-            <div className="bg-white p-5 rounded-lg shadow-lg text-center">
-              <p className="mb-3">
-                Would you like to add this recipe to your family?
-              </p>
-              <div className="flex justify-center">
-                <button
-                  onClick={() => handleModalChoice("yes")}
-                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => handleModalChoice("no")}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
-                >
-                  No
-                </button>
-              </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p className="mb-4 text-lg">Would you like to add this recipe to your family?</p>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => handleModalChoice("yes")}
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => handleModalChoice("no")}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                No
+              </button>
             </div>
           </div>
         )

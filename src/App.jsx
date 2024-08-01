@@ -14,10 +14,6 @@ import RecipeForm from "./Components/Recipe/RecipeForm";
 import RecipeEditForm from "./Components/Recipe/RecipeEditForm";
 import RecipeList from "./Components/Recipe/RecipeList";
 import RecipeShow from "./Components/Recipe/RecipeShow";
-import AboutUs from "./Components/Hamburger/AboutUs";
-import BurgerMenu from "./Components/Hamburger/BurgerMenu";
-import ContactUs from "./Components/Hamburger/ContactUs";
-import FAQ from "./Components/Hamburger/FAQ";
 import { MyCookbook } from "./Components/Pages/MyCookbook";
 import Layout from "./Components/Pages/Layout";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,7 +25,6 @@ import { FamilyMembers } from "./Components/Pages/FamilyMembers";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [burgerToggle, setBurgerToggle] = useState(false);
   const [navBarToggle, setNavBarToggle] = useState(true);
 
   //  new recipe state
@@ -56,8 +51,7 @@ function App() {
       userName={user ? user.displayName : null}
       navBarToggle={navBarToggle}
     >
-      <BurgerMenu burgerToggle={burgerToggle} />
-      <Routes>
+            <Routes>
         <Route
           path="/"
           element={
@@ -65,8 +59,6 @@ function App() {
               <Navigate to="/home" />
             ) : (
               <Login
-                setBurgerToggle={setBurgerToggle}
-                burgerToggle={burgerToggle}
                 setNavBarToggle={setNavBarToggle}
               />
             )
@@ -76,8 +68,6 @@ function App() {
           path="/login"
           element={
             <Login
-              setBurgerToggle={setBurgerToggle}
-              burgerToggle={burgerToggle}
               setNavBarToggle={setNavBarToggle}
             />
           }
@@ -92,7 +82,6 @@ function App() {
               path="/profile"
               element={
                 <Profile
-                  setBurgerToggle={setBurgerToggle}
                   setNavBarToggle={setNavBarToggle}
                 />
               }
@@ -104,7 +93,6 @@ function App() {
               path="/family_cookbook"
               element={
                 <FamilyCookbook
-                  setBurgerToggle={setBurgerToggle}
                   setNavBarToggle={setNavBarToggle}
                 />
               }
@@ -113,7 +101,6 @@ function App() {
               path="/cookbook"
               element={
                 <MyCookbook
-                  setBurgerToggle={setBurgerToggle}
                   setNavBarToggle={setNavBarToggle}
                 />
               }
@@ -122,7 +109,6 @@ function App() {
               path="/home"
               element={
                 <Home
-                  setBurgerToggle={setBurgerToggle}
                   setNavBarToggle={setNavBarToggle}
                 />
               }
@@ -131,9 +117,8 @@ function App() {
               path="/recipe_form"
               element={
                 <RecipeForm
-                  setBurgerToggle={setBurgerToggle}
-                  setNewRecipe={setNewRecipe}
                   newRecipe={newRecipe}
+                  setNewRecipe={setNewRecipe}
                   setNavBarToggle={setNavBarToggle}
                 />
               }
@@ -152,7 +137,6 @@ function App() {
               path="/dish_photo"
               element={
                 <DishCameraView
-                  setBurgerToggle={setBurgerToggle}
                   newRecipe={newRecipe}
                   setNewRecipe={setNewRecipe}
                   setNavBarToggle={setNavBarToggle}
@@ -165,17 +149,12 @@ function App() {
               element={
                 <RecipeList
                   setNavBarToggle={setNavBarToggle}
-                  setBurgerToggle={setBurgerToggle}
                 />
               }
             />
 
             <Route path="/family_members" element={<FamilyMembers />} />
             <Route path="/recipe_show/:id" element={<RecipeShow />} />
-            <Route path="/about_us" element={<AboutUs />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/contact_us" element={<ContactUs />} />
-
             <Route path="/create_a_recipe" element={<CreatARecipe />} />
           </>
         )}
