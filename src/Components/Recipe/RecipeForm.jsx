@@ -40,6 +40,9 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   // New state for checkbox
   const [isSelfChef, setIsSelfChef] = useState(false);
   const [familyID, setFamilyID] = useState(true);
+  // STATE FOR RECORDING
+  const [recordingIndex, setRecordingIndex] = useState(null);
+  const [recordingInputValue, setRecordingInputValue] = useState('');
 
   const addRecipe = async () => {
     newRecipe.user_id = userDetails.id;
@@ -258,6 +261,58 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     }
   };
 
+  // This function is to use the speech recognition API and set up the method to handle the speech recognition
+  //https://github.com/jdrichards-pursuit/recipe-speech-to-input/blob/main/src/RecipeForm.jsx
+  const startRecognition = (callback, index) => {
+    const recognition = new window.webkitSpeechRecognition() || window.SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setRecordingIndex(index);
+    };
+
+    recognition.onresult = (event) => {
+      const speechResult = event.results[0][0].transcript;
+      callback(speechResult);
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.onerror = () => {
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.onend = () => {
+      setRecordingIndex(null);
+      setRecordingInputValue('')
+    };
+
+    recognition.start();
+  };
+
+  const handleIngredientSpeechToText = (index) => {
+    const newInputs = [...ingredientsInputs];
+    startRecognition(
+      (text) =>
+        newInputs[index] = text, 0,
+      setIngredientsInputs(newInputs),
+      setRecordingInputValue('ingredient' + index)
+    )
+  }
+
+  const handleStepsSpeechToText = (index) => {
+    const newInputs = [...stepsInputs];
+    startRecognition(
+      (text) =>
+        newInputs[index] = text, 0,
+      setStepsInputs(newInputs),
+      setRecordingInputValue("step" + index)
+    )
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg bg-white shadow-md">
       <h1 className="text-center text-3xl font-semibold text-[#713A3A] mb-6">
@@ -265,29 +320,68 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       </h1>
       <form onSubmit={conditionalSubmit} className="space-y-6">
         {/* Dish Name Input */}
-        <label>
-          <h2 className="block text-lg font-medium mb-2">Name of dish</h2>
-        </label>
-        <input
-          id="name"
-          value={newRecipe.name || ""}
-          type="text"
-          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-          className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
-        />
+        <div>
+          <label className="block text-lg font-medium mb-2">Name of dish</label>
+          <input
+            id="name"
+            value={newRecipe.name || ""}
+            type="text"
+            onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
+            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+          />
+          <button
+            type="button"
+            onClick={() =>
+              startRecognition(
+                (text) => setNewRecipe({ ...newRecipe, name: text }),
+                0, setRecordingInputValue('name')
+              )
+            }
+          >
+            <Mic className="text-gray-500" />
+          </button>
+          {recordingIndex === 0 && recordingInputValue === 'name' && <span>🔴</span>}
+        </div>
 
         {/* Chef Input */}
-        <label className="flex items-center space-x-2">
-          <h2 className="block text-lg font-medium mb-2">Chef</h2>
-          <input
-            type="checkbox"
+        <div>
+          <label className="flex items-center space-x-2">
+            <input
+               type="checkbox"
             id="selfChef"
             checked={isSelfChef}
             onChange={(event) => {
               setIsSelfChef(!isSelfChef);
               handleTextChange(event, setNewRecipe, newRecipe);
             }}
-            className="mr-2"
+              className="mr-2"
+            />
+            <span>Self</span>
+          </label>
+          <button
+            type="button"
+            onClick={() =>
+              startRecognition(
+                (text) => setNewRecipe({ ...newRecipe, chef: text }),
+                0, setRecordingInputValue('chef')
+              )
+            }
+          >
+            <Mic className="text-gray-500" />
+          </button>
+          {recordingIndex === 0 && recordingInputValue === 'chef' && <span>🔴</span>}
+          <input
+            id="chef"
+            value={
+              isSelfChef
+                ? capitalizeFirstLetter(userDetails?.nickname) ||
+                capitalizeFirstLetter(userDetails?.first_name)
+                : capitalizeFirstLetter(newRecipe.chef) || ""
+            }
+            type="text"
+            onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
+            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+
           />
           <span>Self</span>
         </label>
@@ -305,32 +399,45 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         />
 
         {/* Ingredients Input */}
-        <label className="block text-lg font-medium mb-2">Ingredients</label>
-        {ingredientsInputs.map((ingredientInput, index) => (
-          <div key={index} className="flex items-center space-x-2 mb-4">
-            <input
-              onChange={(e) =>
-                handleIngredientsInputChange(
-                  index,
-                  e,
-                  setIngredientsInputs,
-                  ingredientsInputs
-                )
-              }
-              type="text"
-              value={ingredientInput || ""}
-              className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
-            />
-            <div
-              onClick={() =>
-                handleIngredientDelete(
-                  index,
-                  setIngredientsInputs,
-                  ingredientsInputs
-                )
-              }
-              className="text-red-500 hover:text-red-700 cursor-pointer">
-              <X />
+        <div>
+          <label className="block text-lg font-medium mb-2">Ingredients</label>
+          {ingredientsInputs.map((ingredientInput, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-4">
+              <input
+                onChange={(e) =>
+                  handleIngredientsInputChange(
+                    index,
+                    e,
+                    setIngredientsInputs,
+                    ingredientsInputs
+                  )
+                }
+                type="text"
+                value={ingredientInput || ""}
+                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+              />
+              <button
+                type="button"
+                onClick={() => handleIngredientSpeechToText(index)
+                }
+              >
+                <Mic className="text-gray-500" />
+              </button>
+              {recordingInputValue === 'ingredient' + index && <span>🔴</span>}
+              <button
+                type="button"
+                onClick={() =>
+                  handleIngredientDelete(
+                    index,
+                    setIngredientsInputs,
+                    ingredientsInputs
+                  )
+                }
+                className="text-red-500 hover:text-red-700"
+              >
+                <X />
+              </button>
+
             </div>
           </div>
         ))}
@@ -344,24 +451,33 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         </div>
 
         {/* Steps Input */}
-        <label className="block text-lg font-medium mb-2">Steps</label>
-        {stepsInputs.map((stepInput, index) => (
-          <div key={index} className="flex items-center space-x-2 mb-4">
-            <input
-              onChange={(e) =>
-                handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
-              }
-              type="text"
-              value={stepInput || ""}
-              className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
-            />
-            <Mic className="text-gray-500" />
-            <div
-              onClick={() =>
-                handleStepDelete(index, setStepsInputs, stepsInputs)
-              }
-              className="text-red-500 hover:text-red-700 cursor-pointer">
-              <X />
+        <div>
+          <label className="block text-lg font-medium mb-2">Steps</label>
+          {stepsInputs.map((stepInput, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-4">
+              <input
+                onChange={(e) =>
+                  handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
+                }
+                type="text"
+                value={stepInput || ""}
+                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+              />
+              <button
+                type="button"
+                onClick={() => handleStepsSpeechToText(index)
+                }
+              >
+                <Mic className="text-gray-500" />
+              </button>
+              {recordingInputValue === 'step' + index && <span>🔴</span>}
+              <button
+                type="button"
+                onClick={() => handleStepDelete(index, setStepsInputs, stepsInputs)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <X />
+              </button>
             </div>
           </div>
         ))}
@@ -389,6 +505,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                       setSelectedCategories
                     )
                   }
+
                   className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer ${
                     isSelected ? "bg-gray-300" : "bg-gray-100"
                   } border border-gray-300`}>
@@ -412,9 +529,9 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           <span className="text-lg">{isPublic ? "Public" : "Private"}</span>
           <div
             onClick={handlePublicToggleClick}
-            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-              isPublic ? "bg-blue-600" : "bg-gray-300"
-            }`}>
+            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${isPublic ? "bg-blue-600" : "bg-gray-300"
+              }`}
+          >
             <div
               className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
                 isPublic ? "translate-x-8" : ""
