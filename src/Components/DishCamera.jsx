@@ -1,12 +1,15 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Camera } from "react-camera-pro";
 import { useNavigate } from "react-router-dom";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
 
 export const DishCamera = ({ setNewRecipe, newRecipe }) => {
   const camera = useRef(null);
   const [image, setImage] = useState(null);
   const [cameraToggle, setCameraToggle] = useState(true);
   const [facingMode, setFacingMode] = useState("environment");
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,13 +22,12 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: "image/png" });
 
-    // Convert blob to base64 data URL
     const reader = new FileReader();
     reader.readAsDataURL(blob);
 
     return new Promise((resolve, reject) => {
       reader.onloadend = () => {
-        resolve(reader.result); // This is the base64 PNG data URL
+        resolve(reader.result);
       };
       reader.onerror = () => {
         reject("Error occurred while reading the file.");
@@ -51,12 +53,23 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
     );
   };
 
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobileOrTablet(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
+
   return (
     <div style={{ position: "relative", width: "300px", height: "300px" }}>
       {cameraToggle && (
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <Camera
-            key={facingMode} // Force re-render when facingMode changes
+            key={facingMode}
             ref={camera}
             aspectRatio={1}
             facingMode={facingMode}
@@ -94,23 +107,31 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
               fontSize: "20px",
               padding: "10px 20px",
               zIndex: 100,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            Take photo
+            <PhotoCameraIcon style={{ fontSize: "40px" }} />
+            {/* {isMobileOrTablet && (
+              <span style={{ fontSize: "14px" }}>Switch</span>
+            )} */}
           </button>
-          <button
-            onClick={toggleFacingMode}
-            style={{
-              position: "absolute",
-              bottom: "10px",
-              right: "10px",
-              fontSize: "20px",
-              padding: "10px 20px",
-              zIndex: 100,
-            }}
-          >
-            Switch Camera
-          </button>
+          {isMobileOrTablet && (
+            <button
+              onClick={toggleFacingMode}
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                right: "10px",
+                fontSize: "20px",
+                padding: "10px 20px",
+                zIndex: 100,
+              }}
+            >
+              <CameraswitchIcon />
+            </button>
+          )}
         </>
       )}
     </div>
