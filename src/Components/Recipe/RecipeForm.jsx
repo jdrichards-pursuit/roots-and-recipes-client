@@ -44,8 +44,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   const addRecipe = async () => {
     newRecipe.user_id = userDetails.id;
     newRecipe.status = isPublic;
-    newRecipe.chef = isSelfChef ? userDetails.nickname : newRecipe.chef;
-
+    // newRecipe.chef = isSelfChef ? userDetails.nickname : newRecipe.chef;
+    // console.log(newRecipe);
     try {
       const response = await fetch(`${URL}/api/recipes`, {
         method: "POST",
@@ -91,6 +91,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
         localStorage.removeItem("newRecipe");
         localStorage.removeItem("photo");
         localStorage.removeItem("selectedCategories");
+        localStorage.removeItem("isSelfChef");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -98,13 +99,32 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   };
 
   const handleTextChange = (event, setNewRecipe, newRecipe) => {
-    if (event.target.id === "chef" && isSelfChef) {
-      setNewRecipe({
-        ...newRecipe,
-        chef: userDetails.nickname || userDetails.first_name,
-      });
+    // console.log(event.target.id);
+    // if (event.target.id === "selfChef" && isSelfChef) {
+    //   console.log(`HERE`);
+    //   setNewRecipe((prevRecipe) => ({
+    //     ...prevRecipe,
+    //     chef: isSelfChef ? userDetails.nickname || userDetails.first_name : "",
+    //   }));
+    // } else {
+    //   setNewRecipe((prevRecipe) => ({
+    //     ...prevRecipe,
+    //     [event.target.id]: event.target.value,
+    //   }));
+    // }
+    const { id, value } = event.target;
+
+    if (id === "selfChef" && userDetails) {
+      console.log(newRecipe);
+      setNewRecipe((prevRecipe) => ({
+        ...prevRecipe,
+        chef: isSelfChef ? userDetails.nickname : userDetails.first_name,
+      }));
     } else {
-      setNewRecipe({ ...newRecipe, [event.target.id]: event.target.value });
+      setNewRecipe((prevRecipe) => ({
+        ...prevRecipe,
+        [id]: value,
+      }));
     }
   };
 
@@ -169,11 +189,14 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
     const storedRecipe = JSON.parse(localStorage.getItem("newRecipe")) || [];
     const storedSelectedCategories =
       JSON.parse(localStorage.getItem("selectedCategories")) || [];
+    const storedIsSelfChef =
+      JSON.parse(localStorage.getItem("isSelfChef")) || false;
 
     setIngredientsInputs(storedIngredients);
     setStepsInputs(storedSteps);
     setNewRecipe(storedRecipe);
     setSelectedCategories(storedSelectedCategories);
+    setIsSelfChef(storedIsSelfChef);
 
     // Clean up localStorage if newRecipe name is empty
     if (newRecipe.name === "") {
@@ -182,8 +205,23 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       localStorage.removeItem("newRecipe");
       localStorage.removeItem("photo");
       localStorage.removeItem("selectedCategories");
+      localStorage.removeItem("isSelfChef");
     }
   }, []);
+
+  const handleSelfChefChange = (event) => {
+    const newIsSelfChef = !isSelfChef;
+    setIsSelfChef(newIsSelfChef);
+
+    const updatedChef = newIsSelfChef
+      ? capitalizeFirstLetter(userDetails?.nickname || userDetails?.first_name)
+      : newRecipe.chef;
+
+    setNewRecipe((prevRecipe) => ({
+      ...prevRecipe,
+      chef: updatedChef,
+    }));
+  };
 
   const saveToLocalStorage = () => {
     const updatedRecipe = {
@@ -191,6 +229,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       status: isPublic,
       family_id: familyID.id,
       photo: newRecipe.photo,
+      chef: isSelfChef ? userDetails.nickname || userDetails.first_name : "",
     };
     localStorage.setItem("newRecipe", JSON.stringify(updatedRecipe));
     localStorage.setItem(
@@ -202,8 +241,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       "selectedCategories",
       JSON.stringify(selectedCategories)
     );
+    localStorage.setItem("isSelfChef", JSON.stringify(isSelfChef));
   };
-
   // GIVE THE INGREDIENTS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
   newRecipe.ingredients = ingredientsInputs.join(",");
   // GIVE THE STEPS KEY A VALUE BY JOINING THE ARRAY INTO ONE STRING
@@ -221,122 +260,116 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
   return (
     <div className="max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg bg-white shadow-md">
-      <h1 className="text-center text-3xl font-semibold text-[#713A3A] mb-6">New Recipe</h1>
+      <h1 className="text-center text-3xl font-semibold text-[#713A3A] mb-6">
+        New Recipe
+      </h1>
       <form onSubmit={conditionalSubmit} className="space-y-6">
         {/* Dish Name Input */}
-        <div>
-          <label className="block text-lg font-medium mb-2">Name of dish</label>
-          <input
-            id="name"
-            value={newRecipe.name || ""}
-            type="text"
-            onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
-          />
-        </div>
+        <label>
+          <h2 className="block text-lg font-medium mb-2">Name of dish</h2>
+        </label>
+        <input
+          id="name"
+          value={newRecipe.name || ""}
+          type="text"
+          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
+          className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+        />
 
         {/* Chef Input */}
-        <div>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="selfChef"
-              checked={isSelfChef}
-              onChange={() => setIsSelfChef(!isSelfChef)}
-              className="mr-2"
-            />
-            <span>Self</span>
-          </label>
+        <label className="flex items-center space-x-2">
+          <h2 className="block text-lg font-medium mb-2">Chef</h2>
           <input
-            id="chef"
-            value={
-              isSelfChef
-                ? capitalizeFirstLetter(userDetails?.nickname) ||
-                  capitalizeFirstLetter(userDetails?.first_name)
-                : capitalizeFirstLetter(newRecipe.chef) || ""
-            }
-            type="text"
-            onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
-            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+            type="checkbox"
+            id="selfChef"
+            checked={isSelfChef}
+            onChange={(event) => {
+              setIsSelfChef(!isSelfChef);
+              handleTextChange(event, setNewRecipe, newRecipe);
+            }}
+            className="mr-2"
           />
-        </div>
+          <span>Self</span>
+        </label>
+        <input
+          id="chef"
+          value={
+            isSelfChef
+              ? capitalizeFirstLetter(userDetails?.nickname) ||
+                capitalizeFirstLetter(userDetails?.first_name)
+              : capitalizeFirstLetter(newRecipe.chef) || ""
+          }
+          type="text"
+          onChange={(event) => handleTextChange(event, setNewRecipe, newRecipe)}
+          className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+        />
 
         {/* Ingredients Input */}
-        <div>
-          <label className="block text-lg font-medium mb-2">Ingredients</label>
-          {ingredientsInputs.map((ingredientInput, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-4">
-              <input
-                onChange={(e) =>
-                  handleIngredientsInputChange(
-                    index,
-                    e,
-                    setIngredientsInputs,
-                    ingredientsInputs
-                  )
-                }
-                type="text"
-                value={ingredientInput || ""}
-                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
-              />
-              <button
-                type="button"
-                onClick={() =>
-                  handleIngredientDelete(
-                    index,
-                    setIngredientsInputs,
-                    ingredientsInputs
-                  )
-                }
-                className="text-red-500 hover:text-red-700"
-              >
-                <X />
-              </button>
+        <label className="block text-lg font-medium mb-2">Ingredients</label>
+        {ingredientsInputs.map((ingredientInput, index) => (
+          <div key={index} className="flex items-center space-x-2 mb-4">
+            <input
+              onChange={(e) =>
+                handleIngredientsInputChange(
+                  index,
+                  e,
+                  setIngredientsInputs,
+                  ingredientsInputs
+                )
+              }
+              type="text"
+              value={ingredientInput || ""}
+              className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+            />
+            <div
+              onClick={() =>
+                handleIngredientDelete(
+                  index,
+                  setIngredientsInputs,
+                  ingredientsInputs
+                )
+              }
+              className="text-red-500 hover:text-red-700 cursor-pointer">
+              <X />
             </div>
-          ))}
-          {/* PLUS BUTTON */}
-          <button
-            type="button"
-            onClick={() =>
-              handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
-            }
-            className="bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center"
-          >
-            <Plus />
-          </button>
+          </div>
+        ))}
+        {/* PLUS BUTTON */}
+        <div
+          onClick={() =>
+            handleAddIngredientsInput(setIngredientsInputs, ingredientsInputs)
+          }
+          className="bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center cursor-pointer">
+          <Plus />
         </div>
 
         {/* Steps Input */}
-        <div>
-          <label className="block text-lg font-medium mb-2">Steps</label>
-          {stepsInputs.map((stepInput, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-4">
-              <input
-                onChange={(e) =>
-                  handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
-                }
-                type="text"
-                value={stepInput || ""}
-                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
-              />
-              <Mic className="text-gray-500" />
-              <button
-                type="button"
-                onClick={() => handleStepDelete(index, setStepsInputs, stepsInputs)}
-                className="text-red-500 hover:text-red-700"
-              >
-                <X />
-              </button>
+        <label className="block text-lg font-medium mb-2">Steps</label>
+        {stepsInputs.map((stepInput, index) => (
+          <div key={index} className="flex items-center space-x-2 mb-4">
+            <input
+              onChange={(e) =>
+                handleStepsInputChange(index, e, setStepsInputs, stepsInputs)
+              }
+              type="text"
+              value={stepInput || ""}
+              className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
+            />
+            <Mic className="text-gray-500" />
+            <div
+              onClick={() =>
+                handleStepDelete(index, setStepsInputs, stepsInputs)
+              }
+              className="text-red-500 hover:text-red-700 cursor-pointer">
+              <X />
             </div>
-          ))}
-          {/* PLUS BUTTON */}
-          <button
-            type="button"
-            onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
-            className="bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center"
-          >
-            <Plus />
-          </button>
+          </div>
+        ))}
+        {/* PLUS BUTTON */}
+        <div
+          onClick={() => handleStepsInput(setStepsInputs, stepsInputs)}
+          className="bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center cursor-pointer">
+          <Plus />
         </div>
 
         {/* CATEGORIES */}
@@ -347,7 +380,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                 category.category_name
               );
               return (
-                <button
+                <p
                   key={index}
                   onClick={() =>
                     handleTagClick(
@@ -356,29 +389,23 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                       setSelectedCategories
                     )
                   }
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    isSelected ? "bg-gray-200" : "bg-gray-100"
-                  } border border-gray-300`}
-                >
+                  className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer ${
+                    isSelected ? "bg-gray-300" : "bg-gray-100"
+                  } border border-gray-300`}>
                   #{category.category_name}
-                </button>
+                </p>
               );
             })}
         </div>
-
-        {/* Photo Link */}
-        <div className="flex items-center space-x-2">
-          <Link
-            to="/dish_photo"
-            onClick={() => {
-              saveToLocalStorage();
-            }}
-            className="flex items-center space-x-2 bg-gray-200 text-gray-800 rounded-lg p-2"
-          >
-            <p>Take a photo of your dish</p>
-            <Camera className="w-6 h-6" />
-          </Link>
-        </div>
+        <Link
+          to="/dish_photo"
+          onClick={() => {
+            saveToLocalStorage();
+          }}
+          className="flex items-center space-x-2 bg-gray-200 text-gray-800 rounded-lg p-2">
+          <p>Take a photo of your dish</p>
+          <Camera className="w-6 h-6" />
+        </Link>
 
         {/* Public Toggle */}
         <div className="flex items-center space-x-4 mt-4">
@@ -387,11 +414,11 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             onClick={handlePublicToggleClick}
             className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               isPublic ? "bg-blue-600" : "bg-gray-300"
-            }`}
-          >
+            }`}>
             <div
-              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${isPublic ? "translate-x-8" : ""
-                } transition-transform duration-300`}
+              className={`bg-white w-6 h-6 rounded-full shadow-md transform ${
+                isPublic ? "translate-x-8" : ""
+              } transition-transform duration-300`}
             />
           </div>
         </div>
@@ -401,14 +428,13 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           <input
             type="submit"
             value="Save"
-            className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-4 py-2 shadow-md w-1/2"
+            className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-4 py-2 shadow-md w-1/2 cursor-pointer"
           />
-          <button
+          <p
             onClick={() => navigate(-1)}
-            className="bg-red-400 hover:bg-red-500 text-white rounded-lg px-4 py-2 shadow-md w-1/2"
-          >
+            className="bg-red-400 hover:bg-red-500 text-white rounded-lg px-4 py-2 shadow-md w-1/2 cursor-pointer text-center">
             Cancel
-          </button>
+          </p>
         </div>
       </form>
 
@@ -416,18 +442,18 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <p className="mb-4 text-lg">Would you like to add this recipe to your family?</p>
+            <p className="mb-4 text-lg">
+              Would you like to add this recipe to your family?
+            </p>
             <div className="flex justify-center space-x-4">
               <button
                 onClick={() => handleModalChoice("yes")}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-              >
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
                 Yes
               </button>
               <button
                 onClick={() => handleModalChoice("no")}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-              >
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                 No
               </button>
             </div>
