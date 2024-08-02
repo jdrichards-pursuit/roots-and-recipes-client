@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { getAuth } from "firebase/auth";
 import homeIconPng from "../../assets/home_icon.png";
@@ -14,6 +14,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const auth = getAuth();
@@ -83,41 +84,66 @@ const Layout = ({ children }) => {
         <nav className="lg:hidden bg-custom-brown text-white p-4 fixed top-16 w-full z-20 space-y-4">
           {user ? (
             <>
-              <Link to="/home" className="flex items-center space-x-2">
-                <img src={homeIconPng} alt="home icon" className="w-6 h-6" />
+              <div
+              onClick={() => {navigate("/home");window.location.reload()
+                
+              }}
+              className="flex items-center space-x-2">
+                <img
+                  src={homeIconPng}
+                  alt="home icon"
+                  className="w-6 h-6"
+                />
                 <span>Home</span>
-              </Link>
-              <Link
-                to="/family_cookbook"
-                className="flex items-center space-x-2"
-              >
+              </div>
+              <div
+              onClick={() => {navigate("/family_cookbook");window.location.reload()
+                
+              }}
+              className="flex items-center space-x-2">
                 <img
                   src={familyIconPng}
                   alt="family icon"
                   className="w-6 h-6"
                 />
                 <span>Family</span>
-              </Link>
-              <Link to="/create_a_recipe" className="flex items-center space-x-2">
-                <img src={plusIconPng} alt="plus icon" className="w-8 h-8" />
-                <span>Add </span>
-              </Link>
-              <Link to="/cookbook" className="flex items-center space-x-2">
+              </div>
+              <div
+              onClick={() => {navigate("/create_a_recipe");window.location.reload()
+                
+              }}
+              className="flex items-center space-x-2">
+                <img
+                  src={plusIconPng}
+                  alt="plus icon"
+                  className="w-8 h-8"
+                />
+                <span>Add</span>
+              </div>
+              <div
+              onClick={() => {navigate("/cookbook");window.location.reload()
+                
+              }}
+              className="flex items-center space-x-2">
                 <img
                   src={cookbookIconPng}
                   alt="cookbook icon"
                   className="w-6 h-6"
                 />
                 <span>Cookbook</span>
-              </Link>
-              <Link to="/profile" className="flex items-center space-x-2">
+              </div>
+              <div
+              onClick={() => {navigate("/profile");window.location.reload()
+                
+              }}
+              className="flex items-center space-x-2">
                 <img
                   src={profileIconPng}
                   alt="profile icon"
                   className="w-6 h-6"
                 />
                 <span>Profile</span>
-              </Link>
+              </div>
             </>
           ) : (
             <>
