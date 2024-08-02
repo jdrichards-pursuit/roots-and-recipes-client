@@ -128,20 +128,18 @@ const RecipeShow = () => {
   }
 
   return (
-    <div className="bg-transparent min-h-screen py-8">
+    <div className="bg-transparent min-h-screen py-8 -mt-4">
       <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-4xl">
         <h1 className="text-4xl font-bold mb-6 text-center text-gray-800">
-          {name}
+          {name[0].toUpperCase() + name.slice(1)}
         </h1>
         <div className="bg-gray-100 rounded-lg p-4 mb-6">
-          {family_id !== 1 &&
-            familyName.length > 0 &&
-            familyName !== "defaultFamily" && (
-              <p className="text-lg mb-2 font-bold">
-                Family:
-                <span className="font-thin"> {familyName}</span>
-              </p>
-            )}
+          {user.family_code !== "000000" && singleRecipe.family_id !== 1 && (
+            <p className="text-lg mb-2 font-bold">
+              Family:
+              <span className="font-thin"> {familyName}</span>
+            </p>
+          )}
           <p className="text-lg mb-2">
             <span className="font-bold">Chef:</span> {chef}
           </p>
@@ -149,17 +147,21 @@ const RecipeShow = () => {
             <span className="font-bold">Created at:</span>{" "}
             {new Date(created_at).toLocaleDateString()}
           </p>
-          <h2 className="text-lg font-semibold mb-2">Categories</h2>
-          <ul className="list-inside flex flex-row">
-            {recipeCategories.length > 0 &&
-              recipeCategories.map((category, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-white rounded-full bg-neutral-900 px-4 py-2 ml-2 w-fit ">
-                  {category}
-                </li>
-              ))}
-          </ul>
+          {recipeCategories.length > 0 && (
+            <>
+              <h2 className="text-lg font-semibold mb-2">Categories</h2>
+              <ul className="list-inside flex flex-row">
+                {recipeCategories.length > 0 &&
+                  recipeCategories.map((category, index) => (
+                    <li
+                      key={index}
+                      className="text-sm text-white rounded-full bg-neutral-900 px-4 py-2 ml-2 w-fit ">
+                      {category}
+                    </li>
+                  ))}
+              </ul>
+            </>
+          )}
         </div>
         <div className="flex flex-col lg:flex-row items-start lg:items-center lg:space-x-8">
           <img
@@ -170,9 +172,9 @@ const RecipeShow = () => {
           <div className="w-full lg:w-2/3">
             <div className="bg-white shadow-md rounded-lg p-6 ">
               <h2 className="text-2xl font-semibold mb-2 -mt-4">Ingredients</h2>
-              <ul className=" grid grid-cols-2 gap-1 list-disc list-inside ">
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 list-disc list-inside ">
                 {ingredientList.map((ingredient, index) => (
-                  <li key={index} className="text-base">
+                  <li key={index} className=" text-base">
                     {ingredient}
                   </li>
                 ))}
