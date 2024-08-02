@@ -115,8 +115,7 @@ export const MyCookbook = () => {
             {searchInput ? (
               <div
                 onClick={clearSearch}
-                className="absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer p-1"
-              >
+                className="absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer p-1">
                 <ClearIcon />
               </div>
             ) : (
@@ -134,25 +133,32 @@ export const MyCookbook = () => {
             </p>
           </Link>
         ) : recipes.length > 0 ? (
-
           recipes
             .sort((a, b) => a.id - b.id)
             .map((recipe) => (
-              <div key={recipe.id} className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4">
+              <div
+                key={recipe.id}
+                className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4">
                 <Link to={`/recipe_show/${recipe.id}`} className="flex-1 ml-2">
                   <div className="rounded-xl">
+                    <img src={recipe.photo} alt={recipe.name} />
                     <p className="p-4 rounded-lg text-black text-lg">
-                      {recipe.name}
+                      {recipe.chef}'s {recipe.name}
                     </p>
                   </div>
                 </Link>
                 <div className="flex items-center">
-                  <EditIcon onClick={() => navigate(`/edit/${recipe.id}`)} className="cursor-pointer mr-2" />
-                  <AddCircleIcon onClick={() => handleClick(recipe)} className="text-[#713A3A] cursor-pointer" />
+                  <EditIcon
+                    onClick={() => navigate(`/edit/${recipe.id}`)}
+                    className="cursor-pointer mr-2"
+                  />
+                  <AddCircleIcon
+                    onClick={() => handleClick(recipe)}
+                    className="text-[#713A3A] cursor-pointer"
+                  />
                 </div>
               </div>
             ))
-
         ) : (
           <p className="text-center bg-[#D9D9D9] p-4 rounded-lg shadow-md">
             Sorry, recipe cannot be found
