@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
+
 const URL = import.meta.env.VITE_BASE_URL;
 
 const JoinFamilyForm = () => {
@@ -12,19 +13,9 @@ const JoinFamilyForm = () => {
   const navigate = useNavigate();
 
   const roles = [
-    "Sibling",
-    "Parent",
-    "Grandparent",
-    "Child",
-    "Grandchild",
-    "Aunt",
-    "Uncle",
-    "Nephew",
-    "Niece",
-    "Cousin",
-    "In-law",
-    "Spouse",
-    "Partner",
+    "Sibling", "Parent", "Grandparent", "Child", "Grandchild",
+    "Aunt", "Uncle", "Nephew", "Niece", "Cousin", "In-law",
+    "Spouse", "Partner"
   ];
 
   const handleRoleChange = (event) => {
@@ -45,14 +36,11 @@ const JoinFamilyForm = () => {
   }, []);
 
   const handleJoinFamily = (e) => {
-    // e.preventDefault();
-    //check if the code state exists already within all the family code (fetch for all family codes and put that into allFamilyCodes)
+    e.preventDefault();
     if (
       allFamilyCodes.some((code) => code.family_code === familyCodeInput) &&
       familyCodeInput !== "000000"
     ) {
-      //send a Update method fetch that updates the users family code to the code theyve inputted.
-      // Send a PUT request to update the user's family code
       fetch(
         `${URL}/api/families/codes/update/${familyCodeInput}/${selectedRole}/${user.id}`,
         {
@@ -63,19 +51,18 @@ const JoinFamilyForm = () => {
         }
       )
         .then((res) => {
-          // Check if response is OK
           if (!res.ok) {
             throw new Error("Network response was not ok");
           }
-          // Return JSON response
           return res.json();
         })
         .then((data) => console.log(data))
         .catch((error) => console.error("Fetch error:", error));
+      setModal(false);
+      navigate(`/family_cookbook`);
+    } else {
+      alert("INVALID FAMILY CODE");
     }
-
-    //set modal toggle to true that will ask user for nickname (check if the user already has a nickname first) and role in family (probably have to add a role value to the users table)
-    //navigate to family cookbook page again, only this time because the fetch updated the family code, when the page refreshes it will show the updated family cookbook screen
   };
 
   const handleJoinFamilyChange = (e) => {
@@ -83,69 +70,72 @@ const JoinFamilyForm = () => {
   };
 
   return (
-    <>
-      <h1>Join a family</h1>
+    <div className="bg-white p-8 rounded-lg shadow-xl max-w-md mx-auto">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Join a Family</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (
-            allFamilyCodes.some((code) => code.family_code === familyCodeInput)
-          ) {
+          if (allFamilyCodes.some((code) => code.family_code === familyCodeInput)) {
             setModal(true);
           } else {
             setFamilyCodeInput("");
-            alert(`INVALID FAMILY CODE`);
+            alert("INVALID FAMILY CODE");
           }
-        }}>
+        }}
+      >
         <input
           type="text"
-          name="code"
-          id="code"
           value={familyCodeInput}
           placeholder="Enter Family Code"
           onChange={handleJoinFamilyChange}
+          className="w-full p-4 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-gray-800"
         />
-        <button>Submit</button>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+        >
+          Submit
+        </button>
       </form>
       {modal && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-          <div className="bg-white p-5 rounded-lg shadow-lg text-center">
-            <div className="flex justify-center">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <div className="text-center">
               {user.nickName === "" && (
                 <input
                   type="button"
                   value="NickName"
                   onClick={() => handleModalNickNameInput()}
-                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2 cursor-pointer"
+                  className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg cursor-pointer mb-4"
                 />
               )}
               <form onSubmit={handleJoinFamily}>
-                <label
-                  htmlFor="family-roles"
-                  className="block mb-2 text-lg font-bold">
+                <label htmlFor="family-roles" className="block mb-4 text-xl font-bold text-gray-700">
                   Select Your Family Role:
                 </label>
                 <select
                   id="family-roles"
                   value={selectedRole}
                   onChange={handleRoleChange}
-                  className="bg-white border border-gray-300 rounded-md p-2">
-                  <option value="" disabled>
-                    Select a role
-                  </option>
+                  className="w-full bg-white border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="" disabled>Select a role</option>
                   {roles.map((role) => (
-                    <option key={role} value={role}>
-                      {role}
-                    </option>
+                    <option key={role} value={role}>{role}</option>
                   ))}
                 </select>
-                <button> submit </button>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+                >
+                  Submit
+                </button>
               </form>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

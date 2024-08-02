@@ -7,6 +7,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ClearIcon from "@mui/icons-material/Clear";
+import SearchIcon from "@mui/icons-material/Search";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -71,23 +72,26 @@ const Home = ({ setNavBarToggle }) => {
   };
 
   return (
-    <div className="p-4">
-      <div className="mb-4 relative flex justify-center">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchInput}
-          onChange={handleSearchChange}
-          className="w-full max-w-lg p-2 border rounded shadow-md"
-        />
-        {searchInput && (
-          <div
-            onClick={clearSearch}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
-          >
-            <ClearIcon className="text-xs" />
-          </div>
-        )}
+    <div className="p-6">
+      <div className="mb-4 p-4 flex justify-center">
+        <div className="relative w-full max-w-lg">
+          <input
+            type="text"
+            placeholder="Find recipe..."
+            value={searchInput}
+            onChange={handleSearchChange}
+            className="w-full p-2 pl-10 border rounded shadow-md"
+          />
+          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          {searchInput && (
+            <div
+              onClick={clearSearch}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            >
+              <ClearIcon className="text-xs" />
+            </div>
+          )}
+        </div>
       </div>
 
       {homeDefault && (
@@ -108,11 +112,9 @@ const Home = ({ setNavBarToggle }) => {
                     alt={`Recipe ${singleLunchRecipe.name}`}
                     className="object-cover w-full h-48"
                   />
-
                   <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
                     {singleLunchRecipe.name}
                   </p>
-
                 </div>
               </Link>
             ))}
@@ -134,11 +136,9 @@ const Home = ({ setNavBarToggle }) => {
                     alt={`Recipe ${singleDinnerRecipe.name}`}
                     className="object-cover w-full h-48"
                   />
-
                   <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
                     {singleDinnerRecipe.name}
                   </p>
-
                 </div>
               </Link>
             ))}
@@ -161,11 +161,9 @@ const Home = ({ setNavBarToggle }) => {
                       alt={`Recipe ${singleRecipe.name}`}
                       className="object-cover w-full h-48"
                     />
-
                     <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
                       {singleRecipe.name}
                     </p>
-
                   </div>
                 </Link>
               )
@@ -192,11 +190,9 @@ const Home = ({ setNavBarToggle }) => {
                     alt={`Recipe ${searchedRecipe.name}`}
                     className="object-cover w-full h-48"
                   />
-
                   <p className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
                     {searchedRecipe.name}
                   </p>
-
                 </div>
               </Link>
             ))

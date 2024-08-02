@@ -7,6 +7,8 @@ import familyIconPng from "../../assets/family_icon.png";
 import plusIconPng from "../../assets/plus_icon.png";
 import cookbookIconPng from "../../assets/cookbook_icon.png";
 import profileIconPng from "../../assets/profile_icon.png";
+import logoPng from "../../assets/logo.png";
+import canvaLogo from "../../assets/canva_logo.png";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -30,10 +32,14 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-custom-beige">
-      <header className="bg-custom-brown text-white py-4 px-6 shadow-md fixed top-0 w-full z-20 flex justify-between items-center">
-        <div className="flex items-center">
-          <h1 className="text-4xl font-bold">Roots & Recipe</h1>
+      <header className="bg-custom-brown text-white py-0 px-2 shadow-md fixed top-0 w-full z-20 flex justify-between items-center">
+        <Link to="/home">
+        <div className="flex items-center p-4">
+          <img src={canvaLogo} alt="logo"
+           className="w-60 h-24/>"
+           ></img>
         </div>
+        </Link>
         <nav className="hidden lg:flex space-x-6 items-center">
           {user ? (
             <>
@@ -50,19 +56,15 @@ const Layout = ({ children }) => {
                 Cookbook
               </Link>
               <Link to="/profile" className="nav-item">
-                <img
-                  src={profileIconPng}
-                  alt="profile icon"
-                  className="nav-profile-icon"
-                />
+               Profile
               </Link>
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-item">
+              <Link to="/login" className="nav-item lexend-exa">
                 Log In
               </Link>
-              <Link to="/register" className="nav-item">
+              <Link to="/register" className="nav-item lexend-exa">
                 Register
               </Link>
             </>
@@ -119,7 +121,7 @@ const Layout = ({ children }) => {
             </>
           ) : (
             <>
-              <Link to="/login" className="flex items-center space-x-2">
+              <Link to="/login" className="flex items-center space-x-2 lexend-exa">
                 <img
                   src={profileIconPng}
                   alt="login icon"
@@ -127,7 +129,7 @@ const Layout = ({ children }) => {
                 />
                 <span>Log In</span>
               </Link>
-              <Link to="/register" className="flex items-center space-x-2">
+              <Link to="/register" className="flex items-center space-x-2 lexend-exa">
                 <img
                   src={profileIconPng}
                   alt="register icon"
@@ -140,7 +142,7 @@ const Layout = ({ children }) => {
         </nav>
       )}
 
-      {isHomePage && (
+      {/* {isHomePage && (
         <nav className="bg-white py-1 shadow-md fixed top-16 w-full z-10 flex justify-center space-x-2 text-gray-700 slim-navbar">
           <a href="#top-dinner" className="hover:text-red-500">
             Top Dinner
@@ -154,9 +156,9 @@ const Layout = ({ children }) => {
             Top Lunch
           </a>
         </nav>
-      )}
+      )} */}
 
-      <main className="flex-grow pt-28 pb-16 overflow-y-auto">{children}</main>
+      <main className="flex-grow pt-16 pb-16 overflow-y-auto">{children}</main>
 
       <footer className="bg-custom-brown w-full p-4 fixed bottom-0 z-10" />
     </div>
