@@ -73,6 +73,7 @@ const Home = ({ setNavBarToggle }) => {
 
   return (
     <div className="p-6">
+      <p>Home Page</p>
       <div className="mb-4 p-4 flex justify-center">
         <div className="relative w-full max-w-lg">
           <input
