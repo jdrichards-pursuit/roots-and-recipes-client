@@ -185,7 +185,7 @@ const Layout = ({ children }) => {
 
       <main className="flex-grow pt-16 pb-16 overflow-y-auto">{children}</main>
 
-      <footer className="bg-custom-brown w-full p-4 fixed bottom-0 z-10" />
+      {/* <footer className="bg-custom-brown w-full p-4 fixed bottom-0 z-10" /> */}
     </div>
   );
 };
