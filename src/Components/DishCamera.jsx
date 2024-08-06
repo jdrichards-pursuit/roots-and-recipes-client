@@ -65,7 +65,7 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
   }, []);
 
   return (
-    <div style={{ position: "relative", width: "300px", height: "300px" }}>
+    <div style={{ position: "relative", width: "500px", height: "500px" }} className="ml-[35%] mt-14 bg-[#FFDAB9] bg-opacity-90 backdrop-blur-md p-4  rounded-xl shadow-2xl w-full max-w-lg">
       {cameraToggle && (
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <Camera
@@ -89,10 +89,10 @@ export const DishCamera = ({ setNewRecipe, newRecipe }) => {
               navigate("/recipe_form");
               saveToLocalStorage();
             }}
-          >
-            Check
+          className="bg-emerald-500 hover:bg-emerald-600 rounded-md px-4 py-2 shadow-md w-full mt-4 text-white">
+            Confirm
           </button>
-          <button onClick={() => setCameraToggle(true)}>Retake</button>
+          <button onClick={() => setCameraToggle(true)} className="text-blue-600 px-4 py-2 ml-[180px] pt-0 ">Retake</button>
         </div>
       )}
       {cameraToggle && (
