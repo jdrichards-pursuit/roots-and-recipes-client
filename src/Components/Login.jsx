@@ -3,11 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
-function Login({ setNavBarToggle }) {
+function Login({ setNavBarToggle, signedInWithGoogle, setSignedInWithGoogle }) {
   const navigate = useNavigate();
 
   const [loginUser, setLoginNewUser] = useState({ password: "", email: "" });
@@ -41,8 +40,7 @@ function Login({ setNavBarToggle }) {
       className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{
         backgroundImage: "url('../src/assets/family_dinner.jpg')",
-      }}
-    >
+      }}>
       <div className="w-full max-w-md bg-white/30 backdrop-blur-md p-8 rounded-lg shadow-lg">
         <h3 className="text-2xl font-bold mb-6 text-center text-white lexend-exa">
           Login
@@ -52,8 +50,7 @@ function Login({ setNavBarToggle }) {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-white lexend-exa"
-            >
+              className="block text-sm font-medium text-white lexend-exa">
               Email Address
             </label>
             <input
@@ -70,8 +67,7 @@ function Login({ setNavBarToggle }) {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-white lexend-exa"
-            >
+              className="block text-sm font-medium text-white lexend-exa">
               Password
             </label>
             <input
@@ -88,8 +84,7 @@ function Login({ setNavBarToggle }) {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#7EB098] hover:bg-[#8CC7AB] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 lexend-exa"
-            >
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#7EB098] hover:bg-[#8CC7AB] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 lexend-exa">
               Submit
             </button>
           </div>
@@ -100,17 +95,22 @@ function Login({ setNavBarToggle }) {
             New user?{" "}
             <Link
               to="/register"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
+              className="font-medium text-indigo-600 hover:text-indigo-500">
               Register Here
             </Link>
           </p>
-          <p className="mt-2 text-sm text-white lexend-exa">--Or continue with--</p>
+          <p className="mt-2 text-sm text-white lexend-exa">
+            --Or continue with--
+          </p>
         </div>
 
         <div className="mt-4 flex justify-center items-center">
           <div className="flex justify-center items-center">
-            <SignInWithGoogle className="text-white bg-[#4285F4] px-4 py-2 rounded-md shadow-md hover:bg-[#357ae8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" />
+            <SignInWithGoogle
+              setSignedInWithGoogle={setSignedInWithGoogle}
+              signedInWithGoogle={signedInWithGoogle}
+              className="text-white bg-[#4285F4] px-4 py-2 rounded-md shadow-md hover:bg-[#357ae8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            />
           </div>
         </div>
       </div>

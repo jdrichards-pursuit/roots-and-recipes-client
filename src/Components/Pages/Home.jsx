@@ -86,8 +86,7 @@ const Home = ({ setNavBarToggle }) => {
           {searchInput && (
             <div
               onClick={clearSearch}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-            >
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer">
               <ClearIcon className="text-xs" />
             </div>
           )}
@@ -95,16 +94,15 @@ const Home = ({ setNavBarToggle }) => {
       </div>
 
       {homeDefault && (
-        <>
-          <h1 className="text-xl font-bold mt-6 mb-4 bg-custom-brown p-2 rounded shadow-md section-header">
+        <div className="-mt-9">
+          <h1 className="text-3xl font-bold mt-8 mb-2 p-2 rounded section-header">
             Top Lunch Recipes
           </h1>
           <Slider {...sliderSettings} className="mb-6">
             {allLunchRecipes.map((singleLunchRecipe, index) => (
               <Link
                 key={singleLunchRecipe.id}
-                to={`/recipe_show/${singleLunchRecipe.id}`}
-              >
+                to={`/recipe_show/${singleLunchRecipe.id}`}>
                 <div className="card">
                   <img
                     key={index}
@@ -120,15 +118,14 @@ const Home = ({ setNavBarToggle }) => {
             ))}
           </Slider>
 
-          <h1 className="text-xl font-bold mt-8 mb-4 bg-custom-brown p-2 rounded shadow-md section-header">
+          <h1 className="text-3xl font-bold mt-8 mb-2 p-2 rounded section-header">
             Top Dinner Recipes
           </h1>
           <Slider {...sliderSettings} className="mb-6">
             {allDinnerRecipes.map((singleDinnerRecipe, index) => (
               <Link
                 key={singleDinnerRecipe.id}
-                to={`/recipe_show/${singleDinnerRecipe.id}`}
-              >
+                to={`/recipe_show/${singleDinnerRecipe.id}`}>
                 <div className="card">
                   <img
                     key={index}
@@ -144,7 +141,7 @@ const Home = ({ setNavBarToggle }) => {
             ))}
           </Slider>
 
-          <h1 className="text-xl font-bold mt-8 mb-4 bg-custom-brown p-2 rounded shadow-md section-header">
+          <h1 className="text-3xl font-bold mt-8 mb-2 p-2 rounded section-header">
             All Recipes
           </h1>
           <Slider {...sliderSettings}>
@@ -152,8 +149,7 @@ const Home = ({ setNavBarToggle }) => {
               (singleRecipe, index) => (
                 <Link
                   key={singleRecipe.id}
-                  to={`/recipe_show/${singleRecipe.id}`}
-                >
+                  to={`/recipe_show/${singleRecipe.id}`}>
                   <div className="card">
                     <img
                       key={index}
@@ -169,22 +165,21 @@ const Home = ({ setNavBarToggle }) => {
               )
             )}
           </Slider>
-        </>
+        </div>
       )}
 
       {!homeDefault && (
-        <>
+        <div className="grid grid-cols-3 gap-4">
           {searchedRecipes.length === 0 ? (
-            <p className="text-center bg-gray-200 p-4">
+            <p className="text-center bg-gray-200 p-4 col-span-3">
               Sorry, recipe cannot be found
             </p>
           ) : (
-            searchedRecipes.map((searchedRecipe, index) => (
+            searchedRecipes.map((searchedRecipe) => (
               <Link
                 key={searchedRecipe.id}
-                to={`/recipe_show/${searchedRecipe.id}`}
-              >
-                <div key={index} className="card mb-4 w-full max-w-sm mx-auto">
+                to={`/recipe_show/${searchedRecipe.id}`}>
+                <div className="card">
                   <img
                     src={searchedRecipe.photo || placeholderImage}
                     alt={`Recipe ${searchedRecipe.name}`}
@@ -197,7 +192,7 @@ const Home = ({ setNavBarToggle }) => {
               </Link>
             ))
           )}
-        </>
+        </div>
       )}
     </div>
   );

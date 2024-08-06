@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
-@import url('https://fonts.googleapis.com/css2?family=Ultra&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ultra&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -23,7 +23,6 @@ body {
   background-size: 20px 20px;
 }
 
-
 html,
 body,
 #root,
@@ -39,7 +38,6 @@ body,
 .bg-custom-brown {
   background-color: #713a3a !important;
 }
-
 
 .bg-custom-beige {
   background-color: bisque;
@@ -192,11 +190,12 @@ footer {
 }
 
 .section-header {
-  background-color: #713a3a;
-  color: white;
+  /* background-color: #713a3a; */
+  /* color: white; */
   padding: 0.5rem;
   border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
+  font-family: "Lexend Deca", sans-serif;
   text-align: left;
 }
 
@@ -230,7 +229,7 @@ footer {
 }
 
 .slick-dots {
-  bottom: 10px;
+  bottom: -10px;
 }
 
 .slick-dots li button:before {
@@ -305,7 +304,6 @@ footer {
   font-weight: 500;
   color: #757575;
 }
-
 /* FONTS */
 
 .ultra-regular {
@@ -314,8 +312,7 @@ footer {
   font-style: normal;
 }
 
-
-.lexend-exa{
+.lexend-exa {
   font-family: "Lexend Exa", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;

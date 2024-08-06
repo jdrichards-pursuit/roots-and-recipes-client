@@ -13,9 +13,21 @@ const JoinFamilyForm = () => {
   const navigate = useNavigate();
 
   const roles = [
-    "Sibling", "Parent", "Grandparent", "Child", "Grandchild",
-    "Aunt", "Uncle", "Nephew", "Niece", "Cousin", "In-law",
-    "Spouse", "Partner"
+    "Sibling",
+    "Parent",
+    "Grandparent",
+    "Child",
+    "Grandchild",
+    "Aunt",
+    "Uncle",
+    "Nephew",
+    "Niece",
+    "Cousin",
+    "In-law",
+    "Spouse",
+    "Partner",
+    "Daughter",
+    "Son",
   ];
 
   const handleRoleChange = (event) => {
@@ -60,6 +72,7 @@ const JoinFamilyForm = () => {
         .catch((error) => console.error("Fetch error:", error));
       setModal(false);
       navigate(`/family_cookbook`);
+      window.location.reload();
     } else {
       alert("INVALID FAMILY CODE");
     }
@@ -71,18 +84,21 @@ const JoinFamilyForm = () => {
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-xl max-w-md mx-auto">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Join a Family</h1>
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+        Join a Family
+      </h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (allFamilyCodes.some((code) => code.family_code === familyCodeInput)) {
+          if (
+            allFamilyCodes.some((code) => code.family_code === familyCodeInput)
+          ) {
             setModal(true);
           } else {
             setFamilyCodeInput("");
             alert("INVALID FAMILY CODE");
           }
-        }}
-      >
+        }}>
         <input
           type="text"
           value={familyCodeInput}
@@ -92,8 +108,7 @@ const JoinFamilyForm = () => {
         />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200"
-        >
+          className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200">
           Submit
         </button>
       </form>
@@ -110,24 +125,28 @@ const JoinFamilyForm = () => {
                 />
               )}
               <form onSubmit={handleJoinFamily}>
-                <label htmlFor="family-roles" className="block mb-4 text-xl font-bold text-gray-700">
+                <label
+                  htmlFor="family-roles"
+                  className="block mb-4 text-xl font-bold text-gray-700">
                   Select Your Family Role:
                 </label>
                 <select
                   id="family-roles"
                   value={selectedRole}
                   onChange={handleRoleChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="" disabled>Select a role</option>
+                  className="w-full bg-white border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="" disabled>
+                    Select a role
+                  </option>
                   {roles.map((role) => (
-                    <option key={role} value={role}>{role}</option>
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
                   ))}
                 </select>
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200"
-                >
+                  className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200">
                   Submit
                 </button>
               </form>

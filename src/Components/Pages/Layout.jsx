@@ -35,29 +35,27 @@ const Layout = ({ children }) => {
     <div className="flex flex-col min-h-screen bg-custom-beige">
       <header className="bg-custom-brown text-white py-0 px-2 shadow-md fixed top-0 w-full z-20 flex justify-between items-center">
         <Link to="/home">
-        <div className="flex items-center p-4">
-          <img src={canvaLogo} alt="logo"
-           className="w-60 h-24/>"
-           ></img>
-        </div>
+          <div className="flex items-center p-4">
+            <img src={canvaLogo} alt="logo" className="w-60 h-24/>"></img>
+          </div>
         </Link>
-        <nav className="hidden lg:flex space-x-6 items-center">
+        <nav className="flex justify-between">
           {user ? (
             <>
               <Link to="/home" className="nav-item">
                 Home
               </Link>
-              <Link to="/family_cookbook" className="nav-item">
+              <Link to="/family_cookbook" className="nav-item mr-[10px] ">
                 Family
               </Link>
-              <Link to="/create_a_recipe" className="nav-item">
+              <Link to="/create_a_recipe" className="nav-item ">
                 Add
               </Link>
-              <Link to="/cookbook" className="nav-item">
+              <Link to="/cookbook" className="nav-item ">
                 Cookbook
               </Link>
               <Link to="/profile" className="nav-item">
-               Profile
+                Profile
               </Link>
             </>
           ) : (
@@ -85,22 +83,20 @@ const Layout = ({ children }) => {
           {user ? (
             <>
               <div
-              onClick={() => {navigate("/home");window.location.reload()
-                
-              }}
-              className="flex items-center space-x-2">
-                <img
-                  src={homeIconPng}
-                  alt="home icon"
-                  className="w-6 h-6"
-                />
+                onClick={() => {
+                  navigate("/home");
+                  window.location.reload();
+                }}
+                className="flex items-center space-x-2">
+                <img src={homeIconPng} alt="home icon" className="w-6 h-6" />
                 <span>Home</span>
               </div>
               <div
-              onClick={() => {navigate("/family_cookbook");window.location.reload()
-                
-              }}
-              className="flex items-center space-x-2">
+                onClick={() => {
+                  navigate("/family_cookbook");
+                  window.location.reload();
+                }}
+                className="flex items-center space-x-2">
                 <img
                   src={familyIconPng}
                   alt="family icon"
@@ -109,22 +105,20 @@ const Layout = ({ children }) => {
                 <span>Family</span>
               </div>
               <div
-              onClick={() => {navigate("/create_a_recipe");window.location.reload()
-                
-              }}
-              className="flex items-center space-x-2">
-                <img
-                  src={plusIconPng}
-                  alt="plus icon"
-                  className="w-8 h-8"
-                />
+                onClick={() => {
+                  navigate("/create_a_recipe");
+                  window.location.reload();
+                }}
+                className="flex items-center space-x-2">
+                <img src={plusIconPng} alt="plus icon" className="w-8 h-8" />
                 <span>Add</span>
               </div>
               <div
-              onClick={() => {navigate("/cookbook");window.location.reload()
-                
-              }}
-              className="flex items-center space-x-2">
+                onClick={() => {
+                  navigate("/cookbook");
+                  window.location.reload();
+                }}
+                className="flex items-center space-x-2">
                 <img
                   src={cookbookIconPng}
                   alt="cookbook icon"
@@ -133,10 +127,11 @@ const Layout = ({ children }) => {
                 <span>Cookbook</span>
               </div>
               <div
-              onClick={() => {navigate("/profile");window.location.reload()
-                
-              }}
-              className="flex items-center space-x-2">
+                onClick={() => {
+                  navigate("/profile");
+                  window.location.reload();
+                }}
+                className="flex items-center space-x-2">
                 <img
                   src={profileIconPng}
                   alt="profile icon"
@@ -147,7 +142,9 @@ const Layout = ({ children }) => {
             </>
           ) : (
             <>
-              <Link to="/login" className="flex items-center space-x-2 lexend-exa">
+              <Link
+                to="/login"
+                className="flex items-center space-x-2 lexend-exa">
                 <img
                   src={profileIconPng}
                   alt="login icon"
@@ -155,7 +152,9 @@ const Layout = ({ children }) => {
                 />
                 <span>Log In</span>
               </Link>
-              <Link to="/register" className="flex items-center space-x-2 lexend-exa">
+              <Link
+                to="/register"
+                className="flex items-center space-x-2 lexend-exa">
                 <img
                   src={profileIconPng}
                   alt="register icon"
