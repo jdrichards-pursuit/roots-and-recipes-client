@@ -315,7 +315,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg bg-white shadow-md">
+    <div className="max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg bg-white shadow-md mt-7">
       <h1 className="text-center text-3xl font-semibold text-[#713A3A] mb-6">
         New Recipe
       </h1>
