@@ -26,6 +26,13 @@ import { FamilyMembers } from "./Components/Pages/FamilyMembers";
 function App() {
   const [user, setUser] = useState(null);
   const [navBarToggle, setNavBarToggle] = useState(true);
+  const [signedInWithGoogle, setSignedInWithGoogle] = useState({
+    status: false,
+    first_name: "",
+    last_name: "",
+  });
+
+  console.log(signedInWithGoogle);
 
   //  new recipe state
   const [newRecipe, setNewRecipe] = useState({
@@ -49,18 +56,15 @@ function App() {
   return (
     <Layout
       userName={user ? user.displayName : null}
-      navBarToggle={navBarToggle}
-    >
-            <Routes>
+      navBarToggle={navBarToggle}>
+      <Routes>
         <Route
           path="/"
           element={
             user ? (
               <Navigate to="/home" />
             ) : (
-              <Login
-                setNavBarToggle={setNavBarToggle}
-              />
+              <Login setNavBarToggle={setNavBarToggle} />
             )
           }
         />
@@ -69,6 +73,8 @@ function App() {
           element={
             <Login
               setNavBarToggle={setNavBarToggle}
+              signedInWithGoogle={signedInWithGoogle}
+              setSignedInWithGoogle={setSignedInWithGoogle}
             />
           }
         />
@@ -83,6 +89,7 @@ function App() {
               element={
                 <Profile
                   setNavBarToggle={setNavBarToggle}
+                  signedInWithGoogle={signedInWithGoogle}
                 />
               }
             />
@@ -91,27 +98,15 @@ function App() {
 
             <Route
               path="/family_cookbook"
-              element={
-                <FamilyCookbook
-                  setNavBarToggle={setNavBarToggle}
-                />
-              }
+              element={<FamilyCookbook setNavBarToggle={setNavBarToggle} />}
             />
             <Route
               path="/cookbook"
-              element={
-                <MyCookbook
-                  setNavBarToggle={setNavBarToggle}
-                />
-              }
+              element={<MyCookbook setNavBarToggle={setNavBarToggle} />}
             />
             <Route
               path="/home"
-              element={
-                <Home
-                  setNavBarToggle={setNavBarToggle}
-                />
-              }
+              element={<Home setNavBarToggle={setNavBarToggle} />}
             />
             <Route
               path="/recipe_form"
@@ -146,11 +141,7 @@ function App() {
 
             <Route
               path="/recipe_list"
-              element={
-                <RecipeList
-                  setNavBarToggle={setNavBarToggle}
-                />
-              }
+              element={<RecipeList setNavBarToggle={setNavBarToggle} />}
             />
 
             <Route path="/family_members" element={<FamilyMembers />} />

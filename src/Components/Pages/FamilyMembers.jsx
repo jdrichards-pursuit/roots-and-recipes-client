@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../helpers/getUserData";
 import { data } from "autoprefixer";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -74,18 +75,31 @@ export const FamilyMembers = () => {
     setSelectedMember(member);
   };
   return (
-    <div>
-      {familyMembers.length > 0 &&
-        familyMembers
-          .filter((member) => member.id != user.id)
-          .map((member, index) => {
-            return (
-              <div key={index} onClick={() => handleClick(member)}>
-                {member.first_name}
-              </div>
-            );
-          })}
-
+    <div className="flex flex-col items-center justify-center ">
+      <h1 className="text-3xl mt-10 bg-custom-brown text-white shadow-md rounded-lg py-5 px-9">
+        Select family member to be owner
+      </h1>
+      <div className="grid grid-cols-4 gap-20 mt-10 px-20 py-9 rounded-[20px]">
+        {familyMembers.length > 0 &&
+          familyMembers
+            .filter((member) => member.id != user.id)
+            .map((member, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => handleClick(member)}
+                  className=" flex flex-col items-center family-member p-10 rounded-lg shadow-lg bg-white -mt-2 cursor-pointer">
+                  <img
+                    src={member.photo}
+                    className="h-[90px] w-[90px] object-cover -mt-2 rounded-full"
+                  />
+                  <p className="text-2xl mt-5">
+                    {member.first_name.split(" ")[0]}
+                  </p>
+                </div>
+              );
+            })}
+      </div>
       {showModal && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
           <div className="bg-white p-5 rounded-lg shadow-lg text-center">
@@ -106,7 +120,11 @@ export const FamilyMembers = () => {
         </div>
       )}
 
-      <button onClick={() => navigate("/family_cookbook")}>Back</button>
+      <button
+        onClick={() => navigate("/family_cookbook")}
+        className="absolute bottom-10  left-0 text-2xl opacity-[55%] text-white p-3 rounded-[15px]">
+        <ArrowBackIcon className="text-black fixed -mt-7" fontSize="large" />
+      </button>
     </div>
   );
 };

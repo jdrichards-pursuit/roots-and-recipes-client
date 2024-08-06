@@ -19,6 +19,7 @@ const FamilyCookbook = () => {
 
   const navigate = useNavigate();
 
+  console.log(user);
   useEffect(() => {
     async function fetchData() {
       const user = await getUserData();
@@ -62,12 +63,15 @@ const FamilyCookbook = () => {
       if (choice === "Reassign Owner") {
         navigate(`/family_members`);
       } else {
-        await fetch(`${URL}/api/families/delete/${user.family_code}/${user.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        await fetch(
+          `${URL}/api/families/delete/${user.family_code}/${user.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         await fetch(`${URL}/api/families/delete/${user.family_code}`, {
           method: "DELETE",
           headers: {
@@ -102,11 +106,17 @@ const FamilyCookbook = () => {
     setShowModal(false);
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(familyCode);
+    alert("Family Code copied to clipboard!");
+  };
+
+  console.log(familyMembers);
   return (
-    <div className="flex justify-center items-center min-h-screen py-8">
-      <div className="bg-white/30 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-4xl">
+    <div className="flex justify-center items-center mt-2 w-full">
+      <div className="bg-white/30 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-4xl ">
         {familyCode === "000000" ? (
-          <div className="flex flex-col items-center md:flex-row md:justify-center md:gap-8">
+          <div className="flex flex-col items-center md:flex-row md:justify-center md:gap-8 ">
             <div className="flex-1 max-w-md mb-8 md:mb-0">
               <FamilyForm />
             </div>
@@ -120,8 +130,7 @@ const FamilyCookbook = () => {
         ) : (
           <button
             onClick={handleLeaveFamily}
-            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4"
-          >
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 text-[15px] rounded absolute mt-9 ml-5">
             Leave Family
           </button>
         )}
@@ -131,21 +140,36 @@ const FamilyCookbook = () => {
             <h1 className="text-3xl font-bold text-center mb-6">
               {familyName}'s Family Cookbook
             </h1>
+            <h3 className="text-sm font-bold text-center mb-6 absolute right-10 top-14 mt-5">
+              Family Code:{" "}
+              <span
+                onClick={copyToClipboard}
+                className="text-blue-600 underline cursor-pointer">
+                {familyCode}
+              </span>
+            </h3>
             <h2 className="text-2xl font-semibold mb-4">Members</h2>
             <div className="flex flex-wrap justify-center">
               {familyMembers.map((member, index) => (
                 <div
                   key={index}
-                  className="flex flex-col items-center m-4 p-4 bg-gray-100 rounded-lg shadow-md"
-                >
+                  className="flex flex-col items-center m-4 p-4 bg-gray-100 rounded-lg shadow-md">
+                  {member.owner && (
+                    <h3 className="absolute text-xs -mt-3">Owner</h3>
+                  )}
                   <img
                     src={member.photo}
                     alt="photo"
-                    className="w-24 h-24 border-2 border-gray-300 rounded-full mb-2"
+                    className="w-24 h-24 border-2 border-gray-300 rounded-full mb-3 mt-3"
                   />
                   <h4 className="text-lg font-medium">
-                    {member.nickname || member.first_name}
+                    {user.first_name.split(" ")[0] &&
+                    member.first_name.split(" ")[0] ===
+                      user.first_name.split(" ")[0]
+                      ? "You"
+                      : member.nickname || member.first_name.split(" ")[0]}
                   </h4>
+                  <h3 className="-mt-3">{member.role}</h3>
                 </div>
               ))}
             </div>
@@ -160,8 +184,7 @@ const FamilyCookbook = () => {
                 <Link
                   key={index}
                   to={`/recipe_show/${recipe.id}`}
-                  className="flex flex-col items-center m-4 p-4 bg-gray-100 rounded-lg shadow-md"
-                >
+                  className="flex flex-col items-center m-4 p-4 bg-gray-100 rounded-lg shadow-md">
                   <img
                     src={recipe.photo || recipePlaceHolder}
                     alt="recipe"
@@ -177,7 +200,7 @@ const FamilyCookbook = () => {
 
         {showOwnerModal && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-            <div className="bg-white p-5 rounded-lg shadow-lg text-center">
+            <div className="bg-white p-5 rounded-lg shadow-lg text-center max-w-md w-full">
               <p className="mb-3">
                 Would you like to delete your family or give another user
                 ownership of the group?
@@ -185,14 +208,12 @@ const FamilyCookbook = () => {
               <div className="flex justify-center gap-2">
                 <button
                   onClick={() => handleOwnerModalChoice("Reassign Owner")}
-                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-                >
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
                   Reassign Owner
                 </button>
                 <button
                   onClick={() => handleOwnerModalChoice("Delete Family")}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                >
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                   Delete Family
                 </button>
               </div>
@@ -203,18 +224,18 @@ const FamilyCookbook = () => {
         {showModal && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
             <div className="bg-white p-5 rounded-lg shadow-lg text-center">
-              <p className="mb-3">Are you sure you want to leave your family?</p>
+              <p className="mb-3">
+                Are you sure you want to leave your family?
+              </p>
               <div className="flex justify-center gap-2">
                 <button
                   onClick={() => handleModalChoice("yes")}
-                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-                >
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
                   Yes
                 </button>
                 <button
                   onClick={() => handleModalChoice("no")}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                >
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                   No
                 </button>
               </div>
