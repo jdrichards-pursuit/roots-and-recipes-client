@@ -56,12 +56,6 @@ function Login({ setNavBarToggle }) {
   }, []);
 
   return (
-    // <div
-    //   className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden"
-    //   style={{
-    //     backgroundImage: "url('../src/assets/family_dinner.jpg')",
-    //   }}
-    // >
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{
