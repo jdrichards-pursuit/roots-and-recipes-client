@@ -97,80 +97,80 @@ export const MyCookbook = () => {
       : "My Cookbook"
     : "My Cookbook";
 
-  return (
-    <div className="text-center p-4">
-      <div className="bg-[#713A3A] text-[#FFDAB9] py-4 rounded-lg shadow-md mb-6">
-        <h1 className="text-2xl font-bold">{displayName}</h1>
-      </div>
-      <div className="bg-[#FFDAB9] p-4 rounded-lg shadow-md">
-        <div className="flex justify-center mb-4">
-          <div className="relative w-64">
-            <input
-              className="h-full w-full outline-none text-lg text-black rounded-lg px-4 py-2"
-              type="text"
-              id="search"
-              placeholder="Search"
-              value={searchInput}
-              onChange={handleSearchChange}
-            />
-            {searchInput ? (
-              <div
-                onClick={clearSearch}
-                className="absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer p-1"
-              >
-                <ClearIcon />
-              </div>
-            ) : (
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1">
-                <SearchIcon />
-              </div>
-            )}
-          </div>
+    return (
+      <div className="text-center p-4">
+        <div className="bg-[#713A3A] text-[#FFDAB9] py-4 rounded-lg shadow-md mb-6">
+          <h1 className="text-2xl font-bold">{displayName}</h1>
         </div>
-
-        {!myRecipes.length ? (
-          <Link to={"/create_a_recipe"}>
-            <p className="text-center bg-[#D9D9D9] p-4 rounded-lg shadow-md">
-              Add a recipe <span className="text-2xl font-bold">+</span>
-            </p>
-          </Link>
-        ) : recipes.length > 0 ? (
-          recipes
-            .sort((a, b) => a.id - b.id)
-            .map((recipe) => (
-              <div
-                key={recipe.id}
-                className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4"
-              >
-                <Link to={`/recipe_show/${recipe.id}`} className="flex-1 ml-2">
-                  <div className="rounded-xl">
-                    <img
-                      src={recipe.photo || placeholderImage}
-                      alt={recipe.name}
-                    />
-                    <p className="p-4 rounded-lg text-black text-lg">
-                      {recipe.chef}'s {recipe.name}
-                    </p>
-                  </div>
-                </Link>
-                <div className="flex items-center">
-                  <EditIcon
-                    onClick={() => navigate(`/edit/${recipe.id}`)}
-                    className="cursor-pointer mr-2"
-                  />
-                  <AddCircleIcon
-                    onClick={() => handleClick(recipe)}
-                    className="text-[#713A3A] cursor-pointer"
-                  />
+        <div className="bg-[#FFDAB9] p-4 rounded-lg shadow-md">
+          <div className="flex justify-center mb-4">
+            <div className="relative w-64">
+              <input
+                className="h-full w-full outline-none text-lg text-black rounded-lg px-4 py-2"
+                type="text"
+                id="search"
+                placeholder="Search"
+                value={searchInput}
+                onChange={handleSearchChange}
+              />
+              {searchInput ? (
+                <div
+                  onClick={clearSearch}
+                  className="absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer p-1">
+                  <ClearIcon />
                 </div>
-              </div>
-            ))
-        ) : (
-          <p className="text-center bg-[#D9D9D9] p-4 rounded-lg shadow-md">
-            Sorry, recipe cannot be found
-          </p>
-        )}
+              ) : (
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1">
+                  <SearchIcon />
+                </div>
+              )}
+            </div>
+          </div>
+  
+          {!myRecipes.length ? (
+            <Link to={"/create_a_recipe"}>
+              <p className="text-center bg-[#D9D9D9] p-4 rounded-lg shadow-md">
+                Add a recipe <span className="text-2xl font-bold">+</span>
+              </p>
+            </Link>
+          ) : recipes.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {recipes
+                .sort((a, b) => a.id - b.id)
+                .map((recipe) => (
+                  <div
+                    key={recipe.id}
+                    className="relative bg-white p-4 rounded-lg shadow-md">
+                    <EditIcon
+                      onClick={() => navigate(`/edit/${recipe.id}`)}
+                      className="absolute top-2 right-2 cursor-pointer"
+                    />
+                    <Link to={`/recipe_show/${recipe.id}`} className="block">
+                      <img
+                        src={recipe.photo}
+                        alt={recipe.name}
+                        className="rounded-lg w-full mb-4 pt-6"
+                      />
+                      <p className="text-lg text-black font-semibold">
+                        {recipe.chef}'s {recipe.name}
+                      </p>
+                    </Link>
+                    <div className="flex justify-center mt-4">
+                      <AddCircleIcon
+                        onClick={() => handleClick(recipe)}
+                        className="text-[#713A3A] cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <p className="text-center bg-[#D9D9D9] p-4 rounded-lg shadow-md">
+              Sorry, recipe cannot be found
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
+  
