@@ -327,6 +327,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             id="name"
             value={newRecipe.name || ""}
             type="text"
+            required
             onChange={(event) =>
               handleTextChange(event, setNewRecipe, newRecipe)
             }
@@ -379,6 +380,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
           )}
           <input
             id="chef"
+            required
             value={
               isSelfChef
                 ? capitalizeFirstLetter(userDetails?.nickname) ||
