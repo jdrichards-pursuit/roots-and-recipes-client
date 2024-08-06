@@ -3,6 +3,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+import familyDinner from "../assets/family_dinner.jpg";
+
+
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
