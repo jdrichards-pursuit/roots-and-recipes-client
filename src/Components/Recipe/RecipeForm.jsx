@@ -341,7 +341,8 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
                 0,
                 setRecordingInputValue("name")
               )
-            }>
+            }
+            className="absolute -ml-7 mt-4">
             <Mic className="text-gray-500" />
           </button>
           {recordingIndex === 0 && recordingInputValue === "name" && (
@@ -351,33 +352,7 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
 
         {/* Chef Input */}
         <div>
-          <label className="flex items-center space-x-2" htmlFor="selfChef">
-            <input
-              type="checkbox"
-              id="selfChef"
-              checked={isSelfChef}
-              onChange={(event) => {
-                setIsSelfChef(!isSelfChef);
-                handleTextChange(event, setNewRecipe, newRecipe);
-              }}
-              className="mr-2"
-            />
-            <span>Self</span>
-          </label>
-          <button
-            type="button"
-            onClick={() =>
-              startRecognition(
-                (text) => setNewRecipe({ ...newRecipe, chef: text }),
-                0,
-                setRecordingInputValue("chef")
-              )
-            }>
-            <Mic className="text-gray-500" />
-          </button>
-          {recordingIndex === 0 && recordingInputValue === "chef" && (
-            <span>🔴</span>
-          )}
+          <span className="block text-lg font-medium mb-2">Chef</span>
           <input
             id="chef"
             required
@@ -393,6 +368,34 @@ function RecipeForm({ setNewRecipe, newRecipe }) {
             }
             className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
           />
+          <button
+            type="button"
+            onClick={() =>
+              startRecognition(
+                (text) => setNewRecipe({ ...newRecipe, chef: text }),
+                0,
+                setRecordingInputValue("chef")
+              )
+            }
+            className="absolute -ml-7 mt-4">
+            <Mic className="text-gray-500" />
+          </button>
+          {recordingIndex === 0 && recordingInputValue === "chef" && (
+            <span>🔴</span>
+          )}
+          <label className="flex items-center space-x-2 ml-3" htmlFor="selfChef">
+            <input
+              type="checkbox"
+              id="selfChef"
+              checked={isSelfChef}
+              onChange={(event) => {
+                setIsSelfChef(!isSelfChef);
+                handleTextChange(event, setNewRecipe, newRecipe);
+              }}
+              className="mr-2"
+            />
+            <span>Self</span>
+          </label>
         </div>
 
         {/* Ingredients Input */}
