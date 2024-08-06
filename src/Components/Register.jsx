@@ -9,6 +9,8 @@ import {
 import { auth } from "../helpers/firebase";
 import { register } from "../helpers/register";
 
+import familyKitchen from "../assets/family_kitchen.jpg";
+
 function Register({ setNavBarToggle }) {
   const [newUser, setNewUser] = useState({
     email: "",
@@ -85,16 +87,29 @@ function Register({ setNavBarToggle }) {
   };
 
   return (
+    // <div
+    //   className="min-h-screen flex flex-col justify-center items-center bg-cover bg-center"
+    //   style={{
+    //     backgroundImage: `url('../src/assets/family_kitchen.jpg')`,
+    //     backgroundAttachment: 'fixed',
+    //     backgroundSize: 'cover',
+    //     backgroundRepeat: 'no-repeat',
+    //     minHeight: '100vh',
+    //     width: '100%',
+    //     overflow: 'hidden',
+    //   }}
+    // >
+
     <div
       className="min-h-screen flex flex-col justify-center items-center bg-cover bg-center"
       style={{
-        backgroundImage: `url('../src/assets/family_kitchen.jpg')`,
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
-        width: '100%',
-        overflow: 'hidden',
+        backgroundImage: `url(${familyKitchen})`,
+        backgroundAttachment: "fixed",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        width: "100%",
+        overflow: "hidden",
       }}
     >
       {/* Overlay for better readability */}
