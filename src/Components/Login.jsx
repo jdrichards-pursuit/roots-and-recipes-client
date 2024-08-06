@@ -5,7 +5,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 import familyDinner from "../assets/family_dinner.jpg";
 
-
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
@@ -57,10 +56,16 @@ function Login({ setNavBarToggle }) {
   }, []);
 
   return (
+    // <div
+    //   className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden"
+    //   style={{
+    //     backgroundImage: "url('../src/assets/family_dinner.jpg')",
+    //   }}
+    // >
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{
-        backgroundImage: "url('../src/assets/family_dinner.jpg')",
+        backgroundImage: `url(${familyDinner})`,
       }}
     >
       <div className="w-full max-w-md bg-white/30 backdrop-blur-md p-8 rounded-lg shadow-lg">
