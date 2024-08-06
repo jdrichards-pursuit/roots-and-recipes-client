@@ -11,7 +11,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleIcon from "@mui/icons-material/AddCircle"; // Importing the AddCircleIcon
-
+import { placeholder } from "@cloudinary/react";
+import placeholderImage from "../../assets/recipe_place_holder.png";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -115,7 +116,8 @@ export const MyCookbook = () => {
             {searchInput ? (
               <div
                 onClick={clearSearch}
-                className="absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer p-1">
+                className="absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer p-1"
+              >
                 <ClearIcon />
               </div>
             ) : (
@@ -138,10 +140,14 @@ export const MyCookbook = () => {
             .map((recipe) => (
               <div
                 key={recipe.id}
-                className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4">
+                className="flex items-center justify-between bg-white p-2 rounded-lg shadow-md mb-4"
+              >
                 <Link to={`/recipe_show/${recipe.id}`} className="flex-1 ml-2">
                   <div className="rounded-xl">
-                    <img src={recipe.photo} alt={recipe.name} />
+                    <img
+                      src={recipe.photo || placeholderImage}
+                      alt={recipe.name}
+                    />
                     <p className="p-4 rounded-lg text-black text-lg">
                       {recipe.chef}'s {recipe.name}
                     </p>

@@ -3,6 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+
+import familyDinner from "../assets/family_dinner.jpg";
+
+
 import SignInWithGoogle from "./SignInWithGoogle";
 import { auth } from "../helpers/firebase";
 
@@ -19,12 +23,30 @@ function Login({ setNavBarToggle, signedInWithGoogle, setSignedInWithGoogle }) {
     e.preventDefault();
 
     const { email, password } = loginUser;
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const loggedUser = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User logged in to Firebase Successfully");
+
+      // store the JWT token so that you know the user is logged in.
+      const token = await loggedUser.user.getIdToken();
+      localStorage.setItem("token", token);
+
       setLoginNewUser({ password: "", email: "" });
+      // toast.success("User logged in Successfully", {
+      //   position: "top-center",
+      // });
+
+      // you do not have to create a login in the backend because firebase is handling it.
+      // when you navigate to profile, you will see a fetch for the user.
       navigate("/home");
     } catch (error) {
       console.log(error.message);
+
       toast.error(error.message, {
         position: "bottom-center",
       });
@@ -39,8 +61,9 @@ function Login({ setNavBarToggle, signedInWithGoogle, setSignedInWithGoogle }) {
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{
-        backgroundImage: "url('../src/assets/family_dinner.jpg')",
-      }}>
+        backgroundImage: `url(${familyDinner})`,
+      }}
+    >
       <div className="w-full max-w-md bg-white/30 backdrop-blur-md p-8 rounded-lg shadow-lg">
         <h3 className="text-2xl font-bold mb-6 text-center text-white lexend-exa">
           Login
