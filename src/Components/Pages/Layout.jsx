@@ -2,12 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { getAuth } from "firebase/auth";
-import homeIconPng from "../../assets/home_icon.png";
-import familyIconPng from "../../assets/family_icon.png";
-import plusIconPng from "../../assets/plus_icon.png";
-import cookbookIconPng from "../../assets/cookbook_icon.png";
-import profileIconPng from "../../assets/profile_icon.png";
-import logoPng from "../../assets/logo.png";
 import canvaLogo from "../../assets/canva_logo.png";
 
 const Layout = ({ children }) => {
@@ -32,8 +26,8 @@ const Layout = ({ children }) => {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div className="flex flex-col min-h-screen bg-custom-beige">
-      <header className="bg-custom-brown text-white py-0 px-2 shadow-md fixed top-0 w-full z-20 flex justify-between items-center">
+    <div className="flex flex-col min-h-screen bg-[#FFDAB9]">
+      <header className="bg-[#713A3A] text-white py-0 px-2 shadow-md fixed top-0 w-full z-20 flex justify-between items-center">
         <Link to="/home">
           <div className="flex items-center p-4">
             <img src={canvaLogo} alt="logo" className="w-60 h-24/>"></img>
@@ -79,7 +73,7 @@ const Layout = ({ children }) => {
       </header>
 
       {menuOpen && (
-        <nav className="lg:hidden bg-custom-brown text-white p-4 fixed top-16 w-full z-20 space-y-4">
+        <nav className="lg:hidden bg-[#713A3A] text-white p-4 fixed top-16 w-full z-20 space-y-4">
           {user ? (
             <>
               <div
@@ -88,8 +82,7 @@ const Layout = ({ children }) => {
                   window.location.reload();
                 }}
                 className="flex items-center space-x-2">
-                <img src={homeIconPng} alt="home icon" className="w-6 h-6" />
-                <span>Home</span>
+                <span className="hover:text-[#965d5d]">Home</span>
               </div>
               <div
                 onClick={() => {
@@ -97,12 +90,8 @@ const Layout = ({ children }) => {
                   window.location.reload();
                 }}
                 className="flex items-center space-x-2">
-                <img
-                  src={familyIconPng}
-                  alt="family icon"
-                  className="w-6 h-6"
-                />
-                <span>Family</span>
+              
+                <span className="hover:text-[#965d5d]">Family</span>
               </div>
               <div
                 onClick={() => {
@@ -110,8 +99,7 @@ const Layout = ({ children }) => {
                   window.location.reload();
                 }}
                 className="flex items-center space-x-2">
-                <img src={plusIconPng} alt="plus icon" className="w-8 h-8" />
-                <span>Add</span>
+                <span className="hover:text-[#965d5d]">Add</span>
               </div>
               <div
                 onClick={() => {
@@ -119,12 +107,7 @@ const Layout = ({ children }) => {
                   window.location.reload();
                 }}
                 className="flex items-center space-x-2">
-                <img
-                  src={cookbookIconPng}
-                  alt="cookbook icon"
-                  className="w-6 h-6"
-                />
-                <span>Cookbook</span>
+                <span className="hover:text-[#965d5d]">Cookbook</span>
               </div>
               <div
                 onClick={() => {
@@ -132,60 +115,26 @@ const Layout = ({ children }) => {
                   window.location.reload();
                 }}
                 className="flex items-center space-x-2">
-                <img
-                  src={profileIconPng}
-                  alt="profile icon"
-                  className="w-6 h-6"
-                />
-                <span>Profile</span>
+                <span className="hover:text-[#965d5d]">Profile</span>
               </div>
             </>
           ) : (
             <>
               <Link
                 to="/login"
-                className="flex items-center space-x-2 lexend-exa">
-                <img
-                  src={profileIconPng}
-                  alt="login icon"
-                  className="w-6 h-6"
-                />
-                <span>Log In</span>
+                className="flex items-center space-x-2">
+                <span className="hover:text-[#965d5d]">Log In</span>
               </Link>
               <Link
                 to="/register"
-                className="flex items-center space-x-2 lexend-exa">
-                <img
-                  src={profileIconPng}
-                  alt="register icon"
-                  className="w-6 h-6"
-                />
-                <span>Register</span>
+                className="flex items-center space-x-2">
+                <span className="hover:text-[#965d5d]">Register</span>
               </Link>
             </>
           )}
         </nav>
       )}
-
-      {/* {isHomePage && (
-        <nav className="bg-white py-1 shadow-md fixed top-16 w-full z-10 flex justify-center space-x-2 text-gray-700 slim-navbar">
-          <a href="#top-dinner" className="hover:text-red-500">
-            Top Dinner
-          </a>
-          <span className="separator-bar"></span>
-          <a href="#top-all-recipes" className="hover:text-red-500">
-            Top All Recipes
-          </a>
-          <span className="separator-bar"></span>
-          <a href="#top-lunch" className="hover:text-red-500">
-            Top Lunch
-          </a>
-        </nav>
-      )} */}
-
       <main className="flex-grow pt-16 overflow-y-auto">{children}</main>
-
-      {/* <footer className="bg-custom-brown w-full p-4 fixed bottom-0 z-10" /> */}
     </div>
   );
 };
