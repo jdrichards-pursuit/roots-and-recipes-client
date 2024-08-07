@@ -130,17 +130,17 @@ const FamilyCookbook = () => {
         ) : (
           <button
             onClick={handleLeaveFamily}
-            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 text-[15px] rounded absolute mt-9 ml-5">
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 text-[15px] rounded absolute mt-9 ml-2">
             Leave Family
           </button>
         )}
 
         {familyMembers.length > 0 && (
           <div className="bg-white shadow-lg rounded-lg p-6 mt-6">
-            <h1 className="text-3xl font-bold text-center mb-6">
+            <h1 className="text-3xl font-bold text-center mb-6 pt-[100px]">
               {familyName}'s Family Cookbook
             </h1>
-            <h3 className="text-sm font-bold text-center mb-6 absolute right-10 top-14 mt-5">
+            <h3 className="text-sm font-bold text-center mb-6 absolute right-10 top-14 mt-2 ml-[100px]">
               Family Code:{" "}
               <span
                 onClick={copyToClipboard}

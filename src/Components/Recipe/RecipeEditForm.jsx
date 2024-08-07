@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { X } from "lucide-react";
+import { Close as CloseIcon } from '@mui/icons-material';  // Import the MUI Close icon
 
 import {
   handleIngredientsInputChange,
@@ -105,80 +106,104 @@ const RecipeEditForm = () => {
   const { name, chef, photo, status, steps } = recipeToEdit;
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h1>Edit Your Recipe</h1>
+    <div className="max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg bg-white shadow-md mt-7">
+      <CloseIcon onClick={() => navigate(-1)} />
+      <h1 className="text-center text-3xl font-semibold text-[#713A3A] mb-6">
+        Edit Your Recipe
+      </h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="name">Name of dish</label>
+          <label htmlFor="name" className="block text-lg font-medium mb-2">
+            Name of dish
+          </label>
           <input
             type="text"
             id="name"
             value={name}
             name="name"
             onChange={handleTextChange}
+            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
           />
         </div>
 
         <div>
-          <label htmlFor="chef">Chef</label>
+          <label htmlFor="chef" className="block text-lg font-medium mb-2">
+            Chef
+          </label>
           <input
             type="text"
             id="chef"
             value={chef}
             name="chef"
             onChange={handleTextChange}
+            className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
           />
         </div>
 
         <div>
-          <label>Ingredients</label>
+          <label className="block text-lg font-medium mb-2">Ingredients</label>
           {ingredientsInputs.map((ingredient, index) => (
-            <div key={index} className="flex items-center">
+            <div key={index} className="flex items-center space-x-2 mb-4">
               <input
                 type="text"
                 value={ingredient}
                 onChange={(e) => handleIngredientsChange(index, e)}
-                className="border-solid border-2 border-black p-2 mt-8"
+                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
               />
-              <div type="button" onClick={() => handleDeleteIngredient(index)}>
-                <X />
-              </div>
+              <button
+                type="button"
+                onClick={() => handleDeleteIngredient(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
             </div>
           ))}
 
-          <div
+          <button
             onClick={handleAddIngredient}
-            className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center cursor-pointer"
+            type="button"
+            className="w-full bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center cursor-pointer"
           >
             <Plus />
-          </div>
+          </button>
         </div>
 
         <div>
-          <label>Steps</label>
+          <label className="block text-lg font-medium mb-2">Steps</label>
           {stepsInputs.map((step, index) => (
-            <div key={index} className="flex items-center">
+            <div key={index} className="flex items-center space-x-2 mb-4">
               <input
                 type="text"
                 value={step}
                 onChange={(e) => handleStepsChange(index, e)}
-                className="border-solid border-2 border-black p-2 mt-8"
+                className="w-full border border-gray-300 rounded-lg p-2 shadow-sm"
               />
-              <div type="button" onClick={() => handleDeleteStep(index)}>
-                <X />
-              </div>
+              <button
+                type="button"
+                onClick={() => handleDeleteStep(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
             </div>
           ))}
 
-          <div
+          <button
             onClick={handleAddStep}
-            className="ml-28 bg-zinc-100 text-black shadow-md border-2 border-black rounded-lg py-1 px-2 w-8 h-8 flex items-center justify-center cursor-pointer"
+            type="button"
+            className="w-full bg-gray-200 text-gray-800 shadow-md border border-gray-300 rounded-lg p-2 flex items-center justify-center cursor-pointer"
           >
             <Plus />
-          </div>
+          </button>
         </div>
 
-        <input type="submit" value="Save" />
+        <button
+          type="submit"
+          className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-4 py-2 shadow-md w-full"
+        >
+          Save
+        </button>
       </form>
     </div>
   );
