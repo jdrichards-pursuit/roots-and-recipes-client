@@ -102,19 +102,19 @@ const TakePhoto = () => {
                         <div className="flex flex-col items-center gap-4">
                             <img src={image} alt="Captured" className="max-w-full rounded-lg shadow-md" />
                             <div className="flex flex-row justify-center gap-4">
-                                {toggleRetake &&
-                                    <button 
-                                        onClick={retake}
-                                        className="bg-gray-200 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 transition-transform transform hover:bg-gray-300 hover:text-gray-800"
-                                    >
-                                        Retake
-                                    </button>}
                                 <button 
                                     onClick={uploadImagetoCloudinary}
-                                    className="bg-gray-200 px-6 py-2 border border-gray-300 rounded-lg text-gray-700 transition-transform transform hover:bg-gray-300 hover:text-gray-800"
+                                    className="bg-emerald-500 px-6 py-2 border border-gray-300 rounded-lg text-white transition-transform transform hover:bg-emerald-400 hover:text-white"
                                 >
                                     Use this Image
                                 </button>
+                                {toggleRetake &&
+                                    <button 
+                                        onClick={retake}
+                                        className="px-4 py-2 rounded-lg text-blue-500 transition-transform transform hover:text-blue-300"
+                                    >
+                                        Retake
+                                    </button>}
                             </div>
                         </div>
                     }
